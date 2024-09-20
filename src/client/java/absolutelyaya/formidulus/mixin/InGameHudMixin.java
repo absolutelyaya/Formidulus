@@ -1,6 +1,6 @@
-package absolutelyaya.formidulus.mixin.client;
+package absolutelyaya.formidulus.mixin;
 
-import absolutelyaya.formidulus.TitleHUD;
+import absolutelyaya.formidulus.gui.TitleHUD;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.render.RenderTickCounter;

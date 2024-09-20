@@ -1,9 +1,9 @@
 {
 	"required": true,
-	"package": "absolutelyaya.formidulus.mixin.client",
+	"package": "absolutelyaya.formidulus.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"client": [
-      "InGameHudMixin"
+		"InGameHudMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

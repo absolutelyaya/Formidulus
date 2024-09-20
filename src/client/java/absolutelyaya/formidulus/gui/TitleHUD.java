@@ -1,4 +1,4 @@
-package absolutelyaya.formidulus;
+package absolutelyaya.formidulus.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
