@@ -1,5 +1,6 @@
 package absolutelyaya.formidulus;
 
+import absolutelyaya.formidulus.registries.EntityRegistry;
 import absolutelyaya.formidulus.registries.ParticleRegistry;
 import net.fabricmc.api.ModInitializer;
 
@@ -17,6 +18,7 @@ public class Formidulus implements ModInitializer
 	public void onInitialize()
 	{
 		ParticleRegistry.register();
+		EntityRegistry.register();
 	}
 	
 	public static Identifier identifier(String path)

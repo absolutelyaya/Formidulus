@@ -2,20 +2,34 @@ package absolutelyaya.formidulus;
 
 import absolutelyaya.formidulus.gui.TitleHUD;
 import absolutelyaya.formidulus.particle.BloodDropParticle;
+import absolutelyaya.formidulus.registries.EntityRegistry;
 import absolutelyaya.formidulus.registries.ParticleRegistry;
+import absolutelyaya.formidulus.rendering.entity.DeerGodModel;
+import absolutelyaya.formidulus.rendering.entity.DeerGodRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.message.v1.ClientSendMessageEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.minecraft.client.render.entity.model.EntityModelLayer;
+import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.minecraft.util.Identifier;
 
 public class FormidulusClient implements ClientModInitializer
 {
+	public static final EntityModelLayer DEER_GOD_LAYER = new EntityModelLayer(Formidulus.identifier("deer_god"), "deer_god");
 	final Identifier font = Identifier.of("illageralt");
 	
 	@Override
 	public void onInitializeClient()
 	{
+		//Entities
+		EntityRendererRegistry.register(EntityRegistry.DEER_GOD, DeerGodRenderer::new);
+		
+		//Entity Model Layers
+		EntityModelLayerRegistry.registerModelLayer(DEER_GOD_LAYER, DeerGodModel::getTexturedModelData);
+		
 		//Particles
 		ParticleFactoryRegistry particles = ParticleFactoryRegistry.getInstance();
 		particles.register(ParticleRegistry.BLOOD_DROP_PARTICLE, BloodDropParticle.Factory::new);
