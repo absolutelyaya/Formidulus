@@ -33,4 +33,16 @@ public class DeerGodEntity extends HostileEntity
 	{
 		return true;
 	}
+	
+	@Override
+	public void tickMovement()
+	{
+		super.tickMovement();
+		//TODO: vanishing
+		//for (int i = 0; i < 3; i++)
+		//{
+		//	Vec3d pos = new Vec3d(getX(), getY(), getZ()).add((random.nextFloat() - 0.5f) * 2f, random.nextFloat() * 4.5f, (random.nextFloat() - 0.5f) * 2f);
+		//	getWorld().addParticle(new DustParticleEffect(new Vector3f(0f, 0f, 0f), 5f), pos.x, pos.y, pos.z, 0f, 0f, 0f);
+		//}
+	}
 }

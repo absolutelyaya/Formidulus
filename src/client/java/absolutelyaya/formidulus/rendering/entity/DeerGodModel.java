@@ -1,10 +1,13 @@
 package absolutelyaya.formidulus.rendering.entity;
 
 import absolutelyaya.formidulus.entities.DeerGodEntity;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.ColorHelper;
+import net.minecraft.util.math.MathHelper;
 
 // Made with Blockbench 4.10.4
 // Exported for Minecraft version 1.17+ for Yarn
@@ -25,7 +28,7 @@ public class DeerGodModel extends SinglePartEntityModel<DeerGodEntity>
 	private final ModelPart hoofRight;
 	private final ModelPart spineCenter;
 	private final ModelPart spineTop;
-	private final ModelPart head;
+	public final ModelPart head;
 	private final ModelPart jaw;
 	private final ModelPart torso;
 	private final ModelPart brokenArm;
@@ -181,6 +184,7 @@ public class DeerGodModel extends SinglePartEntityModel<DeerGodEntity>
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, int color)
 	{
+		//TODO: vanishing
 		body.render(matrices, vertices, light, overlay);
 	}
 	
