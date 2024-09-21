@@ -4,7 +4,6 @@ import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.FormidulusClient;
 import absolutelyaya.formidulus.entities.DeerGodEntity;
 import absolutelyaya.formidulus.rendering.entity.feature.DeerGodEyesRenderFeature;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
