@@ -41,13 +41,15 @@ public class FormidulusClient implements ClientModInitializer
 		ClientSendMessageEvents.CHAT.register(message -> {
 			//Spawn Sequence
 			TitleHUD.queueTitle(TitleHUD.makeTextObject("Es ausus altare meum delictem ?") //Have you dared to desecrate my altar ?
-										.jitter(true).font(font).typeSpeed(10f).instability(0.7f).color(0x000000));
+										.jitter(true).font(font).typeSpeed(25f).instability(0.7f).color(0x000000));
 			TitleHUD.queueTitle(TitleHUD.makeTextObject("Peccatum tuum non videris intellegre.") //You do not seem to understand your sin.
 										.jitter(true).font(font).typeSpeed(30f).displayDuration(7.5f).instability(0.5f));
 			TitleHUD.queueTitle(TitleHUD.makeTextObject("Nulla res.") //No matter.
-										.jitter(true).font(font).typeSpeed(30f).displayDuration(2f));
+										.jitter(true).font(font).typeSpeed(50f).displayDuration(1f));
 			TitleHUD.queueTitle(TitleHUD.makeTextObject("Mores vos docebo.") //I will teach you manners
-										.jitter(true).font(font).typeSpeed(20f).displayDuration(5f).instability(0.5f));
+										.jitter(true).font(font).typeSpeed(30f).displayDuration(5f).instability(0.5f));
+			if(true)
+				return;
 			//Player Death
 			TitleHUD.queueTitle(TitleHUD.makeTextObject("Numquam redibis.") //You will never return.
 										.jitter(true).font(font).delay(5f).displayDuration(5f));

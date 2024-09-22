@@ -11,6 +11,7 @@ import net.minecraft.client.util.math.MatrixStack;
 // Paste this class into your mod and generate all required imports
 public class DeerGodModel extends SinglePartEntityModel<DeerGodEntity>
 {
+	private final ModelPart root;
 	private final ModelPart body;
 	private final ModelPart spineBottom;
 	private final ModelPart spineBottomEnd;
@@ -68,10 +69,10 @@ public class DeerGodModel extends SinglePartEntityModel<DeerGodEntity>
 	private final ModelPart finger3tip;
 	private final ModelPart knife3;
 	private final ModelPart flame;
-	private final ModelPart sword;
 	
 	public DeerGodModel(ModelPart root)
 	{
+		this.root = root;
 		this.body = root.getChild("body");
 		this.spineBottom = body.getChild("spineBottom");
 		this.spineBottomEnd = spineBottom.getChild("spineBottomEnd");
@@ -129,9 +130,8 @@ public class DeerGodModel extends SinglePartEntityModel<DeerGodEntity>
 		this.finger3tip = finger3.getChild("finger3tip");
 		this.knife3 = finger3tip.getChild("knife3");
 		this.flame = body.getChild("flame");
-		this.sword = root.getChild("sword");
 		
-		eyes.hidden = sword.hidden = true;
+		eyes.hidden = true;
 		brokenArmGore1.hidden = true;
 		brokenArmGore2.traverse().forEach(i -> i.hidden = true);
 	}
@@ -314,9 +314,6 @@ public class DeerGodModel extends SinglePartEntityModel<DeerGodEntity>
 		
 		ModelPartData cube_r23 = flame.addChild("cube_r23", ModelPartBuilder.create().uv(43, 73).cuboid(-2.5F, -7.0F, 0.0F, 5.0F, 7.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 2.0F, 0.0F, 0.0F, -0.7854F, 0.0F));
 		
-		ModelPartData sword = modelPartData.addChild("sword", ModelPartBuilder.create().uv(0, 30).cuboid(15.0F, -67.0F, -14.0F, 0.0F, 40.0F, 5.0F, new Dilation(0.0F))
-																	  .uv(3, 68).cuboid(14.0F, -27.0F, -15.0F, 2.0F, 1.0F, 7.0F, new Dilation(0.0F))
-																	  .uv(10, 59).cuboid(14.5F, -26.0F, -12.5F, 1.0F, 7.0F, 2.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 24.0F, 0.0F));
 		return TexturedModelData.of(modelData, 128, 128);
 	}
 	
@@ -328,18 +325,28 @@ public class DeerGodModel extends SinglePartEntityModel<DeerGodEntity>
 		updateAnimation(entity.unsummonedPoseAnimationState, DeerGodAnimations.unsummonedPose, ageInTicks);
 		updateAnimation(entity.spawnSequenceAnimationState, DeerGodAnimations.spawnSequence, ageInTicks);
 		updateAnimation(entity.idleAnimationState, DeerGodAnimations.idle, ageInTicks);
+		updateAnimation(entity.swingAnimationState, DeerGodAnimations.lanternSideSwing, ageInTicks);
+		updateAnimation(entity.slamAnimationState, DeerGodAnimations.lanternSlam, ageInTicks);
+		
+		if(entity.shouldApplyArmPose())
+		{
+			if(entity.hasLantern())
+				updateAnimation(entity.holdLanternAnimationState, DeerGodAnimations.holdLantern, ageInTicks);
+			else
+				updateAnimation(entity.noLanternAnimationState, DeerGodAnimations.noLantern, ageInTicks);
+		}
 	}
 	
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, int color)
 	{
 		//TODO: vanishing
-		body.render(matrices, vertices, light, overlay);
+		getPart().render(matrices, vertices, light, overlay);
 	}
 	
 	@Override
 	public ModelPart getPart()
 	{
-		return body;
+		return root;
 	}
 }

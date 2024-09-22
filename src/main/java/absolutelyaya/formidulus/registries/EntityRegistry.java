@@ -5,6 +5,7 @@ import absolutelyaya.formidulus.entities.DeerGodEntity;
 import absolutelyaya.formidulus.entities.IrrlichtEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.entity.*;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 
@@ -17,7 +18,7 @@ public class EntityRegistry
 	
 	public static void register()
 	{
-		FabricDefaultAttributeRegistry.register(DEER_GOD, DeerGodEntity.createMobAttributes());
-		FabricDefaultAttributeRegistry.register(IRRLICHT, IrrlichtEntity.createMobAttributes());
+		FabricDefaultAttributeRegistry.register(DEER_GOD, DeerGodEntity.createMobAttributes().add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1));
+		FabricDefaultAttributeRegistry.register(IRRLICHT, IrrlichtEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 1));
 	}
 }

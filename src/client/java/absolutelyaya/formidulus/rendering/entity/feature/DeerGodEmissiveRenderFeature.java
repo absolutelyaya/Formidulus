@@ -12,7 +12,6 @@ import net.minecraft.client.render.entity.feature.FeatureRenderer;
 import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 
 public class DeerGodEmissiveRenderFeature extends FeatureRenderer<DeerGodEntity, DeerGodModel>
 {
