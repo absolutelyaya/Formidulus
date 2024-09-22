@@ -3,6 +3,7 @@ package absolutelyaya.formidulus.rendering.entity;
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.FormidulusClient;
 import absolutelyaya.formidulus.entities.DeerGodEntity;
+import absolutelyaya.formidulus.rendering.entity.feature.DeerGodEmissiveRenderFeature;
 import absolutelyaya.formidulus.rendering.entity.feature.DeerGodEyesRenderFeature;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -18,6 +19,7 @@ public class DeerGodRenderer extends MobEntityRenderer<DeerGodEntity, DeerGodMod
 	{
 		super(ctx, new DeerGodModel(ctx.getPart(FormidulusClient.DEER_GOD_LAYER)), 1f);
 		addFeature(new DeerGodEyesRenderFeature(this));
+		addFeature(new DeerGodEmissiveRenderFeature(this));
 	}
 	
 	@Override
