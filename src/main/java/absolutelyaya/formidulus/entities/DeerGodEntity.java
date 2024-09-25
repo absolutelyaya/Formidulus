@@ -1,10 +1,14 @@
 package absolutelyaya.formidulus.entities;
 
+import absolutelyaya.formidulus.network.SequenceTriggerPayload;
+import absolutelyaya.formidulus.particle.BloodDropParticleEffect;
 import absolutelyaya.formidulus.registries.EntityRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
@@ -15,10 +19,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
+
+import java.util.List;
 
 public class DeerGodEntity extends HostileEntity
 {
@@ -26,12 +33,14 @@ public class DeerGodEntity extends HostileEntity
 	static final TrackedData<Byte> ANIMATION = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BYTE);
 	static final TrackedData<Integer> ANIMATION_START = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	static final TrackedData<Integer> INTRO_TICKS = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	static final TrackedData<Boolean> CLAW = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	
 	static final byte UNSUMMONED_POSE = 0;
 	static final byte SPAWN_SEQUENCE_ANIM = 1;
 	static final byte IDLE_ANIM = 2;
 	static final byte SWING_ANIM = 3;
 	static final byte SLAM_ANIM = 4;
+	static final byte PHASE_TRANSITION_ANIM = 5;
 	public AnimationState unsummonedPoseAnimationState = new AnimationState();
 	public AnimationState spawnSequenceAnimationState = new AnimationState();
 	public AnimationState idleAnimationState = new AnimationState();
@@ -39,6 +48,10 @@ public class DeerGodEntity extends HostileEntity
 	public AnimationState slamAnimationState = new AnimationState();
 	public AnimationState holdLanternAnimationState = new AnimationState();
 	public AnimationState noLanternAnimationState = new AnimationState();
+	public AnimationState noClawAnimationState = new AnimationState();
+	public AnimationState showClawAnimationState = new AnimationState();
+	public AnimationState showClawWithoutExtrasAnimationState = new AnimationState();
+	public AnimationState phaseTransitionAnimationState = new AnimationState();
 	int animFlags;
 	
 	public DeerGodEntity(EntityType<? extends HostileEntity> entityType, World world)
@@ -47,6 +60,9 @@ public class DeerGodEntity extends HostileEntity
 		unsummonedPoseAnimationState.start(age);
 		holdLanternAnimationState.start(age);
 		noLanternAnimationState.start(age);
+		noClawAnimationState.start(age);
+		showClawAnimationState.start(age);
+		showClawWithoutExtrasAnimationState.start(age);
 		dataTracker.set(ANIMATION_START, age);
 	}
 	
@@ -58,6 +74,7 @@ public class DeerGodEntity extends HostileEntity
 		builder.add(ANIMATION, UNSUMMONED_POSE);
 		builder.add(ANIMATION_START, 0);
 		builder.add(INTRO_TICKS, 400);
+		builder.add(CLAW, false);
 	}
 	
 	@Override
@@ -93,7 +110,7 @@ public class DeerGodEntity extends HostileEntity
 			dataTracker.set(INTRO_TICKS, dataTracker.get(INTRO_TICKS) - 1);
 		
 		if(age % 400 == 0)
-			setAnimation(SWING_ANIM);
+			setAnimation(PHASE_TRANSITION_ANIM);
 		
 		//if(age == 300)
 		//	setAnimation(SWING_ANIM);
@@ -153,6 +170,40 @@ public class DeerGodEntity extends HostileEntity
 				}
 			}
 		}
+		if(getCurrentAnimation() == PHASE_TRANSITION_ANIM)
+		{
+			if(!hasClaw())
+				dataTracker.set(CLAW, true);
+			if(!getAnimationFlag(0) && getCurrentAnimationDuration() >= 0f)
+			{
+				setAnimationFlag(0, true);
+				if(!getWorld().isClient)
+				{
+					List<ServerPlayerEntity> nearby = getWorld().getEntitiesByType(TypeFilter.instanceOf(ServerPlayerEntity.class), getBoundingBox().expand(64), LivingEntity::isAlive);
+					nearby.forEach(i -> ServerPlayNetworking.send(i, new SequenceTriggerPayload(SequenceTriggerPayload.PHASE_TRANSITION_SEQUENCE)));
+				}
+			}
+			if(getCurrentAnimationDuration() >= 3.5f && getCurrentAnimationDuration() <= 4f)
+			{
+				for (int i = 0; i < 12; i++)
+				{
+					Vec3d pos = new Vec3d(getX(), getY(), getZ()).add((random.nextFloat() - 0.5f) * 2.2f, random.nextFloat() * 4.5f, (random.nextFloat() - 0.5f) * 2.2f);
+					getWorld().addParticle(new DustParticleEffect(new Vector3f(0f, 0f, 0f), 5f), pos.x, pos.y, pos.z, 0f, 0f, 0f);
+				}
+			}
+			if(!getAnimationFlag(1) && getCurrentAnimationDuration() >= 5.5f)
+			{
+				setAnimationFlag(1, true);
+				Vec3d dest = getPos().add((float)getRotationVector().x, getHeight() / 2f, (float)getRotationVector().z);
+				for (int i = 0; i < 111; i++)
+				{
+					Vec3d dir = Vec3d.ZERO.addRandom(random, 1f).multiply(1f, 0f, 1f);
+					Vec3d pos = getPos().add(dir.normalize().multiply((getRandom().nextFloat() - 0.5f) * 2f * 16f));
+					getWorld().addParticle(new BloodDropParticleEffect(dest.toVector3f()),
+							(float)pos.x, (float)getY(), (float)pos.z, 0f, 0f, 0f);
+				}
+			}
+		}
 		
 		//TODO: vanishing
 		//for (int i = 0; i < 3; i++)
@@ -164,7 +215,7 @@ public class DeerGodEntity extends HostileEntity
 	
 	void setAnimation(byte id)
 	{
-		//if(dataTracker.get(ANIMATION) == id)
+		//if(dataTracker.get(ANIMATION) == sequenceID)
 		//	return;
 		getAnimation(dataTracker.get(ANIMATION)).stop();
 		getAnimation(id).start(age);
@@ -184,6 +235,7 @@ public class DeerGodEntity extends HostileEntity
 			case IDLE_ANIM -> idleAnimationState;
 			case SWING_ANIM -> swingAnimationState;
 			case SLAM_ANIM -> slamAnimationState;
+			case PHASE_TRANSITION_ANIM -> phaseTransitionAnimationState;
 		};
 	}
 	
@@ -215,7 +267,7 @@ public class DeerGodEntity extends HostileEntity
 		float animDuration = getCurrentAnimationDuration();
 		if(getCurrentAnimation() == SPAWN_SEQUENCE_ANIM)
 			return animDuration > 2f && animDuration < 8.5f;
-		return false;
+		return hasClaw() && !(getCurrentAnimation() == PHASE_TRANSITION_ANIM && animDuration < 2f);
 	}
 	
 	public boolean hasLantern()
@@ -225,12 +277,7 @@ public class DeerGodEntity extends HostileEntity
 	
 	public boolean hasClaw()
 	{
-		return false;
-	}
-	
-	public boolean shouldApplyArmPose()
-	{
-		return getCurrentAnimation() == IDLE_ANIM;
+		return dataTracker.get(CLAW);
 	}
 	
 	@Override
@@ -238,6 +285,27 @@ public class DeerGodEntity extends HostileEntity
 	{
 		if(!(source.isOf(DamageTypes.OUT_OF_WORLD) || source.isOf(DamageTypes.GENERIC_KILL)) && dataTracker.get(INTRO_TICKS) > 0)
 			return false;
-		return super.damage(source, amount);
+		boolean b = super.damage(source, amount);
+		if(!dataTracker.get(CLAW) && b && getHealth() < getMaxHealth() / 2f && getHealth() > 0f)
+		{
+			setAnimation(PHASE_TRANSITION_ANIM);
+			dataTracker.set(CLAW, true);
+		}
+		return b;
+	}
+	
+	public boolean shouldApplyLampArmPose()
+	{
+		return getCurrentAnimation() == IDLE_ANIM;
+	}
+	
+	public boolean shouldApplyClawPose()
+	{
+		return getCurrentAnimation() != PHASE_TRANSITION_ANIM;
+	}
+	
+	public boolean shouldShowClawWithoutExtras()
+	{
+		return getCurrentAnimation() == SLAM_ANIM;
 	}
 }

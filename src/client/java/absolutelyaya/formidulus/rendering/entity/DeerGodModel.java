@@ -70,6 +70,8 @@ public class DeerGodModel extends SinglePartEntityModel<DeerGodEntity>
 	private final ModelPart knife3;
 	private final ModelPart flame;
 	
+	boolean hadClaw;
+	
 	public DeerGodModel(ModelPart root)
 	{
 		this.root = root;
@@ -321,20 +323,35 @@ public class DeerGodModel extends SinglePartEntityModel<DeerGodEntity>
 	public void setAngles(DeerGodEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
 	{
 		getPart().traverse().forEach(ModelPart::resetTransform);
-		float animationProgress = ageInTicks - (float)entity.age;
 		updateAnimation(entity.unsummonedPoseAnimationState, DeerGodAnimations.unsummonedPose, ageInTicks);
 		updateAnimation(entity.spawnSequenceAnimationState, DeerGodAnimations.spawnSequence, ageInTicks);
 		updateAnimation(entity.idleAnimationState, DeerGodAnimations.idle, ageInTicks);
 		updateAnimation(entity.swingAnimationState, DeerGodAnimations.lanternSideSwing, ageInTicks);
 		updateAnimation(entity.slamAnimationState, DeerGodAnimations.lanternSlam, ageInTicks);
+		updateAnimation(entity.phaseTransitionAnimationState, DeerGodAnimations.phaseTransition, ageInTicks);
 		
-		if(entity.shouldApplyArmPose())
+		if(entity.shouldApplyLampArmPose())
 		{
 			if(entity.hasLantern())
 				updateAnimation(entity.holdLanternAnimationState, DeerGodAnimations.holdLantern, ageInTicks);
 			else
 				updateAnimation(entity.noLanternAnimationState, DeerGodAnimations.noLantern, ageInTicks);
 		}
+		
+		boolean claw = entity.hasClaw();
+		brokenArmGore1.hidden = !claw;
+		brokenArmGore2.traverse().forEach(i -> i.hidden = !claw);
+		if(!entity.shouldApplyClawPose())
+			return;
+		if(entity.hasClaw())
+		{
+			if(entity.shouldShowClawWithoutExtras())
+				updateAnimation(entity.showClawWithoutExtrasAnimationState, DeerGodAnimations.showClaw, ageInTicks);
+			else
+				updateAnimation(entity.showClawAnimationState, DeerGodAnimations.showClawWithoutExtras, ageInTicks);
+		}
+		else
+			updateAnimation(entity.noClawAnimationState, DeerGodAnimations.noClaw, ageInTicks);
 	}
 	
 	@Override
