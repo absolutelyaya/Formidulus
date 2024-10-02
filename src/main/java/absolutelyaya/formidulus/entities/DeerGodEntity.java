@@ -14,7 +14,6 @@ import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.DustParticleEffect;
@@ -27,7 +26,7 @@ import org.joml.Vector3f;
 
 import java.util.List;
 
-public class DeerGodEntity extends HostileEntity
+public class DeerGodEntity extends BossEntity
 {
 	static final TrackedData<Boolean> SUMMONED = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Byte> ANIMATION = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BYTE);
@@ -53,8 +52,9 @@ public class DeerGodEntity extends HostileEntity
 	public AnimationState showClawWithoutExtrasAnimationState = new AnimationState();
 	public AnimationState phaseTransitionAnimationState = new AnimationState();
 	int animFlags;
+	byte lastAnimation;
 	
-	public DeerGodEntity(EntityType<? extends HostileEntity> entityType, World world)
+	public DeerGodEntity(EntityType<? extends BossEntity> entityType, World world)
 	{
 		super(entityType, world);
 		unsummonedPoseAnimationState.start(age);
@@ -64,6 +64,20 @@ public class DeerGodEntity extends HostileEntity
 		showClawAnimationState.start(age);
 		showClawWithoutExtrasAnimationState.start(age);
 		dataTracker.set(ANIMATION_START, age);
+	}
+	
+	@Override
+	public void onTrackedDataSet(TrackedData<?> data)
+	{
+		super.onTrackedDataSet(data);
+		if(data.equals(ANIMATION) && getWorld().isClient)
+			setAnimation(dataTracker.get(ANIMATION));
+	}
+	
+	@Override
+	public boolean isBossBarVisible()
+	{
+		return super.isBossBarVisible() && dataTracker.get(SUMMONED) && dataTracker.get(ANIMATION) != SPAWN_SEQUENCE_ANIM;
 	}
 	
 	@Override
@@ -90,12 +104,6 @@ public class DeerGodEntity extends HostileEntity
 	}
 	
 	@Override
-	public boolean cannotDespawn()
-	{
-		return true;
-	}
-	
-	@Override
 	public void tick()
 	{
 		super.tick();
@@ -104,13 +112,8 @@ public class DeerGodEntity extends HostileEntity
 			setAnimation(SPAWN_SEQUENCE_ANIM);
 			dataTracker.set(SUMMONED, true);
 		}
-		if(dataTracker.get(ANIMATION).equals(SPAWN_SEQUENCE_ANIM) && getCurrentAnimationDuration() >= 18f)
-			setAnimation(IDLE_ANIM);
 		if(dataTracker.get(INTRO_TICKS) > 0)
 			dataTracker.set(INTRO_TICKS, dataTracker.get(INTRO_TICKS) - 1);
-		
-		if(age % 400 == 0)
-			setAnimation(PHASE_TRANSITION_ANIM);
 		
 		//if(age == 300)
 		//	setAnimation(SWING_ANIM);
@@ -138,8 +141,10 @@ public class DeerGodEntity extends HostileEntity
 					getWorld().addParticle(new DustParticleEffect(new Vector3f(0f, 0f, 0f), 5f), pos.x, pos.y, pos.z, 0f, 0f, 0f);
 				}
 			}
+			else if(getCurrentAnimationDuration() >= 18f)
+				setAnimation(IDLE_ANIM);
 		}
-		if(getCurrentAnimation() == SLAM_ANIM)
+		else if(getCurrentAnimation() == SLAM_ANIM)
 		{
 			if(!getAnimationFlag(0) && getCurrentAnimationDuration() >= 2.9f)
 			{
@@ -170,7 +175,7 @@ public class DeerGodEntity extends HostileEntity
 				}
 			}
 		}
-		if(getCurrentAnimation() == PHASE_TRANSITION_ANIM)
+		else if(getCurrentAnimation() == PHASE_TRANSITION_ANIM)
 		{
 			if(!hasClaw())
 				dataTracker.set(CLAW, true);
@@ -203,6 +208,8 @@ public class DeerGodEntity extends HostileEntity
 							(float)pos.x, (float)getY(), (float)pos.z, 0f, 0f, 0f);
 				}
 			}
+			if(getCurrentAnimationDuration() >= 18.05f)
+				setAnimation(IDLE_ANIM);
 		}
 		
 		//TODO: vanishing
@@ -215,12 +222,17 @@ public class DeerGodEntity extends HostileEntity
 	
 	void setAnimation(byte id)
 	{
-		//if(dataTracker.get(ANIMATION) == sequenceID)
-		//	return;
-		getAnimation(dataTracker.get(ANIMATION)).stop();
-		getAnimation(id).start(age);
-		dataTracker.set(ANIMATION, id);
-		dataTracker.set(ANIMATION_START, age);
+		if(!getWorld().isClient)
+		{
+			dataTracker.set(ANIMATION, id);
+			dataTracker.set(ANIMATION_START, age);
+			return;
+		}
+		if(getAnimation(lastAnimation) instanceof AnimationState lastState)
+			lastState.stop();
+		if(getAnimation(id) instanceof AnimationState newState)
+			newState.start(age);
+		lastAnimation = id;
 		//reset animation flags
 		animFlags = 0;
 	}

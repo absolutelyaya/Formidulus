@@ -20,6 +20,9 @@
 		],
 		"client": [
 			"absolutelyaya.formidulus.FormidulusClient"
+		],
+		"mm:early_risers": [
+			"absolutelyaya.formidulus.EarlyRiser"
 		]
 	},
 	"mixins": [
