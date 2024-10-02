@@ -19,7 +19,7 @@ public class ClientPacketHandler
 												.jitter(true).font(FormidulusClient.FONT).typeSpeed(30f).displayDuration(7.5f).instability(0.5f));
 					TitleHUD.queueTitle(TitleHUD.makeTextObject("Nulla res.") //No matter.
 												.jitter(true).font(FormidulusClient.FONT).typeSpeed(50f).displayDuration(1f));
-					TitleHUD.queueTitle(TitleHUD.makeTextObject("Mores vos docebo.") //I will teach you manners
+					TitleHUD.queueTitle(TitleHUD.makeTextObject("Faciam te audire.") //I will make you listen.
 												.jitter(true).font(FormidulusClient.FONT).typeSpeed(30f).displayDuration(5f).instability(0.5f));
 					break;
 				}

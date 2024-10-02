@@ -110,6 +110,7 @@ public class DeerGodEntity extends BossEntity
 		if(!dataTracker.get(SUMMONED) && !getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), getBoundingBox().expand(16), i -> true).isEmpty())
 		{
 			setAnimation(SPAWN_SEQUENCE_ANIM);
+			triggerMonologueSequence(SequenceTriggerPayload.SPAWN_SEQUENCE);
 			dataTracker.set(SUMMONED, true);
 		}
 		if(dataTracker.get(INTRO_TICKS) > 0)
@@ -141,7 +142,7 @@ public class DeerGodEntity extends BossEntity
 					getWorld().addParticle(new DustParticleEffect(new Vector3f(0f, 0f, 0f), 5f), pos.x, pos.y, pos.z, 0f, 0f, 0f);
 				}
 			}
-			else if(getCurrentAnimationDuration() >= 18f)
+			if(getCurrentAnimationDuration() >= 18f)
 				setAnimation(IDLE_ANIM);
 		}
 		else if(getCurrentAnimation() == SLAM_ANIM)
@@ -182,11 +183,7 @@ public class DeerGodEntity extends BossEntity
 			if(!getAnimationFlag(0) && getCurrentAnimationDuration() >= 0f)
 			{
 				setAnimationFlag(0, true);
-				if(!getWorld().isClient)
-				{
-					List<ServerPlayerEntity> nearby = getWorld().getEntitiesByType(TypeFilter.instanceOf(ServerPlayerEntity.class), getBoundingBox().expand(64), LivingEntity::isAlive);
-					nearby.forEach(i -> ServerPlayNetworking.send(i, new SequenceTriggerPayload(SequenceTriggerPayload.PHASE_TRANSITION_SEQUENCE)));
-				}
+				triggerMonologueSequence(SequenceTriggerPayload.PHASE_TRANSITION_SEQUENCE);
 			}
 			if(getCurrentAnimationDuration() >= 3.5f && getCurrentAnimationDuration() <= 4f)
 			{
@@ -218,6 +215,14 @@ public class DeerGodEntity extends BossEntity
 		//	Vec3d pos = new Vec3d(getX(), getY(), getZ()).add((random.nextFloat() - 0.5f) * 2f, random.nextFloat() * 4.5f, (random.nextFloat() - 0.5f) * 2f);
 		//	getWorld().addParticle(new DustParticleEffect(new Vector3f(0f, 0f, 0f), 5f), pos.x, pos.y, pos.z, 0f, 0f, 0f);
 		//}
+	}
+	
+	void triggerMonologueSequence(byte id)
+	{
+		if(getWorld().isClient)
+			return;
+		List<ServerPlayerEntity> nearby = getWorld().getEntitiesByType(TypeFilter.instanceOf(ServerPlayerEntity.class), getBoundingBox().expand(64), LivingEntity::isAlive);
+		nearby.forEach(i -> ServerPlayNetworking.send(i, new SequenceTriggerPayload(id)));
 	}
 	
 	void setAnimation(byte id)
@@ -298,7 +303,7 @@ public class DeerGodEntity extends BossEntity
 		if(!(source.isOf(DamageTypes.OUT_OF_WORLD) || source.isOf(DamageTypes.GENERIC_KILL)) && dataTracker.get(INTRO_TICKS) > 0)
 			return false;
 		boolean b = super.damage(source, amount);
-		if(!dataTracker.get(CLAW) && b && getHealth() < getMaxHealth() / 2f && getHealth() > 0f)
+		if(!dataTracker.get(CLAW) && b && getHealth() <= getMaxHealth() / 2f && getHealth() > 0f)
 		{
 			setAnimation(PHASE_TRANSITION_ANIM);
 			dataTracker.set(CLAW, true);
