@@ -5,16 +5,14 @@ import absolutelyaya.formidulus.particle.BloodDropParticleEffect;
 import absolutelyaya.formidulus.registries.EntityRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.AnimationState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Items;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -40,6 +38,7 @@ public class DeerGodEntity extends BossEntity
 	static final byte SWING_ANIM = 3;
 	static final byte SLAM_ANIM = 4;
 	static final byte PHASE_TRANSITION_ANIM = 5;
+	static final byte DEATH_ANIM = 6;
 	public AnimationState unsummonedPoseAnimationState = new AnimationState();
 	public AnimationState spawnSequenceAnimationState = new AnimationState();
 	public AnimationState idleAnimationState = new AnimationState();
@@ -51,7 +50,8 @@ public class DeerGodEntity extends BossEntity
 	public AnimationState showClawAnimationState = new AnimationState();
 	public AnimationState showClawWithoutExtrasAnimationState = new AnimationState();
 	public AnimationState phaseTransitionAnimationState = new AnimationState();
-	int animFlags;
+	public AnimationState deathAnimationState = new AnimationState();
+	int animFlags, deathTime;
 	byte lastAnimation;
 	
 	public DeerGodEntity(EntityType<? extends BossEntity> entityType, World world)
@@ -145,7 +145,7 @@ public class DeerGodEntity extends BossEntity
 			if(getCurrentAnimationDuration() >= 18f)
 				setAnimation(IDLE_ANIM);
 		}
-		else if(getCurrentAnimation() == SLAM_ANIM)
+		if(getCurrentAnimation() == SLAM_ANIM)
 		{
 			if(!getAnimationFlag(0) && getCurrentAnimationDuration() >= 2.9f)
 			{
@@ -176,7 +176,7 @@ public class DeerGodEntity extends BossEntity
 				}
 			}
 		}
-		else if(getCurrentAnimation() == PHASE_TRANSITION_ANIM)
+		if(getCurrentAnimation() == PHASE_TRANSITION_ANIM)
 		{
 			if(!hasClaw())
 				dataTracker.set(CLAW, true);
@@ -253,6 +253,7 @@ public class DeerGodEntity extends BossEntity
 			case SWING_ANIM -> swingAnimationState;
 			case SLAM_ANIM -> slamAnimationState;
 			case PHASE_TRANSITION_ANIM -> phaseTransitionAnimationState;
+			case DEATH_ANIM -> deathAnimationState;
 		};
 	}
 	
@@ -308,6 +309,11 @@ public class DeerGodEntity extends BossEntity
 			setAnimation(PHASE_TRANSITION_ANIM);
 			dataTracker.set(CLAW, true);
 		}
+		if(getHealth() <= 0)
+		{
+			setAnimation(DEATH_ANIM);
+			triggerMonologueSequence(SequenceTriggerPayload.DEATH_SEQUENCE);
+		}
 		return b;
 	}
 	
@@ -318,11 +324,39 @@ public class DeerGodEntity extends BossEntity
 	
 	public boolean shouldApplyClawPose()
 	{
-		return getCurrentAnimation() != PHASE_TRANSITION_ANIM;
+		return getCurrentAnimation() != PHASE_TRANSITION_ANIM && getCurrentAnimation() != DEATH_ANIM;
 	}
 	
 	public boolean shouldShowClawWithoutExtras()
 	{
 		return getCurrentAnimation() == SLAM_ANIM;
+	}
+	
+	@Override
+	protected void updatePostDeath()
+	{
+		if(++deathTime >= 28f * 20 && !getWorld().isClient && !isRemoved()) //death animation is 23.25 seconds long, the sequence takes a bit longer tho
+		{
+			getWorld().sendEntityStatus(this, EntityStatuses.ADD_DEATH_PARTICLES);
+			remove(RemovalReason.KILLED);
+			dropItem(Items.DEAD_BUSH); //TODO: replace with deer skull
+		}
+	}
+	
+	@Override
+	public void handleStatus(byte status)
+	{
+		if(status == EntityStatuses.ADD_DEATH_PARTICLES)
+		{
+			for (int i = 0; i < 160; i++)
+			{
+				Vec3d pos = new Vec3d(getX(), getY(), getZ()).add(new Vec3d((random.nextFloat() - 0.5f) * 2f, random.nextFloat() * 0.75f,
+						(random.nextFloat() - 0.5f) * 4f).rotateY((float)Math.toRadians(-bodyYaw)));
+				Vec3d vel = Vec3d.ZERO.addRandom(random, 0.2f);
+				getWorld().addParticle(new DustParticleEffect(new Vector3f(0f, 0f, 0f), 5f), pos.x, pos.y, pos.z, vel.x, vel.y, vel.z);
+			}
+			return;
+		}
+		super.handleStatus(status);
 	}
 }

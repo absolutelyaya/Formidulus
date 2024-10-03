@@ -329,6 +329,7 @@ public class DeerGodModel extends SinglePartEntityModel<DeerGodEntity>
 		updateAnimation(entity.swingAnimationState, DeerGodAnimations.lanternSideSwing, ageInTicks);
 		updateAnimation(entity.slamAnimationState, DeerGodAnimations.lanternSlam, ageInTicks);
 		updateAnimation(entity.phaseTransitionAnimationState, DeerGodAnimations.phaseTransition, ageInTicks);
+		updateAnimation(entity.deathAnimationState, DeerGodAnimations.death, ageInTicks);
 		
 		if(entity.shouldApplyLampArmPose())
 		{

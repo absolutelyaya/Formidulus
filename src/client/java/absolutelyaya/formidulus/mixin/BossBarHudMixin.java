@@ -60,9 +60,11 @@ public abstract class BossBarHudMixin
 				}
 				context.drawTexture(TEXTURE, -91, y - 9, 0, 0, 182, 9, 182, 27);
 				matrices.push();
-				if(shake > 1f)
+				if(shake > 1f && bar.getPercent() < 0.5f)
 					matrices.translate((RANDOM.nextFloat() - 0.5f) * shake, (RANDOM.nextFloat() - 0.5f) * shake, 0f);
 				context.drawTexture(TEXTURE, -84, y - 9, 7, 9, Math.round(168 * Math.min(bar.getPercent() * 2f, 1f)), 9, 182, 27);
+				if(shake > 1f)
+					matrices.translate((RANDOM.nextFloat() - 0.5f) * shake, (RANDOM.nextFloat() - 0.5f) * shake, 0f);
 				context.drawTexture(TEXTURE, -84, y - 9, 7, 18, Math.round(168 * (bar.getPercent() * 2f - 1f)), 9, 182, 27);
 				matrices.pop();
 				matrices.pop();

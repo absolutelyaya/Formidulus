@@ -1,4 +1,5 @@
 {
-  "entity.formidulus.deer_god": "deer",
-  "entity.formidulus.irrlicht": "Scintilla vitae"
+  "entity.formidulus.deer_god": "Cervus Cruoris",
+  "entity.formidulus.deer_follower": "Cruoris Servus",
+  "entity.formidulus.irrlicht": "Scintilla Vitae"
 }

@@ -42,7 +42,7 @@ public class ClientPacketHandler
 				case SequenceTriggerPayload.DEATH_SEQUENCE:
 				{
 					TitleHUD.queueTitle(TitleHUD.makeTextObject("SATIS!").color(0) //ENOUGH!
-												.jitter(true).font(FormidulusClient.FONT).delay(5f).typeSpeed(40f).displayDuration(4f));
+												.jitter(true).font(FormidulusClient.FONT).delay(1f).typeSpeed(40f).displayDuration(4f));
 					TitleHUD.queueTitle(TitleHUD.makeTextObject("Vas hoc nimis fragilis est...") //This vessel is too fragile.
 												.jitter(true).font(FormidulusClient.FONT).typeSpeed(30f).displayDuration(5f));
 					TitleHUD.queueTitle(TitleHUD.makeTextObject("Vultus bonus, sed non aptus ad bellum.") //Good looking, but not fit for war.
