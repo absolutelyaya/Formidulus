@@ -1,16 +1,18 @@
 package absolutelyaya.formidulus.entities;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public class IrrlichtEntity extends MobEntity
 {
@@ -28,8 +30,14 @@ public class IrrlichtEntity extends MobEntity
 	public void tick()
 	{
 		super.tick();
-		if(getWorld().isClient)
+		if(isDead() || isRemoved())
 			return;
+		if(getWorld().isClient)
+		{
+			if(random.nextFloat() < 0.1f)
+				getWorld().addParticle(ParticleTypes.SMOKE, getX(), getY() + getHeight(), getZ(), 0, 0, 0);
+			return;
+		}
 		float targetDistance = Float.MAX_VALUE;
 		LivingEntity target = null;
 		if(targetCheckTimer-- <= 0)
@@ -55,10 +63,14 @@ public class IrrlichtEntity extends MobEntity
 		if(getTarget() != null && getPos().distanceTo(getTarget().getPos().add(0f, 1f, 0f)) < 0.05f)
 		{
 			getTarget().setFireTicks(getTarget().getFireTicks() + 60);
+			getWorld().sendEntityStatus(this, EntityStatuses.ADD_DEATH_PARTICLES);
 			remove(RemovalReason.KILLED);
 		}
 		if(lifetime-- <= 0)
+		{
+			getWorld().sendEntityStatus(this, EntityStatuses.ADD_DEATH_PARTICLES);
 			remove(RemovalReason.KILLED);
+		}
 	}
 	
 	public void setLifetime(int lifetime)
@@ -78,16 +90,32 @@ public class IrrlichtEntity extends MobEntity
 	
 	}
 	
+	@Nullable
 	@Override
-	public void onRemoved()
+	protected SoundEvent getDeathSound()
 	{
-		for (int i = 0; i < 5; i++)
+		return SoundEvents.BLOCK_FIRE_EXTINGUISH;
+	}
+	
+	@Nullable
+	@Override
+	protected SoundEvent getAmbientSound()
+	{
+		return SoundEvents.BLOCK_FIRE_AMBIENT;
+	}
+	
+	@Override
+	public void handleStatus(byte status)
+	{
+		if(status == EntityStatuses.ADD_DEATH_PARTICLES)
 		{
-			Vec3d vel = Vec3d.ZERO.addRandom(random, 0.1f);
-			getWorld().addParticle(ParticleTypes.FLAME, getX(), getY(), getZ(), vel.x, vel.y, vel.z);
+			for (int i = 0; i < 5; i++)
+			{
+				Vec3d vel = Vec3d.ZERO.addRandom(random, 0.1f);
+				getWorld().addParticle(ParticleTypes.FLAME, getX(), getY(), getZ(), vel.x, vel.y, vel.z);
+			}
+			return;
 		}
-		playSound(SoundEvents.BLOCK_FIRE_EXTINGUISH);
-		//TODO: this only works sometimes ?
-		super.onRemoved();
+		super.handleStatus(status);
 	}
 }
