@@ -21,7 +21,6 @@ public class FormidulusClient implements ClientModInitializer
 {
 	public static final EntityModelLayer DEER_GOD_LAYER = new EntityModelLayer(Formidulus.identifier("deer_god"), "deer_god");
 	public static final EntityModelLayer IRRLICHT_LAYER = new EntityModelLayer(Formidulus.identifier("irrlicht"), "irrlicht");
-	public static final Identifier FONT = Identifier.of("illageralt");
 	
 	@Override
 	public void onInitializeClient()

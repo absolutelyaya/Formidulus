@@ -1,13 +1,10 @@
 package absolutelyaya.formidulus.entities;
 
-import com.chocohead.mm.api.ClassTinkerers;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.boss.ServerBossBar;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -17,26 +14,22 @@ import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class BossEntity extends HostileEntity
+public abstract class BossEntity extends AnimatedHostileEntity
 {
 	protected ServerBossBar bossBar;
 	boolean wasBossbarVisible;
 	
-	protected BossEntity(EntityType<? extends HostileEntity> entityType, World world)
+	protected BossEntity(EntityType<? extends AnimatedHostileEntity> entityType, World world)
 	{
 		super(entityType, world);
 	}
 	
-	@Override
-	protected void initDataTracker(DataTracker.Builder builder)
-	{
-		super.initDataTracker(builder);
-	}
-	
 	protected ServerBossBar initBossBar()
 	{
-		return new ServerBossBar(getDisplayName(), BossBar.Color.RED, ClassTinkerers.getEnum(BossBar.Style.class, "DEER"));
+		return new ServerBossBar(getDisplayName(), BossBar.Color.RED, getBossBarStyle());
 	}
+	
+	abstract BossBar.Style getBossBarStyle();
 	
 	@Nullable
 	@Override
@@ -99,4 +92,6 @@ public class BossEntity extends HostileEntity
 	{
 		return true;
 	}
+	
+	abstract boolean isNotInSequence();
 }

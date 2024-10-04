@@ -18,7 +18,10 @@ public class EntityRegistry
 	
 	public static void register()
 	{
-		FabricDefaultAttributeRegistry.register(DEER_GOD, DeerGodEntity.createMobAttributes().add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1));
-		FabricDefaultAttributeRegistry.register(IRRLICHT, IrrlichtEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 1));
+		FabricDefaultAttributeRegistry.register(DEER_GOD, DeerGodEntity.createMobAttributes()
+																  .add(EntityAttributes.GENERIC_MAX_HEALTH, 200)
+																  .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1));
+		FabricDefaultAttributeRegistry.register(IRRLICHT, IrrlichtEntity.createMobAttributes()
+																  .add(EntityAttributes.GENERIC_MAX_HEALTH, 1));
 	}
 }

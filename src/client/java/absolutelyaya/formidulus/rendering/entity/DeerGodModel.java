@@ -328,6 +328,7 @@ public class DeerGodModel extends SinglePartEntityModel<DeerGodEntity>
 		updateAnimation(entity.idleAnimationState, DeerGodAnimations.idle, ageInTicks);
 		updateAnimation(entity.swingAnimationState, DeerGodAnimations.lanternSideSwing, ageInTicks);
 		updateAnimation(entity.slamAnimationState, DeerGodAnimations.lanternSlam, ageInTicks);
+		updateAnimation(entity.summonLanternAnimationState, DeerGodAnimations.summonLantern, ageInTicks);
 		updateAnimation(entity.phaseTransitionAnimationState, DeerGodAnimations.phaseTransition, ageInTicks);
 		updateAnimation(entity.deathAnimationState, DeerGodAnimations.death, ageInTicks);
 		

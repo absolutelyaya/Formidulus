@@ -69,17 +69,12 @@ public abstract class BossBarHudMixin
 				matrices.pop();
 				matrices.pop();
 				Text t = bar.getName();
-				context.drawText(client.textRenderer, t.getWithStyle(Style.EMPTY.withFont(FormidulusClient.FONT)).getFirst(),
-						center - client.textRenderer.getWidth(t) / 2 - 1, y - 9, 0xffff0000, false);
-				context.drawText(client.textRenderer, t.getWithStyle(Style.EMPTY.withFont(FormidulusClient.FONT)).getFirst(),
-						center - client.textRenderer.getWidth(t) / 2 + 1, y - 9, 0xffff0000, false);
-				context.drawText(client.textRenderer, t.getWithStyle(Style.EMPTY.withFont(FormidulusClient.FONT)).getFirst(),
-						center - client.textRenderer.getWidth(t) / 2, y - 9 - 1, 0xffff0000, false);
-				context.drawText(client.textRenderer, t.getWithStyle(Style.EMPTY.withFont(FormidulusClient.FONT)).getFirst(),
-						center - client.textRenderer.getWidth(t) / 2, y - 9 + 1, 0xffff0000, false);
+				context.drawText(client.textRenderer, t, center - client.textRenderer.getWidth(t) / 2 - 1, y - 9, 0xffff0000, false);
+				context.drawText(client.textRenderer, t, center - client.textRenderer.getWidth(t) / 2 + 1, y - 9, 0xffff0000, false);
+				context.drawText(client.textRenderer, t, center - client.textRenderer.getWidth(t) / 2, y - 9 - 1, 0xffff0000, false);
+				context.drawText(client.textRenderer, t, center - client.textRenderer.getWidth(t) / 2, y - 9 + 1, 0xffff0000, false);
 				
-				context.drawText(client.textRenderer, t.getWithStyle(Style.EMPTY.withFont(FormidulusClient.FONT)).getFirst(),
-						center - client.textRenderer.getWidth(t) / 2, y - 9, 0xff000000, false);
+				context.drawText(client.textRenderer, t, center - client.textRenderer.getWidth(t) / 2, y - 9, 0xff000000, false);
 				y += 19;
 				if(y > context.getScaledWindowHeight() / 3)
 					break;

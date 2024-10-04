@@ -1,5 +1,9 @@
 {
   "entity.formidulus.deer_god": "Cervus Cruoris",
   "entity.formidulus.deer_follower": "Cruoris Servus",
-  "entity.formidulus.irrlicht": "Scintilla Vitae"
+  "entity.formidulus.irrlicht": "Scintilla Vitae",
+
+  "death.attack.lantern": "%s was shown the Light",
+  "death.attack.lantern.item": "%1$s was shown the Light by %3$s",
+  "death.attack.lantern.player": "%1$s was shown the Light whilst fighting %2$s"
 }

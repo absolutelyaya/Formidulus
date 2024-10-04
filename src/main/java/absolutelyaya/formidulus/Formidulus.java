@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 public class Formidulus implements ModInitializer
 {
+	public static final Identifier FONT = Identifier.of("illageralt");
 	public static final String MOD_ID = "formidulus";
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
