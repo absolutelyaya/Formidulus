@@ -13,6 +13,8 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
@@ -30,6 +32,7 @@ public class DeerGodEntity extends BossEntity
 	static final TrackedData<Byte> ANIMATION = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BYTE);
 	static final TrackedData<Integer> ANIMATION_START = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	static final TrackedData<Integer> INTRO_TICKS = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	static final TrackedData<Boolean> LANTERN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Boolean> CLAW = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Vector3f> ORIGIN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
 	
@@ -89,6 +92,7 @@ public class DeerGodEntity extends BossEntity
 		builder.add(ANIMATION, UNSUMMONED_POSE);
 		builder.add(ANIMATION_START, 0);
 		builder.add(INTRO_TICKS, 400);
+		builder.add(LANTERN, true);
 		builder.add(CLAW, false);
 		builder.add(ORIGIN, getPos().toVector3f());
 	}
@@ -309,7 +313,7 @@ public class DeerGodEntity extends BossEntity
 	
 	public boolean hasLantern()
 	{
-		return true;
+		return dataTracker.get(LANTERN);
 	}
 	
 	public boolean hasClaw()
@@ -381,5 +385,46 @@ public class DeerGodEntity extends BossEntity
 			return;
 		}
 		super.handleStatus(status);
+	}
+	
+	@Override
+	public void readCustomDataFromNbt(NbtCompound nbt)
+	{
+		super.readCustomDataFromNbt(nbt);
+		if(nbt.contains("Summoned", NbtElement.BYTE_TYPE))
+		{
+			dataTracker.set(SUMMONED, nbt.getBoolean("Summoned"));
+			setAnimation(IDLE_ANIM);
+			dataTracker.set(ORIGIN, getPos().toVector3f());
+		}
+		if(nbt.contains("Claw", NbtElement.BYTE_TYPE))
+			dataTracker.set(CLAW, nbt.getBoolean("Claw"));
+		if(nbt.contains("Lantern", NbtElement.BYTE_TYPE))
+			dataTracker.set(LANTERN, nbt.getBoolean("Lantern"));
+		if(nbt.contains("Origin", NbtElement.COMPOUND_TYPE))
+		{
+			NbtCompound origin = nbt.getCompound("Origin");
+			dataTracker.set(ORIGIN, new Vector3f(origin.getFloat("x"), origin.getFloat("y"), origin.getFloat("z")));
+		}
+	}
+	
+	@Override
+	public void writeCustomDataToNbt(NbtCompound nbt)
+	{
+		super.writeCustomDataToNbt(nbt);
+		if(dataTracker.get(SUMMONED))
+		{
+			nbt.putBoolean("Summoned", true);
+			NbtCompound origin = new NbtCompound();
+			Vector3f originPos = dataTracker.get(ORIGIN);
+			origin.putFloat("x", originPos.x);
+			origin.putFloat("y", originPos.y);
+			origin.putFloat("z", originPos.z);
+			nbt.put("Origin", origin);
+		}
+		if(dataTracker.get(LANTERN))
+			nbt.putBoolean("Lantern", true);
+		if(dataTracker.get(CLAW))
+			nbt.putBoolean("Claw", true);
 	}
 }
