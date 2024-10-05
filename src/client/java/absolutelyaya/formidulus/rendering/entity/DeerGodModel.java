@@ -70,8 +70,6 @@ public class DeerGodModel extends SinglePartEntityModel<DeerGodEntity>
 	private final ModelPart knife3;
 	private final ModelPart flame;
 	
-	boolean hadClaw;
-	
 	public DeerGodModel(ModelPart root)
 	{
 		this.root = root;
@@ -343,6 +341,10 @@ public class DeerGodModel extends SinglePartEntityModel<DeerGodEntity>
 		boolean claw = entity.hasClaw();
 		brokenArmGore1.hidden = !claw;
 		brokenArmGore2.traverse().forEach(i -> i.hidden = !claw);
+		
+		boolean spine = entity.isSpineVisible();
+		spineBottomEnd.hidden = spineBottom.hidden = spineCenter.hidden = spineTop.hidden = !spine;
+		
 		if(!entity.shouldApplyClawPose())
 			return;
 		if(entity.hasClaw())

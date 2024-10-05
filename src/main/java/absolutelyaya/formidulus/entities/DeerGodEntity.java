@@ -313,6 +313,13 @@ public class DeerGodEntity extends BossEntity
 		return hasClaw() && !(getCurrentAnimation() == PHASE_TRANSITION_ANIM && animDuration < 2f) && getCurrentAnimation() != DEATH_SEQUENCE_ANIM;
 	}
 	
+	public boolean isSpineVisible()
+	{
+		if(getCurrentAnimation() == SPAWN_SEQUENCE_ANIM)
+			return getCurrentAnimationDuration() >= 8.7f;
+		return true;
+	}
+	
 	public boolean hasLantern()
 	{
 		return dataTracker.get(LANTERN);
