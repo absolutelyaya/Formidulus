@@ -39,7 +39,6 @@ import java.util.List;
 public class DeerGodEntity extends BossEntity
 {
 	static final TrackedData<Boolean> SUMMONED = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-	static final TrackedData<Integer> INTRO_TICKS = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	static final TrackedData<Boolean> LANTERN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Boolean> CLAW = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Vector3f> ORIGIN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
@@ -51,7 +50,7 @@ public class DeerGodEntity extends BossEntity
 	static final byte SWING_ANIM = 4;
 	static final byte SLAM_ANIM = 5;
 	static final byte PHASE_TRANSITION_ANIM = 6;
-	static final byte DEATH_ANIM = 69;
+	static final byte DEATH_SEQUENCE_ANIM = 69;
 	public AnimationState unsummonedPoseAnimationState = new AnimationState();
 	public AnimationState spawnSequenceAnimationState = new AnimationState();
 	public AnimationState idleAnimationState = new AnimationState();
@@ -84,7 +83,6 @@ public class DeerGodEntity extends BossEntity
 	{
 		super.initDataTracker(builder);
 		builder.add(SUMMONED, false);
-		builder.add(INTRO_TICKS, 400);
 		builder.add(LANTERN, true);
 		builder.add(CLAW, false);
 		builder.add(ORIGIN, getPos().toVector3f());
@@ -149,17 +147,6 @@ public class DeerGodEntity extends BossEntity
 			triggerMonologueSequence(SequenceTriggerPayload.SPAWN_SEQUENCE);
 			dataTracker.set(SUMMONED, true);
 		}
-		if(dataTracker.get(INTRO_TICKS) > 0)
-			dataTracker.set(INTRO_TICKS, dataTracker.get(INTRO_TICKS) - 1);
-		
-		//if(age == 300)
-		//	setAnimation(SWING_ANIM);
-		//
-		//if(age == 600)
-		//	setAnimation(SLAM_ANIM);
-		//
-		//if(age == 900)
-		//	setAnimation(IDLE_ANIM);
 	}
 	
 	@Override
@@ -223,6 +210,8 @@ public class DeerGodEntity extends BossEntity
 		{
 			if(!hasClaw())
 				setHasClaw(true);
+			if(hasLantern())
+				setHasLantern(false);
 			if(!getAnimationFlag(0) && getCurrentAnimationDuration() >= 0f)
 			{
 				setAnimationFlag(0, true);
@@ -293,20 +282,20 @@ public class DeerGodEntity extends BossEntity
 			case SLAM_ANIM -> slamAnimationState;
 			case SUMMON_LANTERN_ANIM -> summonLanternAnimationState;
 			case PHASE_TRANSITION_ANIM -> phaseTransitionAnimationState;
-			case DEATH_ANIM -> deathAnimationState;
+			case DEATH_SEQUENCE_ANIM -> deathAnimationState;
 		};
 	}
 	
 	@Override
 	protected boolean shouldTickAttackCooldown()
 	{
-		return super.shouldTickAttackCooldown() && isNotInSequence();
+		return super.shouldTickAttackCooldown() && !isInSequence();
 	}
 	
-	public boolean isNotInSequence()
+	public boolean isInSequence()
 	{
 		byte anim = getCurrentAnimation();
-		return anim != SPAWN_SEQUENCE_ANIM && anim != PHASE_TRANSITION_ANIM && anim != DEATH_ANIM;
+		return anim == SPAWN_SEQUENCE_ANIM || anim == PHASE_TRANSITION_ANIM || anim == DEATH_SEQUENCE_ANIM;
 	}
 	
 	@Override
@@ -321,7 +310,7 @@ public class DeerGodEntity extends BossEntity
 		float animDuration = getCurrentAnimationDuration();
 		if(getCurrentAnimation() == SPAWN_SEQUENCE_ANIM)
 			return animDuration > 2f && animDuration < 8.5f;
-		return hasClaw() && !(getCurrentAnimation() == PHASE_TRANSITION_ANIM && animDuration < 2f) && getCurrentAnimation() != DEATH_ANIM;
+		return hasClaw() && !(getCurrentAnimation() == PHASE_TRANSITION_ANIM && animDuration < 2f) && getCurrentAnimation() != DEATH_SEQUENCE_ANIM;
 	}
 	
 	public boolean hasLantern()
@@ -351,7 +340,7 @@ public class DeerGodEntity extends BossEntity
 	
 	public boolean shouldApplyClawPose()
 	{
-		return getCurrentAnimation() != PHASE_TRANSITION_ANIM && getCurrentAnimation() != DEATH_ANIM;
+		return getCurrentAnimation() != PHASE_TRANSITION_ANIM && getCurrentAnimation() != DEATH_SEQUENCE_ANIM;
 	}
 	
 	public boolean shouldShowClawWithoutExtras()
@@ -360,9 +349,17 @@ public class DeerGodEntity extends BossEntity
 	}
 	
 	@Override
+	public boolean isInvulnerable()
+	{
+		return super.isInvulnerable();
+	}
+	
+	@Override
 	public boolean damage(DamageSource source, float amount)
 	{
-		if(!(source.isOf(DamageTypes.OUT_OF_WORLD) || source.isOf(DamageTypes.GENERIC_KILL)) && dataTracker.get(INTRO_TICKS) > 0)
+		if(source.isOf(DamageTypes.OUT_OF_WORLD) || source.isOf(DamageTypes.GENERIC_KILL))
+			return super.damage(source, amount);
+		if(isInSequence())
 			return false;
 		boolean b = super.damage(source, amount);
 		if(getWorld().isClient)
@@ -371,11 +368,12 @@ public class DeerGodEntity extends BossEntity
 		{
 			setAnimation(PHASE_TRANSITION_ANIM);
 			dataTracker.set(CLAW, true);
+			setHealth(getMaxHealth() / 2f);
 			cancelActiveAnimatedAttackGoals();
 		}
 		if(getHealth() <= 0)
 		{
-			setAnimation(DEATH_ANIM);
+			setAnimation(DEATH_SEQUENCE_ANIM);
 			triggerMonologueSequence(SequenceTriggerPayload.DEATH_SEQUENCE);
 			if(bossBar != null)
 				bossBar.setPercent(0f);
@@ -387,6 +385,11 @@ public class DeerGodEntity extends BossEntity
 	@Override
 	protected void updatePostDeath()
 	{
+		if(getRecentDamageSource() instanceof DamageSource source && (source.isOf(DamageTypes.GENERIC_KILL) || source.isOf(DamageTypes.OUT_OF_WORLD)))
+		{
+			getWorld().sendEntityStatus(this, EntityStatuses.ADD_DEATH_PARTICLES);
+			remove(RemovalReason.KILLED);
+		}
 		if(++deathTime >= 28f * 20 && !getWorld().isClient && !isRemoved()) //death animation is 23.25 seconds long, the sequence takes a bit longer tho
 		{
 			getWorld().sendEntityStatus(this, EntityStatuses.ADD_DEATH_PARTICLES);
@@ -463,7 +466,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean canStart()
 		{
-			return mob.isNotInSequence() && mob.hasLantern() && super.canStart() && mob.distanceTo(mob.getTarget()) < 6f;
+			return !mob.isInSequence() && mob.hasLantern() && super.canStart() && mob.distanceTo(mob.getTarget()) < 6f;
 		}
 		
 		@Override
@@ -512,7 +515,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean canStart()
 		{
-			return mob.isNotInSequence() && mob.hasLantern() && super.canStart() && mob.distanceTo(mob.getTarget()) < 10f;
+			return !mob.isInSequence() && mob.hasLantern() && super.canStart() && mob.distanceTo(mob.getTarget()) < 10f;
 		}
 		
 		@Override
@@ -581,7 +584,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean canStart()
 		{
-			return mob.isNotInSequence() && !mob.hasLantern() && super.canStart();
+			return !mob.isInSequence() && !mob.hasLantern() && super.canStart();
 		}
 		
 		@Override

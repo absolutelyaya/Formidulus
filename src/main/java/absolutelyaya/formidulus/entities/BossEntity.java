@@ -93,5 +93,5 @@ public abstract class BossEntity extends AnimatedHostileEntity
 		return true;
 	}
 	
-	abstract boolean isNotInSequence();
+	abstract boolean isInSequence();
 }
