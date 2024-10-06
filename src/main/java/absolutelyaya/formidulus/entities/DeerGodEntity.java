@@ -6,6 +6,7 @@ import absolutelyaya.formidulus.entities.goal.AnimatedAttackGoal;
 import absolutelyaya.formidulus.network.SequenceTriggerPayload;
 import absolutelyaya.formidulus.particle.BloodDropParticleEffect;
 import absolutelyaya.formidulus.registries.EntityRegistry;
+import absolutelyaya.formidulus.registries.StatusEffectRegistry;
 import com.chocohead.mm.api.ClassTinkerers;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.Blocks;
@@ -18,6 +19,7 @@ import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
+import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
@@ -25,6 +27,7 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -171,6 +174,19 @@ public class DeerGodEntity extends BossEntity
 					Vec3d pos = new Vec3d(getX(), getY(), getZ()).add((random.nextFloat() - 0.5f) * 2.2f, random.nextFloat() * 4.5f * darkness / (8.7 - 6.5), (random.nextFloat() - 0.5f) * 2.2f);
 					getWorld().addParticle(new DustParticleEffect(new Vector3f(0f, 0f, 0f), 5f), pos.x, pos.y, pos.z, 0f, 0f, 0f);
 				}
+			}
+			if(getCurrentAnimationDuration() < 16f)
+			{
+				getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), getBoundingBox().expand(16), i -> true)
+						.forEach(p -> p.addStatusEffect(new StatusEffectInstance(StatusEffectRegistry.REVERENCE, 20, 0, true, true)));
+			}
+			if(getCurrentAnimationDuration() < 18f)
+			{
+				getWorld().getOtherEntities(this, getBoundingBox().expand(32), i -> !i.isPlayer())
+						.forEach(e -> {
+							if(!(e instanceof PlayerEntity) && e instanceof LivingEntity living)
+								living.addStatusEffect(new StatusEffectInstance(StatusEffectRegistry.REVERENCE, 40, 0, false, true));
+						});
 			}
 			if(getCurrentAnimationDuration() >= 18f)
 				setAnimation(IDLE_ANIM);

@@ -1,7 +1,6 @@
 package absolutelyaya.formidulus.mixin;
 
 import absolutelyaya.formidulus.Formidulus;
-import absolutelyaya.formidulus.FormidulusClient;
 import absolutelyaya.formidulus.accessor.BossBarAccessor;
 import com.chocohead.mm.api.ClassTinkerers;
 import net.minecraft.client.MinecraftClient;
@@ -10,7 +9,6 @@ import net.minecraft.client.gui.hud.BossBarHud;
 import net.minecraft.client.gui.hud.ClientBossBar;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.boss.BossBar;
-import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
@@ -45,18 +43,18 @@ public abstract class BossBarHudMixin
 		
 		MatrixStack matrices = context.getMatrices();
 		int center = context.getScaledWindowWidth() / 2;
-		int x = center, y = 12;
+		int y = 12;
 		for (ClientBossBar bar : bossBars.values())
 		{
 			if(bar.getStyle().equals(deerStyle))
 			{
 				matrices.push();
-				matrices.translate(x, 9f, 0f);
+				matrices.translate(center, 9f, 0f);
 				float shake = 0;
 				if(bar instanceof BossBarAccessor barr)
 				{
 					barr.formidulus$update(0.02f);
-					shake = barr.formidulus$getDeltaPercent() * 50f;
+					shake = barr.formidulus$getDeltaPercent() * 25f;
 				}
 				context.drawTexture(TEXTURE, -91, y - 9, 0, 0, 182, 9, 182, 27);
 				matrices.push();
@@ -75,12 +73,12 @@ public abstract class BossBarHudMixin
 				context.drawText(client.textRenderer, t, center - client.textRenderer.getWidth(t) / 2, y - 9 + 1, 0xffff0000, false);
 				
 				context.drawText(client.textRenderer, t, center - client.textRenderer.getWidth(t) / 2, y - 9, 0xff000000, false);
-				y += 19;
+				y += 21;
 				if(y > context.getScaledWindowHeight() / 3)
 					break;
 				continue;
 			}
-			renderBossBar(context, x - 91, y, bar);
+			renderBossBar(context, center - 91, y, bar);
 			Text t = bar.getName();
 			context.drawTextWithShadow(client.textRenderer, t, center - client.textRenderer.getWidth(t) / 2, y - 9, 0xffffffff);
 			y += 10 + client.textRenderer.fontHeight;

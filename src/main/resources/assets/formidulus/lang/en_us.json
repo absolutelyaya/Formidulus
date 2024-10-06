@@ -5,5 +5,7 @@
 
   "death.attack.lantern": "%s was shown the Light",
   "death.attack.lantern.item": "%1$s was shown the Light by %3$s",
-  "death.attack.lantern.player": "%1$s was shown the Light whilst fighting %2$s"
+  "death.attack.lantern.player": "%1$s was shown the Light whilst fighting %2$s",
+
+  "effect.formidulus.reverence": "Unwilling Reverence"
 }

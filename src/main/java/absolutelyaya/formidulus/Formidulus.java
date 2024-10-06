@@ -3,6 +3,7 @@ package absolutelyaya.formidulus;
 import absolutelyaya.formidulus.registries.EntityRegistry;
 import absolutelyaya.formidulus.registries.PacketRegistry;
 import absolutelyaya.formidulus.registries.ParticleRegistry;
+import absolutelyaya.formidulus.registries.StatusEffectRegistry;
 import net.fabricmc.api.ModInitializer;
 
 import net.minecraft.util.Identifier;
@@ -22,6 +23,7 @@ public class Formidulus implements ModInitializer
 		ParticleRegistry.register();
 		EntityRegistry.register();
 		PacketRegistry.register();
+		StatusEffectRegistry.register();
 	}
 	
 	public static Identifier identifier(String path)
