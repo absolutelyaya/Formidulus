@@ -3,6 +3,7 @@
   "package": "absolutelyaya.formidulus.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "AbstractInventoryScreenMixin",
     "InGameHudMixin",
     "MouseMixin"
   ],
