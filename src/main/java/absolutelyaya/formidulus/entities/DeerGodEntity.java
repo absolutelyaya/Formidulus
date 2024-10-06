@@ -27,7 +27,6 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
@@ -178,7 +177,7 @@ public class DeerGodEntity extends BossEntity
 			if(getCurrentAnimationDuration() < 16f)
 			{
 				getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), getBoundingBox().expand(16), i -> true)
-						.forEach(p -> p.addStatusEffect(new StatusEffectInstance(StatusEffectRegistry.REVERENCE, 20, 0, true, true)));
+						.forEach(p -> p.addStatusEffect(new StatusEffectInstance(StatusEffectRegistry.REVERENCE, 20, 0, false, false)));
 			}
 			if(getCurrentAnimationDuration() < 18f)
 			{
@@ -276,6 +275,17 @@ public class DeerGodEntity extends BossEntity
 		//	Vec3d offset = new Vec3d(getX(), getY(), getZ()).add((random.nextFloat() - 0.5f) * 2f, random.nextFloat() * 4.5f, (random.nextFloat() - 0.5f) * 2f);
 		//	getWorld().addParticle(new DustParticleEffect(new Vector3f(0f, 0f, 0f), 5f), offset.x, offset.y, offset.z, 0f, 0f, 0f);
 		//}
+	}
+	
+	@Override
+	public Vec3d getFocusPos()
+	{
+		if(getCurrentAnimation() == SPAWN_SEQUENCE_ANIM && getCurrentAnimationDuration() <= 8.5f)
+		{
+			float height = getCurrentAnimationDuration() - 6.5f;
+			return getPos().add(0, Math.max(height / 2f, 0) * (getStandingEyeHeight() - 0.5f), 0);
+		}
+		return super.getFocusPos();
 	}
 	
 	void triggerMonologueSequence(byte id)

@@ -58,7 +58,7 @@ public abstract class MouseMixin
 				BossEntity closest = world.getClosestEntity(targets, TargetPredicate.createNonAttackable(), p, p.getX(), p.getY(), p.getZ());
 				if(closest == null || closest.distanceTo(p) > 16)
 					return;
-				Vector2f targetRot = RotationUtil.getRotationTowards(p.getEyePos(), closest.getEyePos().subtract(0f, 0.5f, 0f));
+				Vector2f targetRot = RotationUtil.getRotationTowards(p.getEyePos(), closest.getFocusPos());
 				Vector2f rot = new Vector2f(p.getYaw(), p.getPitch());
 				Vector2f diff = new Vector2f(targetRot).sub(rot);
 				diff = new Vector2f(MathHelper.wrapDegrees(diff.x), MathHelper.wrapDegrees(diff.y));

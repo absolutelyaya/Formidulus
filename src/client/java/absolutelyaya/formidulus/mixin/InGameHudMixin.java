@@ -26,7 +26,7 @@ public class InGameHudMixin
 		if(MinecraftClient.getInstance().player instanceof LivingEntity living && living.hasStatusEffect(StatusEffectRegistry.REVERENCE))
 			cinematicBars = Math.min(cinematicBars + tickCounter.getTickDelta(true) / 20f, 1f);
 		else if(cinematicBars > 0)
-			cinematicBars = Math.max(cinematicBars - tickCounter.getTickDelta(true), 0f);
+			cinematicBars = Math.max(cinematicBars - tickCounter.getTickDelta(true) / 5f, 0f);
 		
 		if(cinematicBars > 0f)
 		{

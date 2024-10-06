@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.TypeFilter;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
@@ -94,4 +95,9 @@ public abstract class BossEntity extends AnimatedHostileEntity
 	}
 	
 	abstract boolean isInSequence();
+	
+	public Vec3d getFocusPos()
+	{
+		return getEyePos().subtract(0f, 0.5f, 0f);
+	}
 }
