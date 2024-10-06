@@ -21,6 +21,9 @@
 		"client": [
 			"absolutelyaya.formidulus.FormidulusClient"
 		],
+		"fabric-datagen": [
+			"absolutelyaya.formidulus.datagen.DataGenerator"
+		],
 		"mm:early_risers": [
 			"absolutelyaya.formidulus.EarlyRiser"
 		]

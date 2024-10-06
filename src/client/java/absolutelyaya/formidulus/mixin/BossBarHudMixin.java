@@ -64,6 +64,13 @@ public abstract class BossBarHudMixin
 				if(shake > 1f)
 					matrices.translate((RANDOM.nextFloat() - 0.5f) * shake, (RANDOM.nextFloat() - 0.5f) * shake, 0f);
 				context.drawTexture(TEXTURE, -84, y - 9, 7, 18, Math.round(168 * (bar.getPercent() * 2f - 1f)), 9, 182, 27);
+				// nice idea, doesn't actually look that good tho
+				//if(bar.getPercent() > 0.5f)
+				//{
+				//	int width = Math.round(84 * (bar.getPercent() * 2f - 1f));
+				//	context.drawTexture(TEXTURE, -width, y - 9, 7, 18, width, 9, 182, 27);
+				//	context.drawTexture(TEXTURE, 0, y - 9, 91 + 84 - width, 18, width, 9, 182, 27);
+				//}
 				matrices.pop();
 				matrices.pop();
 				Text t = bar.getName();

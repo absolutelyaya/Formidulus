@@ -1,0 +1,8 @@
+{
+  "death.attack.lantern": "%s was shown the Light",
+  "death.attack.lantern.item": "%1s was shown the Light by %2$s using %3$s",
+  "death.attack.lantern.player": "%1s was shown the Light whilst fighting %2$s",
+  "effect.formidulus.reverence": "Unwilling Reverence",
+  "entity.formidulus.deer_god": "Cervus Cruoris",
+  "entity.formidulus.irrlicht": "Scintilla Vitae"
+}
