@@ -3,6 +3,7 @@ package absolutelyaya.formidulus.entities;
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.entities.damage.DamageSources;
 import absolutelyaya.formidulus.entities.goal.AnimatedAttackGoal;
+import absolutelyaya.formidulus.entities.goal.InterruptableGoal;
 import absolutelyaya.formidulus.network.SequenceTriggerPayload;
 import absolutelyaya.formidulus.particle.BloodDropParticleEffect;
 import absolutelyaya.formidulus.registries.EntityRegistry;
@@ -13,7 +14,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
-import net.minecraft.entity.ai.goal.WanderAroundGoal;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
@@ -37,6 +37,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
 
+import java.util.EnumSet;
 import java.util.List;
 
 public class DeerGodEntity extends BossEntity
@@ -46,6 +47,7 @@ public class DeerGodEntity extends BossEntity
 	static final TrackedData<Boolean> CLAW = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Vector3f> ORIGIN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
 	static final TrackedData<Integer> TELEPORT_TIMER = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	static final TrackedData<Integer> TELEPORT_COOLDOWN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	static final TrackedData<Vector3f> NEXT_TELEPORT_DEST = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
 	
 	static final byte UNSUMMONED_POSE = 0;
@@ -96,6 +98,7 @@ public class DeerGodEntity extends BossEntity
 		builder.add(CLAW, false);
 		builder.add(ORIGIN, getPos().toVector3f());
 		builder.add(TELEPORT_TIMER, Integer.MIN_VALUE);
+		builder.add(TELEPORT_COOLDOWN, 200);
 		builder.add(NEXT_TELEPORT_DEST, getPos().toVector3f());
 	}
 	
@@ -114,7 +117,8 @@ public class DeerGodEntity extends BossEntity
 		goalSelector.add(0, new SummonLanternGoal(this));
 		goalSelector.add(1, new LanternSwingGoal(this));
 		goalSelector.add(1, new LanternSlamGoal(this));
-		goalSelector.add(0, new WanderAroundGoal(this, 0.3f, 100));
+		goalSelector.add(2, new TeleportRandomlyGoal(this));
+		goalSelector.add(3, new ApproachTargetGoal(this));
 		
 		targetSelector.add(0, new ActiveTargetGoal<>(this, PlayerEntity.class, false));
 	}
@@ -166,7 +170,10 @@ public class DeerGodEntity extends BossEntity
 		}
 		if(getWorld().isClient)
 			return;
-		
+		if(dataTracker.get(ORIGIN).equals(new Vector3f()))
+			dataTracker.set(ORIGIN, getPos().toVector3f());
+		if(dataTracker.get(TELEPORT_COOLDOWN) > 0)
+			dataTracker.set(TELEPORT_COOLDOWN, dataTracker.get(TELEPORT_COOLDOWN) - 1);
 		dataTracker.set(TELEPORT_TIMER, dataTracker.get(TELEPORT_TIMER) - 1);
 	}
 	
@@ -432,7 +439,7 @@ public class DeerGodEntity extends BossEntity
 			setAnimation(PHASE_TRANSITION_ANIM);
 			dataTracker.set(CLAW, true);
 			setHealth(getMaxHealth() / 2f);
-			cancelActiveAnimatedAttackGoals();
+			cancelActiveGoals();
 		}
 		if(getHealth() <= 0)
 		{
@@ -445,9 +452,16 @@ public class DeerGodEntity extends BossEntity
 				killer = player;
 			if(killer == null && source.getSource() instanceof PlayerEntity player)
 				killer = player;
-			cancelActiveAnimatedAttackGoals();
+			cancelActiveGoals();
 		}
 		return b;
+	}
+	
+	@Override
+	protected void cancelActiveGoals()
+	{
+		super.cancelActiveGoals();
+		dataTracker.set(TELEPORT_TIMER, Integer.MIN_VALUE);
 	}
 	
 	@Override
@@ -510,6 +524,21 @@ public class DeerGodEntity extends BossEntity
 		return MathHelper.clamp(1f - (Math.abs(getTeleportTimer()) / 40f), 0f, 1f);
 	}
 	
+	public boolean isReadyToAttack()
+	{
+		return super.isReadyToAttack() && !isInSequence() && getVanishingPercent() == 0f && navigation.isIdle();
+	}
+	
+	public boolean isReadyToTeleport()
+	{
+		return dataTracker.get(TELEPORT_COOLDOWN) <= 0;
+	}
+	
+	public void setTeleportCooldown(int cooldown)
+	{
+		dataTracker.set(TELEPORT_COOLDOWN, cooldown);
+	}
+	
 	@Override
 	public void readCustomDataFromNbt(NbtCompound nbt)
 	{
@@ -518,7 +547,6 @@ public class DeerGodEntity extends BossEntity
 		{
 			dataTracker.set(SUMMONED, nbt.getBoolean("Summoned"));
 			setAnimation(IDLE_ANIM);
-			dataTracker.set(ORIGIN, getPos().toVector3f());
 		}
 		if(nbt.contains("Claw", NbtElement.BYTE_TYPE))
 			dataTracker.set(CLAW, nbt.getBoolean("Claw"));
@@ -561,7 +589,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean canStart()
 		{
-			return !mob.isInSequence() && mob.hasLantern() && super.canStart() && mob.distanceTo(mob.getTarget()) < 6f;
+			return mob.hasLantern() && super.canStart() && mob.distanceTo(mob.getTarget()) < 6f;
 		}
 		
 		@Override
@@ -610,7 +638,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean canStart()
 		{
-			return !mob.isInSequence() && mob.hasLantern() && super.canStart() && mob.distanceTo(mob.getTarget()) < 10f;
+			return mob.hasLantern() && super.canStart() && mob.distanceTo(mob.getTarget()) < 10f;
 		}
 		
 		@Override
@@ -679,7 +707,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean canStart()
 		{
-			return !mob.isInSequence() && !mob.hasLantern() && super.canStart();
+			return !mob.hasLantern() && super.canStart();
 		}
 		
 		@Override
@@ -694,6 +722,110 @@ public class DeerGodEntity extends BossEntity
 		protected int getAttackCooldown()
 		{
 			return 10 + (int)(mob.random.nextFloat() * 5);
+		}
+	}
+	
+	static class ApproachTargetGoal extends InterruptableGoal
+	{
+		final DeerGodEntity mob;
+		int time;
+		boolean failed;
+		
+		public ApproachTargetGoal(DeerGodEntity mob)
+		{
+			this.mob = mob;
+			setControls(EnumSet.of(Control.MOVE, Control.LOOK));
+		}
+		
+		@Override
+		public boolean canStart()
+		{
+			return mob.isReadyToAttack() && mob.dataTracker.get(TELEPORT_TIMER) < -40;
+		}
+		
+		@Override
+		public void start()
+		{
+			super.start();
+			failed = false;
+			time = 0;
+		}
+		
+		@Override
+		public boolean shouldContinue()
+		{
+			return mob.shouldTickAttackCooldown() && mob.isNotInAttackAnimation();
+		}
+		
+		@Override
+		public void tick()
+		{
+			super.tick();
+			if(mob.getTarget() == null || mob.getTarget().isRemoved())
+			{
+				mob.navigation.stop();
+				failed = true;
+				stop();
+				return;
+			}
+			mob.navigation.startMovingTo(mob.getTarget(), 0.3f);
+			mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, mob.getTarget().getEyePos());
+			failed = mob.getPos().distanceTo(new Vec3d(mob.dataTracker.get(ORIGIN))) > 16f || ++time > 200;
+			if(mob.distanceTo(mob.getTarget()) <= 4f || failed)
+			{
+				mob.navigation.stop();
+				stop();
+			}
+		}
+		
+		@Override
+		public void stop()
+		{
+			super.stop();
+			if(failed)
+				mob.setTeleportCooldown(0);
+		}
+	}
+	
+	static class TeleportRandomlyGoal extends InterruptableGoal
+	{
+		final DeerGodEntity mob;
+		Vec3d origin;
+		
+		public TeleportRandomlyGoal(DeerGodEntity mob)
+		{
+			this.mob = mob;
+		}
+		
+		@Override
+		public boolean canStart()
+		{
+			return mob.isReadyToAttack() && mob.isReadyToTeleport();
+		}
+		
+		@Override
+		public void start()
+		{
+			super.start();
+			mob.navigation.stop();
+			origin = new Vec3d(mob.dataTracker.get(ORIGIN));
+			Vec3d dest;
+			boolean success = false;
+			for (int i = 0; i < 8; i++)
+			{
+				dest = origin.add((mob.random.nextFloat() - 0.5) * 2f * 16f, 0f, (mob.random.nextFloat() - 0.5) * 2f * 16f);
+				if(mob.getWorld().isSpaceEmpty(mob.getBoundingBox().offset(mob.getPos().multiply(-1)).offset(dest)))
+				{
+					mob.setNextTeleport(dest, 30 + (int)(mob.random.nextFloat() * 25));
+					mob.navigation.stop();
+					success = true;
+					break;
+				}
+			}
+			if(!success)
+				Formidulus.LOGGER.warn("Deer couldn't find a free spot to teleport to!");
+			mob.setTeleportCooldown(100 + (int)(mob.random.nextFloat() * 300));
+			stop();
 		}
 	}
 }

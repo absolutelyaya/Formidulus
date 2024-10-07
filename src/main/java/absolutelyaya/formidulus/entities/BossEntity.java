@@ -1,8 +1,6 @@
 package absolutelyaya.formidulus.entities;
 
-import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.boss.ServerBossBar;
 import net.minecraft.entity.player.PlayerEntity;
@@ -10,8 +8,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -31,13 +27,6 @@ public abstract class BossEntity extends AnimatedHostileEntity
 	}
 	
 	abstract BossBar.Style getBossBarStyle();
-	
-	@Nullable
-	@Override
-	public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData)
-	{
-		return super.initialize(world, difficulty, spawnReason, entityData);
-	}
 	
 	@Override
 	public void setCustomName(@Nullable Text name)

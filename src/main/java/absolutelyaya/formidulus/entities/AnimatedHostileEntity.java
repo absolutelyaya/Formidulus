@@ -1,6 +1,7 @@
 package absolutelyaya.formidulus.entities;
 
 import absolutelyaya.formidulus.entities.goal.AnimatedAttackGoal;
+import absolutelyaya.formidulus.entities.goal.InterruptableGoal;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
@@ -84,7 +85,7 @@ public abstract class AnimatedHostileEntity extends HostileEntity
 	
 	public boolean isReadyToAttack()
 	{
-		return dataTracker.get(ATTACK_COOLDOWN) <= 0 && isNotInAttackAnimation();
+		return dataTracker.get(ATTACK_COOLDOWN) <= 0 && shouldTickAttackCooldown() && isNotInAttackAnimation();
 	}
 	
 	@Override
@@ -99,10 +100,11 @@ public abstract class AnimatedHostileEntity extends HostileEntity
 		}
 	}
 	
-	protected void cancelActiveAnimatedAttackGoals()
+	protected void cancelActiveGoals()
 	{
+		navigation.stop();
 		goalSelector.getGoals().forEach(i -> {
-			if(i.getGoal() instanceof AnimatedAttackGoal<?> animated && i.isRunning())
+			if(i.getGoal() instanceof InterruptableGoal animated && i.isRunning())
 				animated.interrupt();
 		});
 	}

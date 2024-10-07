@@ -2,16 +2,14 @@ package absolutelyaya.formidulus.entities.goal;
 
 import absolutelyaya.formidulus.entities.AnimatedHostileEntity;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.goal.Goal;
 
-public abstract class AnimatedAttackGoal<T extends AnimatedHostileEntity> extends Goal
+public abstract class AnimatedAttackGoal<T extends AnimatedHostileEntity> extends InterruptableGoal
 {
 	protected final T mob;
 	final float duration;
 	final byte attackAnimationId, postAnimationID;
 	protected int time;
 	protected LivingEntity target;
-	boolean interrupted;
 	
 	public AnimatedAttackGoal(T mob, byte attackAnimationId, float duration, byte postAnimationID)
 	{
@@ -34,7 +32,6 @@ public abstract class AnimatedAttackGoal<T extends AnimatedHostileEntity> extend
 		time = 0;
 		mob.setAnimation(attackAnimationId);
 		target = mob.getTarget();
-		interrupted = false;
 	}
 	
 	@Override
@@ -69,17 +66,11 @@ public abstract class AnimatedAttackGoal<T extends AnimatedHostileEntity> extend
 	public void stop()
 	{
 		super.stop();
-		if(!interrupted)
+		if(!wasInterrupted())
 		{
 			if(mob.getCurrentAnimation() == attackAnimationId)
 				mob.setAnimation(postAnimationID);
 			mob.setAttackCooldown(getAttackCooldown());
 		}
-	}
-	
-	public void interrupt()
-	{
-		interrupted = true;
-		stop();
 	}
 }
