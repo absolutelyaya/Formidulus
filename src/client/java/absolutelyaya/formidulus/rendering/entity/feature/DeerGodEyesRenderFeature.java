@@ -14,7 +14,7 @@ import net.minecraft.util.math.ColorHelper;
 
 public class DeerGodEyesRenderFeature extends FeatureRenderer<DeerGodEntity, DeerGodModel>
 {
-	static final Identifier TEX = Formidulus.identifier("textures/entity/deer_demon_eyes.png");
+	static final Identifier TEX = Formidulus.identifier("textures/entity/deer_god_eyes.png");
 	float opacity;
 	
 	public DeerGodEyesRenderFeature(FeatureRendererContext<DeerGodEntity, DeerGodModel> context)

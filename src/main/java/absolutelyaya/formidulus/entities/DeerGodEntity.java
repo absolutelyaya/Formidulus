@@ -21,7 +21,6 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.BlockStateParticleEffect;
@@ -67,6 +66,8 @@ public class DeerGodEntity extends BossEntity
 	public AnimationState phaseTransitionAnimationState = new AnimationState();
 	public AnimationState deathAnimationState = new AnimationState();
 	int deathTime;
+	DamageSource killingBlow;
+	PlayerEntity killer;
 	
 	public DeerGodEntity(EntityType<? extends BossEntity> entityType, World world)
 	{
@@ -410,9 +411,20 @@ public class DeerGodEntity extends BossEntity
 			triggerMonologueSequence(SequenceTriggerPayload.DEATH_SEQUENCE);
 			if(bossBar != null)
 				bossBar.setPercent(0f);
+			killingBlow = source;
+			if(source.getAttacker() instanceof PlayerEntity player)
+				killer = player;
+			if(killer == null && source.getSource() instanceof PlayerEntity player)
+				killer = player;
 			cancelActiveAnimatedAttackGoals();
 		}
 		return b;
+	}
+	
+	@Override
+	protected boolean shouldDropLoot()
+	{
+		return false;
 	}
 	
 	@Override
@@ -427,7 +439,7 @@ public class DeerGodEntity extends BossEntity
 		{
 			getWorld().sendEntityStatus(this, EntityStatuses.ADD_DEATH_PARTICLES);
 			remove(RemovalReason.KILLED);
-			dropItem(Items.DEAD_BUSH); //TODO: replace with deer skull
+			dropLoot(killingBlow, killer != null);
 		}
 	}
 	

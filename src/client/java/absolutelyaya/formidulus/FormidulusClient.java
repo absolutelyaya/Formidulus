@@ -4,13 +4,12 @@ import absolutelyaya.formidulus.gui.TitleHUD;
 import absolutelyaya.formidulus.network.ClientPacketHandler;
 import absolutelyaya.formidulus.particle.BloodDropParticle;
 import absolutelyaya.formidulus.registries.EntityRegistry;
+import absolutelyaya.formidulus.registries.ItemRegistry;
 import absolutelyaya.formidulus.registries.ParticleRegistry;
-import absolutelyaya.formidulus.rendering.entity.DeerGodModel;
-import absolutelyaya.formidulus.rendering.entity.DeerGodRenderer;
-import absolutelyaya.formidulus.rendering.entity.IrrlichtModel;
-import absolutelyaya.formidulus.rendering.entity.IrrlichtRenderer;
+import absolutelyaya.formidulus.rendering.entity.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
@@ -19,6 +18,7 @@ import net.minecraft.client.render.entity.model.EntityModelLayer;
 public class FormidulusClient implements ClientModInitializer
 {
 	public static final EntityModelLayer DEER_GOD_LAYER = new EntityModelLayer(Formidulus.identifier("deer_god"), "deer_god");
+	public static final EntityModelLayer DEER_GOD_SKULL_LAYER = new EntityModelLayer(Formidulus.identifier("deer_god_skull"), "deer_god_skull");
 	public static final EntityModelLayer IRRLICHT_LAYER = new EntityModelLayer(Formidulus.identifier("irrlicht"), "irrlicht");
 	
 	@Override
@@ -32,6 +32,7 @@ public class FormidulusClient implements ClientModInitializer
 		
 		//Entity Model Layers
 		EntityModelLayerRegistry.registerModelLayer(DEER_GOD_LAYER, DeerGodModel::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(DEER_GOD_SKULL_LAYER, DeerGodSkullModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(IRRLICHT_LAYER, IrrlichtModel::getTexturedModelData);
 		
 		//Particles
@@ -39,5 +40,8 @@ public class FormidulusClient implements ClientModInitializer
 		particles.register(ParticleRegistry.BLOOD_DROP_PARTICLE, BloodDropParticle.Factory::new);
 		
 		HudRenderCallback.EVENT.register((context, tickCounter) -> TitleHUD.render(context, tickCounter.getLastFrameDuration()));
+		
+		BuiltinItemRendererRegistry builtinItemRendererRegistry = BuiltinItemRendererRegistry.INSTANCE;
+		builtinItemRendererRegistry.register(ItemRegistry.DEER_SKULL, new DeerGodSkullRenderer());
 	}
 }

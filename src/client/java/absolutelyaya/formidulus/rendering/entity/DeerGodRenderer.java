@@ -25,7 +25,7 @@ public class DeerGodRenderer extends MobEntityRenderer<DeerGodEntity, DeerGodMod
 	@Override
 	public Identifier getTexture(DeerGodEntity entity)
 	{
-		return Formidulus.identifier("textures/entity/deer_demon.png");
+		return Formidulus.identifier("textures/entity/deer_god.png");
 	}
 	
 	@Override

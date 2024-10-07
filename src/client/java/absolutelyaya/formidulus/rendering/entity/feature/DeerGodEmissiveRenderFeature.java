@@ -15,7 +15,7 @@ import net.minecraft.util.Identifier;
 
 public class DeerGodEmissiveRenderFeature extends FeatureRenderer<DeerGodEntity, DeerGodModel>
 {
-	static final Identifier TEX = Formidulus.identifier("textures/entity/deer_demon_emissive.png");
+	static final Identifier TEX = Formidulus.identifier("textures/entity/deer_god_emissive.png");
 	int flickerTimer;
 	boolean flicker;
 	float brightness = 1f;

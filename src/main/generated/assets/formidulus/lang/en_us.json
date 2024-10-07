@@ -4,5 +4,9 @@
   "death.attack.lantern.player": "%1s was shown the Light whilst fighting %2$s",
   "effect.formidulus.reverence": "Unwilling Reverence",
   "entity.formidulus.deer_god": "Cervus Cruoris",
-  "entity.formidulus.irrlicht": "Scintilla Vitae"
+  "entity.formidulus.irrlicht": "Scintilla Vitae",
+  "item.formidulus.deer_skull": "Deer Skull",
+  "item.formidulus.deer_skull.lore0": "The Skull of a horrid Skeletal Beast.",
+  "item.formidulus.deer_skull.lore1": "A third eye was carved into this previously ordinary deer skull.",
+  "item.formidulus.deer_skull.lore2": "It was as though it spoke to us.. but we couldn't comprehend it."
 }
