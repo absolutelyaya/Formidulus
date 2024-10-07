@@ -5,6 +5,7 @@ import absolutelyaya.formidulus.FormidulusClient;
 import absolutelyaya.formidulus.entities.DeerGodEntity;
 import absolutelyaya.formidulus.rendering.entity.feature.DeerGodEmissiveRenderFeature;
 import absolutelyaya.formidulus.rendering.entity.feature.DeerGodEyesRenderFeature;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -18,8 +19,8 @@ public class DeerGodRenderer extends MobEntityRenderer<DeerGodEntity, DeerGodMod
 	public DeerGodRenderer(EntityRendererFactory.Context ctx)
 	{
 		super(ctx, new DeerGodModel(ctx.getPart(FormidulusClient.DEER_GOD_LAYER)), 1f);
-		addFeature(new DeerGodEyesRenderFeature(this));
 		addFeature(new DeerGodEmissiveRenderFeature(this));
+		addFeature(new DeerGodEyesRenderFeature(this));
 	}
 	
 	@Override
@@ -31,11 +32,14 @@ public class DeerGodRenderer extends MobEntityRenderer<DeerGodEntity, DeerGodMod
 	@Override
 	public void render(DeerGodEntity livingEntity, float f, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i)
 	{
-		//TODO: vanishing
-		//float opacity = (float)Math.max(Math.sin(livingEntity.age / 20f), 0f);
-		//RenderSystem.setShaderColor(0f, 0f, 0f, opacity);
+		float vanishing = livingEntity.getVanishingPercent();
+		if(vanishing >= 0.9f)
+			return;
+		float c = Math.max(1f - vanishing * 2f, 0f);
+		RenderSystem.setShaderColor(c, c, c, Math.min(1f - (vanishing * 6 - 4), 1f));
+		//RenderSystem.setShaderColor(0f, 0f, 0f, 1f);
 		super.render(livingEntity, f, tickDelta, matrixStack, vertexConsumerProvider, i);
-		//RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+		RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 	}
 	
 	@Nullable

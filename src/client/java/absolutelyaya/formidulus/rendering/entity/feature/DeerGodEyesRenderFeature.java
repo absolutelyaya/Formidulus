@@ -11,6 +11,7 @@ import net.minecraft.client.render.entity.feature.FeatureRendererContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.ColorHelper;
+import net.minecraft.util.math.MathHelper;
 
 public class DeerGodEyesRenderFeature extends FeatureRenderer<DeerGodEntity, DeerGodModel>
 {
@@ -34,10 +35,13 @@ public class DeerGodEyesRenderFeature extends FeatureRenderer<DeerGodEntity, Dee
 			else
 				opacity = Math.max(opacity - tickDelta / 20f, 0f);
 		}
-		//TODO: vanishing
+		float vanishing = entity.getVanishingPercent();
+		if(vanishing > 0f)
+			opacity = Math.max(MathHelper.clamp(vanishing * 2f - Math.max(vanishing * 10f - 6f, 0f), 0f, 1f), opacity);
+		
 		DeerGodModel model = getContextModel();
 		model.animateModel(entity, limbAngle, limbDistance, tickDelta);
 		int c = ColorHelper.Argb.getArgb((int)(255 * opacity), 255, 255, 255);
-		model.getPart().render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(TEX)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, c);
+		model.getPart().render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(TEX)), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, c);
 	}
 }

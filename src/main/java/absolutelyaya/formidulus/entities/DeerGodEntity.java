@@ -31,6 +31,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Vector3f;
@@ -43,6 +44,8 @@ public class DeerGodEntity extends BossEntity
 	static final TrackedData<Boolean> LANTERN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Boolean> CLAW = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Vector3f> ORIGIN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
+	static final TrackedData<Integer> TELEPORT_TIMER = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	static final TrackedData<Vector3f> NEXT_TELEPORT_DEST = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
 	
 	static final byte UNSUMMONED_POSE = 0;
 	static final byte SPAWN_SEQUENCE_ANIM = 1;
@@ -89,6 +92,8 @@ public class DeerGodEntity extends BossEntity
 		builder.add(LANTERN, true);
 		builder.add(CLAW, false);
 		builder.add(ORIGIN, getPos().toVector3f());
+		builder.add(TELEPORT_TIMER, Integer.MIN_VALUE);
+		builder.add(NEXT_TELEPORT_DEST, getPos().toVector3f());
 	}
 	
 	@Override
@@ -150,6 +155,15 @@ public class DeerGodEntity extends BossEntity
 			triggerMonologueSequence(SequenceTriggerPayload.SPAWN_SEQUENCE);
 			dataTracker.set(SUMMONED, true);
 		}
+		if(getTeleportTimer() == 0)
+		{
+			Vec3d dest = getNextTeleportDestination();
+			setPosition(dest.x, dest.y, dest.z);
+		}
+		if(getWorld().isClient)
+			return;
+		
+		dataTracker.set(TELEPORT_TIMER, dataTracker.get(TELEPORT_TIMER) - 1);
 	}
 	
 	@Override
@@ -270,12 +284,22 @@ public class DeerGodEntity extends BossEntity
 				setAnimation(IDLE_ANIM);
 		}
 		
-		//TODO: vanishing
-		//for (int i = 0; i < 3; i++)
-		//{
-		//	Vec3d offset = new Vec3d(getX(), getY(), getZ()).add((random.nextFloat() - 0.5f) * 2f, random.nextFloat() * 4.5f, (random.nextFloat() - 0.5f) * 2f);
-		//	getWorld().addParticle(new DustParticleEffect(new Vector3f(0f, 0f, 0f), 5f), offset.x, offset.y, offset.z, 0f, 0f, 0f);
-		//}
+		float vanishing = getVanishingPercent();
+		if(vanishing > 0f)
+		{
+			for (int i = 0; i < Math.ceil(vanishing * 3); i++)
+			{
+				Vec3d offset = new Vec3d(getX(), getY(), getZ()).add((random.nextFloat() - 0.5f) * 2f, random.nextFloat() * 4.5f, (random.nextFloat() - 0.5f) * 2f);
+				getWorld().addParticle(new DustParticleEffect(new Vector3f(0f, 0f, 0f), 5f), true, offset.x, offset.y, offset.z,
+						0f, 0f, 0f);
+			}
+			for (int i = 0; i < Math.ceil(vanishing * 3); i++)
+			{
+				Vec3d offset = getNextTeleportDestination().add((random.nextFloat() - 0.5f) * 2f, random.nextFloat() * 4.5f, (random.nextFloat() - 0.5f) * 2f);
+				getWorld().addParticle(new DustParticleEffect(new Vector3f(0f, 0f, 0f), 5f), true, offset.x, offset.y, offset.z,
+						0f, 0f, 0f);
+			}
+		}
 	}
 	
 	@Override
@@ -293,7 +317,8 @@ public class DeerGodEntity extends BossEntity
 	{
 		if(getWorld().isClient)
 			return;
-		List<ServerPlayerEntity> nearby = getWorld().getEntitiesByType(TypeFilter.instanceOf(ServerPlayerEntity.class), getBoundingBox().expand(64), LivingEntity::isAlive);
+		List<ServerPlayerEntity> nearby = getWorld().getEntitiesByType(TypeFilter.instanceOf(ServerPlayerEntity.class), getBoundingBox().expand(64),
+				LivingEntity::isAlive);
 		nearby.forEach(i -> ServerPlayNetworking.send(i, new SequenceTriggerPayload(id)));
 	}
 	
@@ -460,6 +485,27 @@ public class DeerGodEntity extends BossEntity
 		super.handleStatus(status);
 	}
 	
+	void setNextTeleport(Vec3d destination, int delay)
+	{
+		dataTracker.set(TELEPORT_TIMER, delay);
+		dataTracker.set(NEXT_TELEPORT_DEST, destination.toVector3f());
+	}
+	
+	public int getTeleportTimer()
+	{
+		return dataTracker.get(TELEPORT_TIMER);
+	}
+	
+	public Vec3d getNextTeleportDestination()
+	{
+		return new Vec3d(dataTracker.get(NEXT_TELEPORT_DEST));
+	}
+	
+	public float getVanishingPercent()
+	{
+		return MathHelper.clamp(1f - (Math.abs(getTeleportTimer()) / 40f), 0f, 1f);
+	}
+	
 	@Override
 	public void readCustomDataFromNbt(NbtCompound nbt)
 	{
@@ -598,12 +644,12 @@ public class DeerGodEntity extends BossEntity
 				mob.setHasLantern(false);
 				Vec3d impact = mob.getPos().add(new Vec3d(0.5, 0, 3).rotateY((float)Math.toRadians(-mob.getYaw())));
 				List<LivingEntity> hits = mob.getWorld().getNonSpectatingEntities(LivingEntity.class,
-						Box.from(impact).expand(8f));
+						Box.from(impact).expand(5f));
 				for (LivingEntity hit : hits)
 				{
 					if(hit instanceof IrrlichtEntity || hit instanceof DeerGodEntity)
 						continue;
-					float strength = Math.max(1f - (float)impact.distanceTo(hit.getPos()) / 8f, 0f);
+					float strength = Math.max(1f - (float)impact.distanceTo(hit.getPos()) / 5f, 0f);
 					if(strength <= 0f)
 						continue;
 					if(hit.damage(DamageSources.get(mob.getWorld(), DamageSources.LANTERN, mob), strength * 20f))
