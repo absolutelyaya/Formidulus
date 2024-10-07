@@ -3,14 +3,18 @@ package absolutelyaya.formidulus.rendering.entity;
 import absolutelyaya.formidulus.entities.DeerGodEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.entity.animation.Animation;
+import net.minecraft.client.render.entity.animation.AnimationHelper;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
+import org.joml.Vector3f;
 
 // Made with Blockbench 4.10.4
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
 public class DeerGodModel extends SinglePartEntityModel<DeerGodEntity>
 {
+	private static final Vector3f TEMP = new Vector3f();
 	private final ModelPart root;
 	private final ModelPart body;
 	private final ModelPart spineBottom;
@@ -321,9 +325,10 @@ public class DeerGodModel extends SinglePartEntityModel<DeerGodEntity>
 	public void setAngles(DeerGodEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
 	{
 		getPart().traverse().forEach(ModelPart::resetTransform);
+		if(entity.idleAnimationState.isRunning())
+			blendMovement(DeerGodAnimations.idle, DeerGodAnimations.walk, limbSwing, ageInTicks, limbSwingAmount, 1f, 4f, 5f);
 		updateAnimation(entity.unsummonedPoseAnimationState, DeerGodAnimations.unsummonedPose, ageInTicks);
 		updateAnimation(entity.spawnSequenceAnimationState, DeerGodAnimations.spawnSequence, ageInTicks);
-		updateAnimation(entity.idleAnimationState, DeerGodAnimations.idle, ageInTicks);
 		updateAnimation(entity.swingAnimationState, DeerGodAnimations.lanternSideSwing, ageInTicks);
 		updateAnimation(entity.slamAnimationState, DeerGodAnimations.lanternSlam, ageInTicks);
 		updateAnimation(entity.summonLanternAnimationState, DeerGodAnimations.summonLantern, ageInTicks);
@@ -356,6 +361,15 @@ public class DeerGodModel extends SinglePartEntityModel<DeerGodEntity>
 		}
 		else
 			updateAnimation(entity.noClawAnimationState, DeerGodAnimations.noClaw, ageInTicks);
+	}
+	
+	void blendMovement(Animation idleAnim, Animation moveAnim, float limbAngle, float ageInTicks, float interpolation, float idleAnimSpeed, float moveAnimSpeed, float interpolationScale)
+	{
+		long moveTime = (long)(limbAngle * 50f * moveAnimSpeed);
+		long idleTime = (long)(ageInTicks * 50f * idleAnimSpeed);
+		float scale = Math.min(interpolation * interpolationScale, 1f);
+		AnimationHelper.animate(this, moveAnim, moveTime, scale, TEMP);
+		AnimationHelper.animate(this, idleAnim, idleTime, 1f - scale, TEMP);
 	}
 	
 	@Override

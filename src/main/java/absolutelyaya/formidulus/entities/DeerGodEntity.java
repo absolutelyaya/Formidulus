@@ -13,6 +13,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
+import net.minecraft.entity.ai.goal.WanderAroundGoal;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
@@ -58,6 +59,7 @@ public class DeerGodEntity extends BossEntity
 	public AnimationState unsummonedPoseAnimationState = new AnimationState();
 	public AnimationState spawnSequenceAnimationState = new AnimationState();
 	public AnimationState idleAnimationState = new AnimationState();
+	public AnimationState walkingAnimationState = new AnimationState();
 	public AnimationState swingAnimationState = new AnimationState();
 	public AnimationState slamAnimationState = new AnimationState();
 	public AnimationState summonLanternAnimationState = new AnimationState();
@@ -80,6 +82,7 @@ public class DeerGodEntity extends BossEntity
 		noLanternAnimationState.start(age);
 		noClawAnimationState.start(age);
 		showClawAnimationState.start(age);
+		walkingAnimationState.start(age);
 		showClawWithoutExtrasAnimationState.start(age);
 		dataTracker.set(ANIMATION_START, age);
 	}
@@ -111,6 +114,7 @@ public class DeerGodEntity extends BossEntity
 		goalSelector.add(0, new SummonLanternGoal(this));
 		goalSelector.add(1, new LanternSwingGoal(this));
 		goalSelector.add(1, new LanternSlamGoal(this));
+		goalSelector.add(0, new WanderAroundGoal(this, 0.3f, 100));
 		
 		targetSelector.add(0, new ActiveTargetGoal<>(this, PlayerEntity.class, false));
 	}
