@@ -9,9 +9,9 @@ import net.minecraft.registry.RegistryWrapper;
 
 import java.util.concurrent.CompletableFuture;
 
-public class TranslationProvider extends FabricLanguageProvider
+public class BaseTranslationProvider extends FabricLanguageProvider
 {
-	protected TranslationProvider(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup)
+	protected BaseTranslationProvider(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup)
 	{
 		super(dataOutput, registryLookup);
 	}

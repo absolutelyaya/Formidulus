@@ -1,0 +1,12 @@
+{
+  "death.attack.lantern": "%s wurde das Licht gezeigt",
+  "death.attack.lantern.item": "%1s wurde von %2$s mittels %3$s das Licht gezeigt",
+  "death.attack.lantern.player": "%1s wurde das Licht gezeigt, während eines Kampfes mit %2$s",
+  "effect.formidulus.reverence": "Erzwungende Erfurcht",
+  "entity.formidulus.deer_god": "Cervus Cruoris",
+  "entity.formidulus.irrlicht": "Scintilla Vitae",
+  "item.formidulus.deer_skull": "Hirsch Schädel",
+  "item.formidulus.deer_skull.lore0": "Der Schädel eines schrecklichen Skelettbiests.",
+  "item.formidulus.deer_skull.lore1": "Ein drittes Auge wurde in diesen zuvor normalen Schädel geschnitzt.",
+  "item.formidulus.deer_skull.lore2": "Es war als würde es mit uns reden.. aber wir konnten nichts verstehen."
+}

@@ -9,7 +9,8 @@ public class DataGenerator implements DataGeneratorEntrypoint
 	public void onInitializeDataGenerator(FabricDataGenerator generator)
 	{
 		FabricDataGenerator.Pack pack = generator.createPack();
-		pack.addProvider(TranslationProvider::new);
+		pack.addProvider(BaseTranslationProvider::new);
+		pack.addProvider(GermanTranslationProvider::new); //there isn't too much to translate, so might as well
 		pack.addProvider(EntityLootTableProvider::new);
 	}
 }
