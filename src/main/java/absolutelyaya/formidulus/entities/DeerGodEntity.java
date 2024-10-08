@@ -14,6 +14,8 @@ import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
+import net.minecraft.entity.ai.goal.RevengeGoal;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.DamageTypes;
@@ -35,6 +37,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.EnumSet;
@@ -114,13 +117,15 @@ public class DeerGodEntity extends BossEntity
 	protected void initGoals()
 	{
 		super.initGoals();
-		goalSelector.add(0, new SummonLanternGoal(this));
+		goalSelector.add(0, new TeleportRandomlyGoal(this));
+		goalSelector.add(1, new SummonLanternGoal(this));
 		goalSelector.add(1, new LanternSwingGoal(this));
 		goalSelector.add(1, new LanternSlamGoal(this));
-		goalSelector.add(2, new TeleportRandomlyGoal(this));
-		goalSelector.add(3, new ApproachTargetGoal(this));
+		goalSelector.add(2, new TeleportToTargetGoal(this));
+		goalSelector.add(3, new ApproachTargetGoal(this, 0.4f));
 		
-		targetSelector.add(0, new ActiveTargetGoal<>(this, PlayerEntity.class, false));
+		targetSelector.add(0, new RevengeGoal(this));
+		targetSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, false));
 	}
 	
 	@Override
@@ -170,11 +175,14 @@ public class DeerGodEntity extends BossEntity
 		}
 		if(getWorld().isClient)
 			return;
+		if((getTarget() == null || getTarget().isRemoved()) && !isNotInAttackAnimation() && !isInSequence())
+			cancelActiveGoals();
 		if(dataTracker.get(ORIGIN).equals(new Vector3f()))
 			dataTracker.set(ORIGIN, getPos().toVector3f());
-		if(dataTracker.get(TELEPORT_COOLDOWN) > 0)
+		if(getHealth() < getMaxHealth() * 0.75f && dataTracker.get(TELEPORT_COOLDOWN) > 0)
 			dataTracker.set(TELEPORT_COOLDOWN, dataTracker.get(TELEPORT_COOLDOWN) - 1);
-		dataTracker.set(TELEPORT_TIMER, dataTracker.get(TELEPORT_TIMER) - 1);
+		if(isTeleporting())
+			dataTracker.set(TELEPORT_TIMER, dataTracker.get(TELEPORT_TIMER) - 1);
 	}
 	
 	@Override
@@ -200,19 +208,7 @@ public class DeerGodEntity extends BossEntity
 					getWorld().addParticle(new DustParticleEffect(new Vector3f(0f, 0f, 0f), 5f), pos.x, pos.y, pos.z, 0f, 0f, 0f);
 				}
 			}
-			if(getCurrentAnimationDuration() < 16f)
-			{
-				getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), getBoundingBox().expand(16), i -> true)
-						.forEach(p -> p.addStatusEffect(new StatusEffectInstance(StatusEffectRegistry.REVERENCE, 20, 0, false, false)));
-			}
-			if(getCurrentAnimationDuration() < 18f)
-			{
-				getWorld().getOtherEntities(this, getBoundingBox().expand(32), i -> !i.isPlayer())
-						.forEach(e -> {
-							if(!(e instanceof PlayerEntity) && e instanceof LivingEntity living)
-								living.addStatusEffect(new StatusEffectInstance(StatusEffectRegistry.REVERENCE, 40, 0, false, true));
-						});
-			}
+			applyReverence(18f - getCurrentAnimationDuration());
 			if(getCurrentAnimationDuration() >= 18f)
 				setAnimation(IDLE_ANIM);
 		}
@@ -291,9 +287,12 @@ public class DeerGodEntity extends BossEntity
 							(float)pos.x, (float)getY(), (float)pos.z, 0f, 0f, 0f);
 				}
 			}
+			applyReverence(18f - getCurrentAnimationDuration());
 			if(getCurrentAnimationDuration() >= 18.05f)
 				setAnimation(IDLE_ANIM);
 		}
+		if(getCurrentAnimation() == DEATH_SEQUENCE_ANIM)
+			applyReverence(18f - getCurrentAnimationDuration());
 		
 		float vanishing = getVanishingPercent();
 		if(vanishing > 0f)
@@ -313,6 +312,25 @@ public class DeerGodEntity extends BossEntity
 		}
 	}
 	
+	void applyReverence(float remainingTime)
+	{
+		if(getWorld().isClient)
+			return;
+		if(getCurrentAnimationDuration() < remainingTime) //players
+		{
+			getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), getBoundingBox().expand(16), i -> true)
+					.forEach(p -> p.addStatusEffect(new StatusEffectInstance(StatusEffectRegistry.REVERENCE, 20, 0, false, false)));
+		}
+		if(getCurrentAnimationDuration() < remainingTime + 2f) //other entities
+		{
+			getWorld().getOtherEntities(this, getBoundingBox().expand(32), i -> !i.isPlayer())
+					.forEach(e -> {
+						if(!(e instanceof PlayerEntity) && e instanceof LivingEntity living)
+							living.addStatusEffect(new StatusEffectInstance(StatusEffectRegistry.REVERENCE, 40, 0, false, true));
+					});
+		}
+	}
+	
 	@Override
 	public Vec3d getFocusPos()
 	{
@@ -321,7 +339,17 @@ public class DeerGodEntity extends BossEntity
 			float height = getCurrentAnimationDuration() - 6.5f;
 			return getPos().add(0, Math.max(height / 2f, 0) * (getStandingEyeHeight() - 0.5f), 0);
 		}
-		return super.getFocusPos();
+		if(getCurrentAnimation() == DEATH_SEQUENCE_ANIM)
+		{
+			if(getCurrentAnimationDuration() > 15f && getCurrentAnimationDuration() < 18f)
+			{
+				float height = (getCurrentAnimationDuration() - 15f);
+				return getEyePos().subtract(0, Math.max(height / 3f, 0) * 0.5f - 0.5f, 0);
+			}
+			else if(getCurrentAnimationDuration() >= 18f)
+				return getPos();
+		}
+		return super.getFocusPos().subtract(0f, 0.5f, 0f);
 	}
 	
 	void triggerMonologueSequence(byte id)
@@ -436,13 +464,14 @@ public class DeerGodEntity extends BossEntity
 			return b;
 		if(!dataTracker.get(CLAW) && b && getHealth() <= getMaxHealth() / 2f && getHealth() > 0f)
 		{
+			cancelActiveGoals();
 			setAnimation(PHASE_TRANSITION_ANIM);
 			dataTracker.set(CLAW, true);
 			setHealth(getMaxHealth() / 2f);
-			cancelActiveGoals();
 		}
 		if(getHealth() <= 0)
 		{
+			cancelActiveGoals();
 			setAnimation(DEATH_SEQUENCE_ANIM);
 			triggerMonologueSequence(SequenceTriggerPayload.DEATH_SEQUENCE);
 			if(bossBar != null)
@@ -452,7 +481,6 @@ public class DeerGodEntity extends BossEntity
 				killer = player;
 			if(killer == null && source.getSource() instanceof PlayerEntity player)
 				killer = player;
-			cancelActiveGoals();
 		}
 		return b;
 	}
@@ -462,6 +490,7 @@ public class DeerGodEntity extends BossEntity
 	{
 		super.cancelActiveGoals();
 		dataTracker.set(TELEPORT_TIMER, Integer.MIN_VALUE);
+		setAnimation(IDLE_ANIM);
 	}
 	
 	@Override
@@ -521,12 +550,12 @@ public class DeerGodEntity extends BossEntity
 	
 	public float getVanishingPercent()
 	{
-		return MathHelper.clamp(1f - (Math.abs(getTeleportTimer()) / 40f), 0f, 1f);
+		return MathHelper.clamp(1f - (Math.abs((float)getTeleportTimer()) / (float) getTeleportFadeDuration()), 0f, 1f);
 	}
 	
 	public boolean isReadyToAttack()
 	{
-		return super.isReadyToAttack() && !isInSequence() && getVanishingPercent() == 0f && navigation.isIdle();
+		return super.isReadyToAttack() && !isInSequence() && getVanishingPercent() < 0.5f && !isAboutToTeleport() && navigation.isIdle();
 	}
 	
 	public boolean isReadyToTeleport()
@@ -537,6 +566,29 @@ public class DeerGodEntity extends BossEntity
 	public void setTeleportCooldown(int cooldown)
 	{
 		dataTracker.set(TELEPORT_COOLDOWN, cooldown);
+	}
+	
+	public int getTeleportFadeDuration()
+	{
+		return 40 - (20 * Math.round(1f - (Math.max(getHealth() / getMaxHealth(), 0.5f) - 0.5f) * 4f));
+	}
+	
+	public boolean isTeleporting()
+	{
+		return dataTracker.get(TELEPORT_TIMER) > -getTeleportFadeDuration();
+	}
+	
+	public boolean isAboutToTeleport()
+	{
+		return dataTracker.get(TELEPORT_TIMER) >= 0;
+	}
+	
+	@Override
+	protected float applyArmorToDamage(DamageSource source, float amount)
+	{
+		float armor = (float)getAttributeValue(EntityAttributes.GENERIC_ARMOR) * (getWorld().getDifficulty().getId() * 0.75f + 1f);
+		float toughness = (float)getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS) * (getWorld().getDifficulty().getId() * 0.75f + 1f);
+		return DamageUtil.getDamageLeft(this, amount, source, armor, toughness);
 	}
 	
 	@Override
@@ -589,7 +641,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean canStart()
 		{
-			return mob.hasLantern() && super.canStart() && mob.distanceTo(mob.getTarget()) < 6f;
+			return mob.hasLantern() && super.canStart() && mob.distanceTo(mob.getTarget()) < 4f;
 		}
 		
 		@Override
@@ -624,7 +676,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		protected int getAttackCooldown()
 		{
-			return 20 + (int)(mob.random.nextFloat() * 20);
+			return 1;
 		}
 	}
 	
@@ -638,7 +690,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean canStart()
 		{
-			return mob.hasLantern() && super.canStart() && mob.distanceTo(mob.getTarget()) < 10f;
+			return mob.hasLantern() && super.canStart() && mob.distanceTo(mob.getTarget()) < 6f;
 		}
 		
 		@Override
@@ -730,17 +782,19 @@ public class DeerGodEntity extends BossEntity
 		final DeerGodEntity mob;
 		int time;
 		boolean failed;
+		float speed;
 		
-		public ApproachTargetGoal(DeerGodEntity mob)
+		public ApproachTargetGoal(DeerGodEntity mob, float speed)
 		{
 			this.mob = mob;
+			this.speed = speed;
 			setControls(EnumSet.of(Control.MOVE, Control.LOOK));
 		}
 		
 		@Override
 		public boolean canStart()
 		{
-			return mob.isReadyToAttack() && mob.dataTracker.get(TELEPORT_TIMER) < -40;
+			return mob.isReadyToAttack() && !mob.isTeleporting();
 		}
 		
 		@Override
@@ -768,7 +822,7 @@ public class DeerGodEntity extends BossEntity
 				stop();
 				return;
 			}
-			mob.navigation.startMovingTo(mob.getTarget(), 0.3f);
+			mob.navigation.startMovingTo(mob.getTarget(), speed);
 			mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, mob.getTarget().getEyePos());
 			failed = mob.getPos().distanceTo(new Vec3d(mob.dataTracker.get(ORIGIN))) > 16f || ++time > 200;
 			if(mob.distanceTo(mob.getTarget()) <= 4f || failed)
@@ -787,12 +841,11 @@ public class DeerGodEntity extends BossEntity
 		}
 	}
 	
-	static class TeleportRandomlyGoal extends InterruptableGoal
+	static abstract class DeerTeleportGoal extends InterruptableGoal
 	{
 		final DeerGodEntity mob;
-		Vec3d origin;
 		
-		public TeleportRandomlyGoal(DeerGodEntity mob)
+		public DeerTeleportGoal(DeerGodEntity mob)
 		{
 			this.mob = mob;
 		}
@@ -808,24 +861,104 @@ public class DeerGodEntity extends BossEntity
 		{
 			super.start();
 			mob.navigation.stop();
+			Vec3d dest = getTeleportDestination();
+			if(dest != null && isDestinationFree(dest))
+			{
+				mob.setNextTeleport(dest, getTeleportDelay());
+				mob.navigation.stop();
+			}
+			else
+				Formidulus.LOGGER.warn("Deer couldn't find a free spot to teleport to!");
+			mob.setTeleportCooldown((int)((100 + (mob.random.nextFloat())) * Math.max(mob.getHealth() / mob.getMaxHealth(), 0.1f)));
+			stop();
+		}
+		
+		protected abstract @Nullable Vec3d getTeleportDestination();
+		
+		protected int getTeleportDelay()
+		{
+			return mob.getTeleportFadeDuration();
+		}
+		
+		boolean isDestinationFree(Vec3d dest)
+		{
+			return mob.getWorld().isSpaceEmpty(mob.getBoundingBox().offset(mob.getPos().multiply(-1)).offset(dest));
+		}
+	}
+	
+	static class TeleportRandomlyGoal extends DeerTeleportGoal
+	{
+		Vec3d origin;
+		
+		public TeleportRandomlyGoal(DeerGodEntity mob)
+		{
+			super(mob);
+		}
+		
+		@Override
+		public boolean canStart()
+		{
+			return super.canStart() && ((!mob.hasLantern() && mob.getTarget() != null && mob.distanceTo(mob.getTarget()) < 5) || mob.random.nextFloat() < 0.01f);
+		}
+		
+		@Override
+		public void start()
+		{
 			origin = new Vec3d(mob.dataTracker.get(ORIGIN));
+			super.start();
+		}
+		
+		@Override
+		protected @Nullable Vec3d getTeleportDestination()
+		{
 			Vec3d dest;
-			boolean success = false;
 			for (int i = 0; i < 8; i++)
 			{
 				dest = origin.add((mob.random.nextFloat() - 0.5) * 2f * 16f, 0f, (mob.random.nextFloat() - 0.5) * 2f * 16f);
-				if(mob.getWorld().isSpaceEmpty(mob.getBoundingBox().offset(mob.getPos().multiply(-1)).offset(dest)))
-				{
-					mob.setNextTeleport(dest, 30 + (int)(mob.random.nextFloat() * 25));
-					mob.navigation.stop();
-					success = true;
-					break;
-				}
+				if(isDestinationFree(dest))
+					return dest;
 			}
-			if(!success)
-				Formidulus.LOGGER.warn("Deer couldn't find a free spot to teleport to!");
-			mob.setTeleportCooldown(100 + (int)(mob.random.nextFloat() * 300));
-			stop();
+			return null;
+		}
+	}
+	
+	static class TeleportToTargetGoal extends DeerTeleportGoal
+	{
+		public TeleportToTargetGoal(DeerGodEntity mob)
+		{
+			super(mob);
+		}
+		
+		@Override
+		public boolean canStart()
+		{
+			return super.canStart() && mob.getTarget() != null && mob.distanceTo(mob.getTarget()) > 8;
+		}
+		
+		@Override
+		public void start()
+		{
+			super.start();
+			if(mob.getTarget() != null)
+				mob.lookAt(EntityAnchorArgumentType.EntityAnchor.FEET, mob.getTarget().getPos());
+		}
+		
+		@Override
+		protected @Nullable Vec3d getTeleportDestination()
+		{
+			LivingEntity target = mob.getTarget();
+			if(target == null)
+				return null;
+			Vec3d dir = mob.getPos().subtract(target.getPos()).multiply(1f, 0f, 1f).normalize();
+			Vec3d dest;
+			for (int i = 0; i < 36; i++)
+			{
+				float rot = i / 2f * (i % 2 == 0 ? -1 : 1) * 20f;
+				dest = target.getPos().add(dir.rotateY((float)Math.toRadians(rot)).multiply(3f + mob.random.nextFloat()));
+				if(isDestinationFree(dest))
+					return dest;
+			}
+			return null;
 		}
 	}
 }

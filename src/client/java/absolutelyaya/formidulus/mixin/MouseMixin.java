@@ -65,8 +65,8 @@ public abstract class MouseMixin
 				Vector2f dir = new Vector2f(diff.x, diff.y).normalize();
 				if(diff.length() > 0)
 				{
-					double dx = cursorXSmoother.smooth(dir.x * diff.length(), timeDelta * 5f);
-					double dy = cursorYSmoother.smooth(dir.y * diff.length(), timeDelta * 5f);
+					double dx = cursorXSmoother.smooth(dir.x * diff.length() * 0.5f, timeDelta * 5f);
+					double dy = cursorYSmoother.smooth(dir.y * diff.length() * 0.5f, timeDelta * 5f);
 					p.changeLookDirection(dx, dy);
 				}
 			}
