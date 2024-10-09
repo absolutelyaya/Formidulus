@@ -29,6 +29,7 @@ public class FormidulusClient implements ClientModInitializer
 		//Entities
 		EntityRendererRegistry.register(EntityRegistry.DEER_GOD, DeerGodRenderer::new);
 		EntityRendererRegistry.register(EntityRegistry.IRRLICHT, IrrlichtRenderer::new);
+		EntityRendererRegistry.register(EntityRegistry.PUMPKIN, FireballRenderer::new);
 		
 		//Entity Model Layers
 		EntityModelLayerRegistry.registerModelLayer(DEER_GOD_LAYER, DeerGodModel::getTexturedModelData);

@@ -54,7 +54,7 @@ public abstract class MouseMixin
 			World world = p.getWorld();
 			if(p.hasStatusEffect(StatusEffectRegistry.REVERENCE))
 			{
-				List<BossEntity> targets = world.getEntitiesByType(TypeFilter.instanceOf(BossEntity.class), p.getBoundingBox().expand(16), i -> true);
+				List<BossEntity> targets = world.getEntitiesByType(TypeFilter.instanceOf(BossEntity.class), p.getBoundingBox().expand(32), i -> true);
 				BossEntity closest = world.getClosestEntity(targets, TargetPredicate.createNonAttackable().setPredicate(i -> true), p, p.getX(), p.getY(), p.getZ());
 				if(closest == null || closest.distanceTo(p) > 16)
 					return;

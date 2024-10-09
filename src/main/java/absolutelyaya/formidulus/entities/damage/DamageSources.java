@@ -11,6 +11,8 @@ import net.minecraft.world.World;
 public class DamageSources
 {
 	public static final RegistryKey<DamageType> LANTERN = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Formidulus.identifier("lantern"));
+	public static final RegistryKey<DamageType> CLAW = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Formidulus.identifier("claw"));
+	public static final RegistryKey<DamageType> SACRIFICE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Formidulus.identifier("sacrifice"));
 	
 	public static DamageSource get(World world, RegistryKey<DamageType> type)
 	{

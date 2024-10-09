@@ -1,6 +1,5 @@
 package absolutelyaya.formidulus.entities;
 
-import absolutelyaya.formidulus.entities.goal.AnimatedAttackGoal;
 import absolutelyaya.formidulus.entities.goal.InterruptableGoal;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.EntityType;
@@ -78,21 +77,21 @@ public abstract class AnimatedHostileEntity extends HostileEntity
 		dataTracker.set(ATTACK_COOLDOWN, Math.max(cooldown, 0));
 	}
 	
-	protected boolean shouldTickAttackCooldown()
+	protected boolean hasLivingTarget()
 	{
 		return getTarget() != null && getTarget().isAlive() && !getTarget().isRemoved();
 	}
 	
 	public boolean isReadyToAttack()
 	{
-		return dataTracker.get(ATTACK_COOLDOWN) <= 0 && shouldTickAttackCooldown() && isNotInAttackAnimation();
+		return dataTracker.get(ATTACK_COOLDOWN) <= 0 && hasLivingTarget() && isNotInAttackAnimation();
 	}
 	
 	@Override
 	public void tick()
 	{
 		super.tick();
-		if(shouldTickAttackCooldown())
+		if(hasLivingTarget())
 		{
 			int cd = dataTracker.get(ATTACK_COOLDOWN);
 			if(cd > 0)

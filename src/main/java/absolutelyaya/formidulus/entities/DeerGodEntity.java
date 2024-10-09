@@ -25,6 +25,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.BlockStateParticleEffect;
@@ -52,9 +53,11 @@ public class DeerGodEntity extends BossEntity
 	static final TrackedData<Boolean> SUMMONED = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Boolean> LANTERN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Boolean> CLAW = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	static final TrackedData<Boolean> RANGED = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Vector3f> ORIGIN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
 	static final TrackedData<Integer> TELEPORT_TIMER = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	static final TrackedData<Integer> TELEPORT_COOLDOWN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	static final TrackedData<Integer> RANGED_COOLDOWN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	static final TrackedData<Vector3f> NEXT_TELEPORT_DEST = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
 	
 	static final byte UNSUMMONED_POSE = 0;
@@ -82,6 +85,7 @@ public class DeerGodEntity extends BossEntity
 	int deathTime, swingChain;
 	DamageSource killingBlow;
 	PlayerEntity killer;
+	float rangedDamageTaken;
 	
 	public DeerGodEntity(EntityType<? extends BossEntity> entityType, World world)
 	{
@@ -103,9 +107,11 @@ public class DeerGodEntity extends BossEntity
 		builder.add(SUMMONED, false);
 		builder.add(LANTERN, true);
 		builder.add(CLAW, false);
+		builder.add(RANGED, false);
 		builder.add(ORIGIN, getPos().toVector3f());
 		builder.add(TELEPORT_TIMER, Integer.MIN_VALUE);
 		builder.add(TELEPORT_COOLDOWN, 200);
+		builder.add(RANGED_COOLDOWN, 100);
 		builder.add(NEXT_TELEPORT_DEST, getPos().toVector3f());
 	}
 	
@@ -125,6 +131,7 @@ public class DeerGodEntity extends BossEntity
 		goalSelector.add(1, new SummonLanternGoal(this));
 		goalSelector.add(1, new LanternSwingGoal(this));
 		goalSelector.add(1, new LanternSlamGoal(this));
+		goalSelector.add(1, new ProjectileGoal(this));
 		goalSelector.add(2, new TeleportToTargetGoal(this));
 		goalSelector.add(3, new ApproachTargetGoal(this, 0.4f));
 		
@@ -194,6 +201,15 @@ public class DeerGodEntity extends BossEntity
 			dataTracker.set(TELEPORT_COOLDOWN, dataTracker.get(TELEPORT_COOLDOWN) - 1);
 		if(isTeleporting())
 			dataTracker.set(TELEPORT_TIMER, dataTracker.get(TELEPORT_TIMER) - 1);
+		if(rangedDamageTaken > 0f)
+			rangedDamageTaken -= 0.05f;
+		if(dataTracker.get(RANGED) && hasLivingTarget())
+			dataTracker.set(RANGED_COOLDOWN, dataTracker.get(RANGED_COOLDOWN) - 1);
+		if(!dataTracker.get(RANGED) && rangedDamageTaken > 50)
+		{
+			dataTracker.set(RANGED, true);
+			triggerMonologueSequence(SequenceTriggerPayload.PROJECTILE_SEQUENCE);
+		}
 	}
 	
 	@Override
@@ -265,6 +281,7 @@ public class DeerGodEntity extends BossEntity
 					Vec3d vel = Vec3d.ZERO.addRandom(random, 1.5f);
 					vel = new Vec3d(vel.x, Math.abs(vel.y * 0.2f), vel.z);
 					IrrlichtEntity funke = new IrrlichtEntity(EntityRegistry.IRRLICHT, getWorld());
+					funke.setOwner(this);
 					funke.setPosition(getPos().add(impactOffset));
 					funke.setVelocity(vel);
 					funke.setLifetime(300 + (int)(random.nextFloat() * 50));
@@ -435,9 +452,9 @@ public class DeerGodEntity extends BossEntity
 	}
 	
 	@Override
-	protected boolean shouldTickAttackCooldown()
+	protected boolean hasLivingTarget()
 	{
-		return super.shouldTickAttackCooldown() && !isInSequence();
+		return super.hasLivingTarget() && !isInSequence();
 	}
 	
 	public boolean isInSequence()
@@ -519,6 +536,8 @@ public class DeerGodEntity extends BossEntity
 		boolean b = super.damage(source, amount);
 		if(getWorld().isClient)
 			return b;
+		if(b && (source.getAttacker() != null && distanceTo(source.getAttacker()) > 10) || (source.getSource() != null && source.getSource() instanceof ProjectileEntity))
+			rangedDamageTaken += amount; //let's keep it raw
 		if(!dataTracker.get(CLAW) && b && getHealth() <= getMaxHealth() / 2f && getHealth() > 0f)
 		{
 			cancelActiveGoals();
@@ -548,6 +567,7 @@ public class DeerGodEntity extends BossEntity
 		super.cancelActiveGoals();
 		dataTracker.set(TELEPORT_TIMER, Integer.MIN_VALUE);
 		setAnimation(IDLE_ANIM);
+		getWorld().getEntitiesByType(TypeFilter.instanceOf(IrrlichtEntity.class), Box.from(getPos()).expand(32), i -> i.owner == this).forEach(LivingEntity::kill);
 	}
 	
 	@Override
@@ -617,7 +637,7 @@ public class DeerGodEntity extends BossEntity
 	
 	public boolean isReadyToTeleport()
 	{
-		return dataTracker.get(TELEPORT_COOLDOWN) <= 0 && getHealth() / getMaxHealth() <= 0.75f;
+		return dataTracker.get(TELEPORT_COOLDOWN) <= 0 && getHealth() / getMaxHealth() <= 0.75f && rangedDamageTaken < 100f;
 	}
 	
 	public void setTeleportCooldown(int cooldown)
@@ -666,6 +686,10 @@ public class DeerGodEntity extends BossEntity
 			NbtCompound origin = nbt.getCompound("Origin");
 			dataTracker.set(ORIGIN, new Vector3f(origin.getFloat("x"), origin.getFloat("y"), origin.getFloat("z")));
 		}
+		if(nbt.contains("Ranged", NbtElement.BYTE_TYPE))
+			dataTracker.set(RANGED, nbt.getBoolean("Ranged"));
+		if(nbt.contains("RangedDamageTaken", NbtElement.FLOAT_TYPE))
+			rangedDamageTaken = nbt.getFloat("RangedDamageTaken");
 	}
 	
 	@Override
@@ -686,6 +710,10 @@ public class DeerGodEntity extends BossEntity
 			nbt.putBoolean("Lantern", true);
 		if(dataTracker.get(CLAW))
 			nbt.putBoolean("Claw", true);
+		if(dataTracker.get(RANGED))
+			nbt.putBoolean("Ranged", true);
+		if(rangedDamageTaken > 0f)
+			nbt.putFloat("RangedDamageTaken", rangedDamageTaken);
 	}
 	
 	static class LanternSwingGoal extends AnimatedAttackGoal<DeerGodEntity>
@@ -711,12 +739,18 @@ public class DeerGodEntity extends BossEntity
 		}
 		
 		@Override
+		public boolean shouldContinue()
+		{
+			return super.shouldContinue() && !mob.isInSequence();
+		}
+		
+		@Override
 		public void tick()
 		{
 			super.tick();
-			if(time >= 22 && time <= 32)
+			if(time >= 22 && time <= 30)
 			{
-				float rotation = (float)Math.toRadians(-mob.getYaw() + 135 - (time - 22f) / (32f - 22f) * 225);
+				float rotation = (float)Math.toRadians(-mob.getYaw() + 135 - (time - 22f) / (30f - 22f) * 225);
 				Vec3d offset = new Vec3d(0, 0, 0.5).rotateY(rotation);
 				Vec3d expansion = new Vec3d(2, 0f, 3).rotateY(rotation);
 				List<LivingEntity> hits = mob.getWorld().getNonSpectatingEntities(LivingEntity.class,
@@ -758,6 +792,12 @@ public class DeerGodEntity extends BossEntity
 			mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
 			mob.prevBodyYaw = mob.bodyYaw = mob.headYaw;
 			mob.swingChain = 0;
+		}
+		
+		@Override
+		public boolean shouldContinue()
+		{
+			return super.shouldContinue() && !mob.isInSequence();
 		}
 		
 		@Override
@@ -867,7 +907,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean shouldContinue()
 		{
-			return mob.shouldTickAttackCooldown() && mob.isNotInAttackAnimation() && !(mob.distanceTo(mob.getTarget()) <= 4f || failed);
+			return mob.hasLivingTarget() && mob.isNotInAttackAnimation() && !(mob.distanceTo(mob.getTarget()) <= 4f || failed);
 		}
 		
 		@Override
@@ -1021,6 +1061,43 @@ public class DeerGodEntity extends BossEntity
 					return dest;
 			}
 			return null;
+		}
+	}
+	
+	static class ProjectileGoal extends InterruptableGoal
+	{
+		final DeerGodEntity mob;
+		
+		public ProjectileGoal(DeerGodEntity mob)
+		{
+			this.mob = mob;
+		}
+		
+		@Override
+		public boolean canStart()
+		{
+			return !mob.isInSequence() && mob.dataTracker.get(RANGED) && mob.dataTracker.get(RANGED_COOLDOWN) <= 0 && mob.rangedDamageTaken > 10;
+		}
+		
+		@Override
+		public void start()
+		{
+			super.start();
+			float amount = (1f - mob.getHealth() / mob.getMaxHealth()) * 4f + mob.getWorld().getDifficulty().getId() * 0.33f;
+			for (int i = 0; i < Math.max(amount, 1); i++)
+			{
+				Vec3d pos = mob.getPos().add(0, -1, 0)
+									.add((mob.random.nextFloat() - 0.5f) * 2f * 4f, 0f, (mob.random.nextFloat() - 0.5f) * 2f * 4f);
+				IrrlichtEntity funke = new IrrlichtEntity(EntityRegistry.IRRLICHT, mob.getWorld());
+				funke.setOwner(mob);
+				funke.setPosition(pos);
+				funke.setType(IrrlichtEntity.PROJECTILE_TYPE);
+				funke.lifetime = 100 - (int)(mob.random.nextFloat() * 40f);
+				mob.getWorld().spawnEntity(funke);
+			}
+			mob.dataTracker.set(RANGED_COOLDOWN, (int)(((100 + mob.random.nextFloat() * 200) - mob.getWorld().getDifficulty().getId() * 20) *
+								  ((mob.getHealth() / mob.getMaxHealth() < 0.5f ? 0.5f : 1f))));
+			mob.rangedDamageTaken -= amount / Math.max(mob.getWorld().getDifficulty().getId(), 1);
 		}
 	}
 }
