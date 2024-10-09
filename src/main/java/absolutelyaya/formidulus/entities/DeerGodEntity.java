@@ -180,6 +180,8 @@ public class DeerGodEntity extends BossEntity
 			Vec3d dest = getNextTeleportDestination();
 			playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 0.6f, 1f);
 			setPosition(dest.x, dest.y, dest.z);
+			if(getTarget() != null && distanceTo(getTarget()) < 6f)
+				lookAt(EntityAnchorArgumentType.EntityAnchor.FEET, getTarget().getPos());
 			playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 0.6f, 1f);
 		}
 		if(getWorld().isClient)
@@ -612,7 +614,7 @@ public class DeerGodEntity extends BossEntity
 	
 	public boolean isReadyToTeleport()
 	{
-		return dataTracker.get(TELEPORT_COOLDOWN) <= 0;
+		return dataTracker.get(TELEPORT_COOLDOWN) <= 0 && getHealth() / getMaxHealth() <= 0.75f;
 	}
 	
 	public void setTeleportCooldown(int cooldown)
@@ -713,7 +715,7 @@ public class DeerGodEntity extends BossEntity
 			{
 				float rotation = (float)Math.toRadians(-mob.getYaw() + 135 - (time - 27f) / (35f - 27f) * 225);
 				Vec3d offset = new Vec3d(0, 0, 0.5).rotateY(rotation);
-				Vec3d expansion = new Vec3d(3, 0f, 4).rotateY(rotation);
+				Vec3d expansion = new Vec3d(2, 0f, 3).rotateY(rotation);
 				List<LivingEntity> hits = mob.getWorld().getNonSpectatingEntities(LivingEntity.class,
 						Box.from(mob.getPos()).stretch(expansion.x, 0f, expansion.z));
 				for (LivingEntity hit : hits)
