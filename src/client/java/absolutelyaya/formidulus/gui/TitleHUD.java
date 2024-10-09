@@ -108,6 +108,13 @@ public class TitleHUD
 	
 	public static void queueTitle(TextObject text)
 	{
+		if(text.clearPreceding)
+		{
+			textQueue.clear();
+			if(!curText.isEmpty())
+				forceDelete = true;
+			delay = 0f;
+		}
 		textQueue.add(text);
 	}
 	
@@ -122,6 +129,7 @@ public class TitleHUD
 		int color = -1;
 		Identifier font = null;
 		boolean jitter;
+		boolean clearPreceding;
 		
 		public TextObject(String text)
 		{
@@ -218,6 +226,17 @@ public class TitleHUD
 		public TextObject jitter(boolean b)
 		{
 			jitter = b;
+			return this;
+		}
+		
+		public boolean clearPreceding()
+		{
+			return clearPreceding;
+		}
+		
+		public TextObject clearPreceding(boolean b)
+		{
+			clearPreceding = b;
 			return this;
 		}
 		

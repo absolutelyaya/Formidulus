@@ -14,7 +14,7 @@ public class ClientPacketHandler
 				case SequenceTriggerPayload.SPAWN_SEQUENCE:
 				{
 					TitleHUD.queueTitle(TitleHUD.makeTextObject("Es ausus altare meum delictem ?").color(0) //Have you dared to desecrate my altar ?
-												.jitter(true).font(Formidulus.FONT).typeSpeed(25f).displayDuration(5f).instability(0.7f).color(0x000000));
+												.jitter(true).font(Formidulus.FONT).typeSpeed(25f).displayDuration(5f).instability(0.7f).color(0x000000).clearPreceding(true));
 					TitleHUD.queueTitle(TitleHUD.makeTextObject("Non habes ullam veneratia ?") //Have you no respect ?
 												.jitter(true).font(Formidulus.FONT).typeSpeed(30f).displayDuration(5f).instability(0.5f));
 					TitleHUD.queueTitle(TitleHUD.makeTextObject("Nulla res.") //No matter.
@@ -26,7 +26,7 @@ public class ClientPacketHandler
 				case SequenceTriggerPayload.PHASE_TRANSITION_SEQUENCE:
 				{
 					TitleHUD.queueTitle(TitleHUD.makeTextObject("Tus inprob modicas...").color(0) //You little brat...
-												.jitter(true).font(Formidulus.FONT).typeSpeed(40f).instability(0.3f).displayDuration(3f));
+												.jitter(true).font(Formidulus.FONT).typeSpeed(40f).instability(0.3f).displayDuration(3f).clearPreceding(true));
 					TitleHUD.queueTitle(TitleHUD.makeTextObject("Terra, tus cruorem mihi!") //Earth, shed Blood for me!
 												.jitter(true).font(Formidulus.FONT).typeSpeed(80f).displayDuration(5f));
 					TitleHUD.queueTitle(TitleHUD.makeTextObject("Videamus quomodo contra hoc vales.") //Let's see how you fare against this.
@@ -36,7 +36,7 @@ public class ClientPacketHandler
 				case SequenceTriggerPayload.PLAYER_DEATH_SEQUENCE:
 				{
 					TitleHUD.queueTitle(TitleHUD.makeTextObject("Numquam redibis.").color(0) //You will never return.
-												.jitter(true).font(Formidulus.FONT).delay(5f).displayDuration(5f));
+												.jitter(true).font(Formidulus.FONT).delay(5f).displayDuration(5f).clearPreceding(true));
 					break;
 				}
 				case SequenceTriggerPayload.DEATH_SEQUENCE:
@@ -50,7 +50,7 @@ public class ClientPacketHandler
 					TitleHUD.queueTitle(TitleHUD.makeTextObject("semel vas quod satis est invenio,") //once I find a vessel that is sufficient,
 												.jitter(true).font(Formidulus.FONT).typeSpeed(30f).displayDuration(6f));
 					TitleHUD.queueTitle(TitleHUD.makeTextObject("Ego te delebus.") //I will destroy you.
-												.jitter(true).font(Formidulus.FONT).typeSpeed(10f).displayDuration(6f));
+												.jitter(true).font(Formidulus.FONT).typeSpeed(10f).displayDuration(6f).clearPreceding(true));
 					break;
 				}
 			}
