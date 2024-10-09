@@ -326,7 +326,7 @@ public class DeerGodModel extends SinglePartEntityModel<DeerGodEntity>
 	{
 		getPart().traverse().forEach(ModelPart::resetTransform);
 		if(entity.idleAnimationState.isRunning()) //TODO: add running
-			blendMovement(DeerGodAnimations.idle, DeerGodAnimations.walk, limbSwing, ageInTicks, limbSwingAmount, 1f, 4f, 5f);
+			blendMovement(DeerGodAnimations.idle, DeerGodAnimations.walk, limbSwing, ageInTicks, limbSwingAmount, 1f, 3f, 5f);
 		updateAnimation(entity.unsummonedPoseAnimationState, DeerGodAnimations.unsummonedPose, ageInTicks);
 		updateAnimation(entity.spawnSequenceAnimationState, DeerGodAnimations.spawnSequence, ageInTicks);
 		updateAnimation(entity.swingAnimationState, DeerGodAnimations.lanternSideSwing, ageInTicks);

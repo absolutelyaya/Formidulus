@@ -225,7 +225,7 @@ public class DeerGodEntity extends BossEntity
 		}
 		if(getCurrentAnimation() == SWING_ANIM)
 		{
-			if(!getAnimationFlag(0) && getCurrentAnimationDuration() >= 1.4f)
+			if(!getAnimationFlag(0) && getCurrentAnimationDuration() >= 1.1f)
 			{
 				setAnimationFlag(0, true);
 				getWorld().playSound(null, getBlockPos(), SoundEvents.ENTITY_WITCH_THROW, SoundCategory.HOSTILE, 0.8f, 0.1f);
@@ -291,7 +291,7 @@ public class DeerGodEntity extends BossEntity
 				if(!getAnimationFlag(1))
 				{
 					setAnimationFlag(1, true);
-					playSound(SoundEvents.ENTITY_EVOKER_PREPARE_SUMMON, 5f, 1f);
+					playSound(SoundEvents.ENTITY_EVOKER_PREPARE_ATTACK, 0.6f, 1f);
 				}
 				for (int i = 0; i < 12; i++)
 				{
@@ -309,7 +309,9 @@ public class DeerGodEntity extends BossEntity
 			{
 				setAnimationFlag(2, true);
 				Vector3f pos = dataTracker.get(ORIGIN);
+				playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 0.6f, 1f);
 				setPosition(pos.x, pos.y, pos.z);
+				playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 0.6f, 1f);
 				if(getTarget() != null)
 					lookAt(EntityAnchorArgumentType.EntityAnchor.FEET, getTarget().getPos());
 				else
@@ -318,6 +320,7 @@ public class DeerGodEntity extends BossEntity
 			if(getWorld().isClient && !getAnimationFlag(3) && getCurrentAnimationDuration() >= 5.5f)
 			{
 				setAnimationFlag(3, true);
+				playSound(SoundEvents.ENTITY_EVOKER_PREPARE_SUMMON, 5f, 1f);
 				Vec3d dest = getPos().add((float)getRotationVector().x, getHeight() / 2f, (float)getRotationVector().z);
 				for (int i = 0; i < 111; i++)
 				{
@@ -511,7 +514,7 @@ public class DeerGodEntity extends BossEntity
 	{
 		if(source.isOf(DamageTypes.OUT_OF_WORLD) || source.isOf(DamageTypes.GENERIC_KILL))
 			return super.damage(source, amount);
-		if(isInSequence())
+		if(isInSequence() || getVanishingPercent() > 0.5f)
 			return false;
 		boolean b = super.damage(source, amount);
 		if(getWorld().isClient)
@@ -609,7 +612,7 @@ public class DeerGodEntity extends BossEntity
 	
 	public boolean isReadyToAttack()
 	{
-		return super.isReadyToAttack() && !isInSequence() && getVanishingPercent() < 0.5f && !isAboutToTeleport() && navigation.isIdle();
+		return super.isReadyToAttack() && dataTracker.get(SUMMONED) && !isInSequence() && getVanishingPercent() < 0.5f && !isAboutToTeleport() && navigation.isIdle();
 	}
 	
 	public boolean isReadyToTeleport()
@@ -689,13 +692,13 @@ public class DeerGodEntity extends BossEntity
 	{
 		public LanternSwingGoal(DeerGodEntity mob)
 		{
-			super(mob, SWING_ANIM, 3.05f, IDLE_ANIM);
+			super(mob, SWING_ANIM, 2.45f, IDLE_ANIM);
 		}
 		
 		@Override
 		public boolean canStart()
 		{
-			return mob.hasLantern() && super.canStart() && mob.distanceTo(mob.getTarget()) < 4f && (mob.random.nextFloat() <= 1.9f / (mob.swingChain + 1));
+			return mob.hasLantern() && super.canStart() && mob.distanceTo(mob.getTarget()) < 4f && (mob.random.nextFloat() <= 1.2f / (mob.swingChain + 1));
 		}
 		
 		@Override
@@ -711,9 +714,9 @@ public class DeerGodEntity extends BossEntity
 		public void tick()
 		{
 			super.tick();
-			if(time >= 27 && time <= 35)
+			if(time >= 22 && time <= 32)
 			{
-				float rotation = (float)Math.toRadians(-mob.getYaw() + 135 - (time - 27f) / (35f - 27f) * 225);
+				float rotation = (float)Math.toRadians(-mob.getYaw() + 135 - (time - 22f) / (32f - 22f) * 225);
 				Vec3d offset = new Vec3d(0, 0, 0.5).rotateY(rotation);
 				Vec3d expansion = new Vec3d(2, 0f, 3).rotateY(rotation);
 				List<LivingEntity> hits = mob.getWorld().getNonSpectatingEntities(LivingEntity.class,
@@ -722,7 +725,7 @@ public class DeerGodEntity extends BossEntity
 				{
 					if (hit instanceof IrrlichtEntity || hit instanceof DeerGodEntity)
 						continue;
-					if(hit.damage(DamageSources.get(mob.getWorld(), DamageSources.LANTERN, mob), 5f))
+					if(hit.damage(DamageSources.get(mob.getWorld(), DamageSources.LANTERN, mob), 15f))
 						hit.setVelocity(offset.normalize().multiply(2f).add(0f, 0.2f, 0f));
 				}
 			}
@@ -775,7 +778,7 @@ public class DeerGodEntity extends BossEntity
 				{
 					if (hit instanceof IrrlichtEntity || hit instanceof DeerGodEntity)
 						continue;
-					if(hit.damage(DamageSources.get(mob.getWorld(), DamageSources.LANTERN, mob), 5f))
+					if(hit.damage(DamageSources.get(mob.getWorld(), DamageSources.LANTERN, mob), 12f))
 						hit.setVelocity(mob.getRotationVector().multiply(1f, 0f, 1f).normalize().multiply(0.5f).add(0f, 1.5f, 0f));
 				}
 			}
@@ -789,7 +792,7 @@ public class DeerGodEntity extends BossEntity
 				{
 					if(hit instanceof IrrlichtEntity || hit instanceof DeerGodEntity)
 						continue;
-					float strength = Math.max(1f - (float)impact.distanceTo(hit.getPos()) / 10f, 0f);
+					float strength = Math.max(1f - (float)impact.distanceTo(hit.getPos()) / 6f, 0f);
 					if(strength <= 0f)
 						continue;
 					if(hit.damage(DamageSources.get(mob.getWorld(), DamageSources.LANTERN, mob), strength * 20f))
@@ -809,7 +812,7 @@ public class DeerGodEntity extends BossEntity
 	{
 		public SummonLanternGoal(DeerGodEntity mob)
 		{
-			super(mob, SUMMON_LANTERN_ANIM, 4f, IDLE_ANIM);
+			super(mob, SUMMON_LANTERN_ANIM, 2.75f, IDLE_ANIM);
 		}
 		
 		@Override
@@ -864,12 +867,13 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean shouldContinue()
 		{
-			return mob.shouldTickAttackCooldown() && mob.isNotInAttackAnimation();
+			return mob.shouldTickAttackCooldown() && mob.isNotInAttackAnimation() && !(mob.distanceTo(mob.getTarget()) <= 4f || failed);
 		}
 		
 		@Override
 		public void tick()
 		{
+			time++;
 			super.tick();
 			if(mob.getTarget() == null || mob.getTarget().isRemoved())
 			{
@@ -878,19 +882,21 @@ public class DeerGodEntity extends BossEntity
 				stop();
 				return;
 			}
-			mob.navigation.startMovingTo(mob.getTarget(), speed);
-			mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, mob.getTarget().getEyePos());
-			failed = mob.getPos().distanceTo(new Vec3d(mob.dataTracker.get(ORIGIN))) > 16f || ++time > 200;
+			failed = mob.getTarget().getPos().distanceTo(new Vec3d(mob.dataTracker.get(ORIGIN))) > 32f || ++time > 200;
 			if(mob.distanceTo(mob.getTarget()) <= 4f || failed)
 			{
 				mob.navigation.stop();
 				stop();
+				return;
 			}
+			mob.navigation.startMovingTo(mob.getTarget(), speed);
+			mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, mob.getTarget().getEyePos());
 		}
 		
 		@Override
 		public void stop()
 		{
+			mob.navigation.stop();
 			super.stop();
 			if(failed)
 				mob.setTeleportCooldown(0);

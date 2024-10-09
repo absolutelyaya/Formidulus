@@ -79,7 +79,7 @@ public class TitleHUD
 		if(!curText.isEmpty())
 		{
 			matrices.push();
-			matrices.translate(width / 2f, height - height / 5f, 10);
+			matrices.translate(width / 2f, height - 74, 10);
 			matrices.scale(2f, 2f, 2f);
 			RenderSystem.enableBlend();
 			Text t = Text.of(curText);

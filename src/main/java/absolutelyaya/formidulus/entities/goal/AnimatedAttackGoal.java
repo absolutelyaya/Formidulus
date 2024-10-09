@@ -57,7 +57,7 @@ public abstract class AnimatedAttackGoal<T extends AnimatedHostileEntity> extend
 	@Override
 	public boolean shouldContinue()
 	{
-		return time <= duration * 20 || target == null || target.isDead() || target.isRemoved();
+		return time <= duration * 20 && !(target == null || target.isDead() || target.isRemoved());
 	}
 	
 	protected abstract int getAttackCooldown();
