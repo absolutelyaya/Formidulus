@@ -30,9 +30,9 @@ public class InGameHudMixin
 		
 		if(cinematicBars > 0f)
 		{
-			context.fill(0, 0, context.getScaledWindowWidth(), (int)(context.getScaledWindowHeight() / 10 * cinematicBars), 0xff000000);
+			context.fill(0, 0, context.getScaledWindowWidth(), (int)(39 * cinematicBars), 0xff000000);
 			int y = context.getScaledWindowHeight();
-			context.fill(0, (int)(y - context.getScaledWindowHeight() / 10 * cinematicBars), context.getScaledWindowWidth(), y, 0xff000000);
+			context.fill(0, (int)(y - 39 * cinematicBars), context.getScaledWindowWidth(), y, 0xff000000);
 		}
 	}
 }
