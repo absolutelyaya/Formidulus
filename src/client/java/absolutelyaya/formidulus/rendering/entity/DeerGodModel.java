@@ -355,9 +355,9 @@ public class DeerGodModel extends SinglePartEntityModel<DeerGodEntity>
 		if(entity.hasClaw())
 		{
 			if(entity.shouldShowClawWithoutExtras())
-				updateAnimation(entity.showClawWithoutExtrasAnimationState, DeerGodAnimations.showClaw, ageInTicks);
+				updateAnimation(entity.showClawWithoutExtrasAnimationState, DeerGodAnimations.showClawWithoutExtras, ageInTicks);
 			else
-				updateAnimation(entity.showClawAnimationState, DeerGodAnimations.showClawWithoutExtras, ageInTicks);
+				updateAnimation(entity.showClawAnimationState, DeerGodAnimations.showClaw, ageInTicks);
 		}
 		else
 			updateAnimation(entity.noClawAnimationState, DeerGodAnimations.noClaw, ageInTicks);

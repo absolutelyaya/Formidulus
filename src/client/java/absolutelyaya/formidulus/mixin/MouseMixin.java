@@ -55,7 +55,7 @@ public abstract class MouseMixin
 			if(p.hasStatusEffect(StatusEffectRegistry.REVERENCE))
 			{
 				List<BossEntity> targets = world.getEntitiesByType(TypeFilter.instanceOf(BossEntity.class), p.getBoundingBox().expand(16), i -> true);
-				BossEntity closest = world.getClosestEntity(targets, TargetPredicate.createNonAttackable(), p, p.getX(), p.getY(), p.getZ());
+				BossEntity closest = world.getClosestEntity(targets, TargetPredicate.createNonAttackable().setPredicate(i -> true), p, p.getX(), p.getY(), p.getZ());
 				if(closest == null || closest.distanceTo(p) > 16)
 					return;
 				Vector2f targetRot = RotationUtil.getRotationTowards(p.getEyePos(), closest.getFocusPos());
@@ -65,8 +65,8 @@ public abstract class MouseMixin
 				Vector2f dir = new Vector2f(diff.x, diff.y).normalize();
 				if(diff.length() > 0)
 				{
-					double dx = cursorXSmoother.smooth(dir.x * diff.length() * 0.5f, timeDelta * 5f);
-					double dy = cursorYSmoother.smooth(dir.y * diff.length() * 0.5f, timeDelta * 5f);
+					double dx = cursorXSmoother.smooth(dir.x * diff.length() * 0.33f, timeDelta * 10f);
+					double dy = cursorYSmoother.smooth(dir.y * diff.length() * 0.33f, timeDelta * 10f);
 					p.changeLookDirection(dx, dy);
 				}
 			}
