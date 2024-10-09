@@ -1,5 +1,6 @@
 package absolutelyaya.formidulus.datagen;
 
+import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.registries.EntityRegistry;
 import absolutelyaya.formidulus.registries.ItemRegistry;
 import absolutelyaya.formidulus.registries.StatusEffectRegistry;
@@ -24,10 +25,14 @@ public class BaseTranslationProvider extends FabricLanguageProvider
 		builder.add(EntityRegistry.IRRLICHT, "Scintilla Vitae");
 		builder.add(EntityRegistry.PUMPKIN, "Volatile Pumpkin");
 		
+		builder.add("item." + Formidulus.MOD_ID + ".expandable_lore_hint", "[Press Shift for more Info]");
 		builder.add(ItemRegistry.DEER_SKULL, "Deer Skull");
 		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore0", "The Skull of a horrid Skeletal Beast.");
-		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore1", "A third eye was carved into its forehead and it's painted with blood.");
-		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore2", "It was as though it spoke to us.. but we couldn't comprehend it.");
+		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore1", "A third eye was carved into its forehead.");
+		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore2", "There's also strange patterns painted onto it using blood.");
+		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore3", " ");
+		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore4", "It was as though it spoke to us..");
+		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore5", "..but we couldn't comprehend it.");
 		
 		builder.add("death.attack.lantern", "%1$s was shown the Light by %2$s");
 		builder.add("death.attack.lantern.item", "%1s was shown the Light by %2$s using %3$s");

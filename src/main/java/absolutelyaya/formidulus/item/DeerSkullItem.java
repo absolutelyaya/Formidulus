@@ -11,7 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
 
-public class DeerSkullItem extends Item implements Equipment
+public class DeerSkullItem extends ExpandableLoreItem implements Equipment
 {
 	public DeerSkullItem(Settings settings)
 	{

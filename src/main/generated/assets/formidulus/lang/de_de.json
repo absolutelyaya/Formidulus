@@ -2,9 +2,9 @@
   "death.attack.claw": "%1$s wurde von %2$s zerrissen",
   "death.attack.claw.item": "%1s wurde von %2$s mit %3$s zerrissen",
   "death.attack.claw.player": "%1s wurde zerrissen beim Versuch %2$s zu entkommen",
-  "death.attack.lantern": "%1$s wurde von %2$s das Licht gezeigt",
-  "death.attack.lantern.item": "%1$s wurde von %2$s mittels %3$s das Licht gezeigt",
-  "death.attack.lantern.player": "%1s wurde das Licht gezeigt, während eines Kampfes mit %2$s",
+  "death.attack.lantern": "%1$s wurde von %2$s ins Licht geführt",
+  "death.attack.lantern.item": "%1$s wurde von %2$s mittels %3$s ins Licht geführt",
+  "death.attack.lantern.player": "%1s wurde ins Licht geführt, während eines Kampfes mit %2$s",
   "death.attack.sacrifice": "%1$s wurde zu einer Opfergabe durch %2$s",
   "death.attack.sacrifice.item": "%1s wurde zu einer Opfergabe durch %2$s mit %3$s",
   "death.attack.sacrifice.player": "%1s wurde zu einer Opfergabe beim Versuch %2$s zu entkommen",
@@ -14,6 +14,10 @@
   "entity.formidulus.pumpkin": "Explosiver Kürbis",
   "item.formidulus.deer_skull": "Hirsch Schädel",
   "item.formidulus.deer_skull.lore0": "Der Schädel eines schrecklichen Skelettbiests.",
-  "item.formidulus.deer_skull.lore1": "Ein drittes Auge wurde in diesen zuvor normalen Schädel geschnitzt.",
-  "item.formidulus.deer_skull.lore2": "Es war als würde es mit uns reden.. aber wir konnten nichts verstehen."
+  "item.formidulus.deer_skull.lore1": "In dessen Stirn wurde ein drittes Auge geschnitzt.",
+  "item.formidulus.deer_skull.lore2": "Zudem ist er in seltsamen Mustern mit Blut bemalt.",
+  "item.formidulus.deer_skull.lore3": " ",
+  "item.formidulus.deer_skull.lore4": "Es war als würde es mit uns reden..",
+  "item.formidulus.deer_skull.lore5": "..aber wir konnten nichts verstehen.",
+  "item.formidulus.expandable_lore_hint": "[Drück Shift für mehr Infos]"
 }

@@ -1,5 +1,6 @@
 package absolutelyaya.formidulus.datagen;
 
+import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.registries.EntityRegistry;
 import absolutelyaya.formidulus.registries.ItemRegistry;
 import absolutelyaya.formidulus.registries.StatusEffectRegistry;
@@ -24,10 +25,14 @@ public class GermanTranslationProvider extends FabricLanguageProvider
 		builder.add(EntityRegistry.IRRLICHT, "Scintilla Vitae");
 		builder.add(EntityRegistry.PUMPKIN, "Explosiver Kürbis");
 		
+		builder.add("item." + Formidulus.MOD_ID + ".expandable_lore_hint", "[Drück Shift für mehr Infos]");
 		builder.add(ItemRegistry.DEER_SKULL, "Hirsch Schädel");
 		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore0", "Der Schädel eines schrecklichen Skelettbiests.");
-		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore1", "Ein drittes Auge wurde in die Stirn geschnitzt und er ist mit Blut bemalt.");
-		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore2", "Es war als würde es mit uns reden.. aber wir konnten nichts verstehen.");
+		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore1", "In dessen Stirn wurde ein drittes Auge geschnitzt.");
+		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore2", "Zudem ist er in seltsamen Mustern mit Blut bemalt.");
+		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore3", " ");
+		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore4", "Es war als würde es mit uns reden..");
+		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore5", "..aber wir konnten nichts verstehen.");
 		
 		builder.add("death.attack.lantern", "%1$s wurde von %2$s ins Licht geführt");
 		builder.add("death.attack.lantern.item", "%1$s wurde von %2$s mittels %3$s ins Licht geführt");

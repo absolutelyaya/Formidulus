@@ -14,6 +14,10 @@
   "entity.formidulus.pumpkin": "Volatile Pumpkin",
   "item.formidulus.deer_skull": "Deer Skull",
   "item.formidulus.deer_skull.lore0": "The Skull of a horrid Skeletal Beast.",
-  "item.formidulus.deer_skull.lore1": "A third eye was carved into this previously ordinary deer skull.",
-  "item.formidulus.deer_skull.lore2": "It was as though it spoke to us.. but we couldn't comprehend it."
+  "item.formidulus.deer_skull.lore1": "A third eye was carved into its forehead.",
+  "item.formidulus.deer_skull.lore2": "There's also strange patterns painted onto it using blood.",
+  "item.formidulus.deer_skull.lore3": " ",
+  "item.formidulus.deer_skull.lore4": "It was as though it spoke to us..",
+  "item.formidulus.deer_skull.lore5": "..but we couldn't comprehend it.",
+  "item.formidulus.expandable_lore_hint": "[Press Shift for more Info]"
 }
