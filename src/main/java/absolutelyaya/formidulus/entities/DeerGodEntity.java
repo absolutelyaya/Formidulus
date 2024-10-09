@@ -79,7 +79,7 @@ public class DeerGodEntity extends BossEntity
 	public AnimationState showClawWithoutExtrasAnimationState = new AnimationState();
 	public AnimationState phaseTransitionAnimationState = new AnimationState();
 	public AnimationState deathAnimationState = new AnimationState();
-	int deathTime;
+	int deathTime, swingChain;
 	DamageSource killingBlow;
 	PlayerEntity killer;
 	
@@ -693,7 +693,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean canStart()
 		{
-			return mob.hasLantern() && super.canStart() && mob.distanceTo(mob.getTarget()) < 4f;
+			return mob.hasLantern() && super.canStart() && mob.distanceTo(mob.getTarget()) < 4f && (mob.random.nextFloat() <= 1.9f / (mob.swingChain + 1));
 		}
 		
 		@Override
@@ -702,6 +702,7 @@ public class DeerGodEntity extends BossEntity
 			super.start();
 			mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
 			mob.prevBodyYaw = mob.bodyYaw = mob.headYaw;
+			mob.swingChain++;
 		}
 		
 		@Override
@@ -742,7 +743,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean canStart()
 		{
-			return mob.hasLantern() && super.canStart() && mob.distanceTo(mob.getTarget()) < 8f;
+			return mob.hasLantern() && super.canStart() && mob.distanceTo(mob.getTarget()) < 7f && (mob.swingChain > 1 || mob.random.nextFloat() < 0.01f);
 		}
 		
 		@Override
@@ -751,6 +752,7 @@ public class DeerGodEntity extends BossEntity
 			super.start();
 			mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
 			mob.prevBodyYaw = mob.bodyYaw = mob.headYaw;
+			mob.swingChain = 0;
 		}
 		
 		@Override
@@ -780,7 +782,7 @@ public class DeerGodEntity extends BossEntity
 				mob.setHasLantern(false);
 				Vec3d impact = mob.getPos().add(new Vec3d(0.5, 0, 3).rotateY((float)Math.toRadians(-mob.getYaw())));
 				List<LivingEntity> hits = mob.getWorld().getNonSpectatingEntities(LivingEntity.class,
-						Box.from(impact).expand(10f));
+						Box.from(impact).expand(8f));
 				for (LivingEntity hit : hits)
 				{
 					if(hit instanceof IrrlichtEntity || hit instanceof DeerGodEntity)
