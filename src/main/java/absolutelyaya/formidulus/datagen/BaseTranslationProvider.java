@@ -26,7 +26,7 @@ public class BaseTranslationProvider extends FabricLanguageProvider
 		
 		builder.add(ItemRegistry.DEER_SKULL, "Deer Skull");
 		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore0", "The Skull of a horrid Skeletal Beast.");
-		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore1", "A third eye was carved into this previously ordinary deer skull.");
+		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore1", "A third eye was carved into its forehead and it's painted with blood.");
 		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore2", "It was as though it spoke to us.. but we couldn't comprehend it.");
 		
 		builder.add("death.attack.lantern", "%1$s was shown the Light by %2$s");

@@ -116,14 +116,6 @@ public class DeerGodEntity extends BossEntity
 	}
 	
 	@Override
-	public void onTrackedDataSet(TrackedData<?> data)
-	{
-		super.onTrackedDataSet(data);
-		if(data.equals(ANIMATION) && getWorld().isClient)
-			setAnimation(dataTracker.get(ANIMATION));
-	}
-	
-	@Override
 	protected void initGoals()
 	{
 		super.initGoals();
@@ -236,7 +228,7 @@ public class DeerGodEntity extends BossEntity
 				}
 			}
 			applyReverence(18f - getCurrentAnimationDuration());
-			if(getCurrentAnimationDuration() >= 18f)
+			if(!getWorld().isClient && getCurrentAnimationDuration() >= 18f)
 				setAnimation(IDLE_ANIM);
 		}
 		if(getCurrentAnimation() == SWING_ANIM)
@@ -354,7 +346,7 @@ public class DeerGodEntity extends BossEntity
 			}
 			if(getCurrentAnimationDuration() > 4.05f)
 				applyReverence(18f - getCurrentAnimationDuration());
-			if(getCurrentAnimationDuration() >= 18.05f)
+			if(!getWorld().isClient && getCurrentAnimationDuration() >= 18.05f)
 				setAnimation(IDLE_ANIM);
 		}
 		if(getCurrentAnimation() == DEATH_SEQUENCE_ANIM)

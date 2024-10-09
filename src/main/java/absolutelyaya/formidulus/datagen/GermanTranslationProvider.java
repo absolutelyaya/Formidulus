@@ -26,12 +26,12 @@ public class GermanTranslationProvider extends FabricLanguageProvider
 		
 		builder.add(ItemRegistry.DEER_SKULL, "Hirsch Schädel");
 		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore0", "Der Schädel eines schrecklichen Skelettbiests.");
-		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore1", "Ein drittes Auge wurde in diesen zuvor normalen Schädel geschnitzt.");
+		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore1", "Ein drittes Auge wurde in die Stirn geschnitzt und er ist mit Blut bemalt.");
 		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore2", "Es war als würde es mit uns reden.. aber wir konnten nichts verstehen.");
 		
-		builder.add("death.attack.lantern", "%1$s wurde von %2$s das Licht gezeigt");
-		builder.add("death.attack.lantern.item", "%1$s wurde von %2$s mittels %3$s das Licht gezeigt");
-		builder.add("death.attack.lantern.player", "%1s wurde das Licht gezeigt, während eines Kampfes mit %2$s");
+		builder.add("death.attack.lantern", "%1$s wurde von %2$s ins Licht geführt");
+		builder.add("death.attack.lantern.item", "%1$s wurde von %2$s mittels %3$s ins Licht geführt");
+		builder.add("death.attack.lantern.player", "%1s wurde ins Licht geführt, während eines Kampfes mit %2$s");
 		
 		builder.add("death.attack.claw", "%1$s wurde von %2$s zerrissen");
 		builder.add("death.attack.claw.item", "%1s wurde von %2$s mit %3$s zerrissen");

@@ -31,12 +31,25 @@ public abstract class AnimatedHostileEntity extends HostileEntity
 		builder.add(ATTACK_COOLDOWN, 0);
 	}
 	
+	@Override
+	public void onTrackedDataSet(TrackedData<?> data)
+	{
+		super.onTrackedDataSet(data);
+		if(getWorld().isClient)
+		{
+			if(data.equals(ANIMATION_START))
+				age = dataTracker.get(ANIMATION_START); //to make sure the age and thus animation progress is synced
+			if(data.equals(ANIMATION))
+				setAnimation(dataTracker.get(ANIMATION));
+		}
+	}
+	
 	public void setAnimation(byte id)
 	{
 		if(!getWorld().isClient)
 		{
-			dataTracker.set(ANIMATION, id);
 			dataTracker.set(ANIMATION_START, age);
+			dataTracker.set(ANIMATION, id);
 		}
 		if(getAnimationState(lastAnimation) instanceof AnimationState lastState)
 			lastState.stop();
