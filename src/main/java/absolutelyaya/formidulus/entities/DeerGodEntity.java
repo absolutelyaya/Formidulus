@@ -1,8 +1,9 @@
 package absolutelyaya.formidulus.entities;
 
 import absolutelyaya.formidulus.Formidulus;
-import absolutelyaya.formidulus.entities.damage.DamageSources;
+import absolutelyaya.formidulus.damage.DamageSources;
 import absolutelyaya.formidulus.entities.goal.AnimatedAttackGoal;
+import absolutelyaya.formidulus.entities.goal.BossTargetGoal;
 import absolutelyaya.formidulus.entities.goal.InterruptableGoal;
 import absolutelyaya.formidulus.network.SequenceTriggerPayload;
 import absolutelyaya.formidulus.particle.BloodDropParticleEffect;
@@ -14,8 +15,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.ActiveTargetGoal;
-import net.minecraft.entity.ai.goal.RevengeGoal;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.damage.DamageSource;
@@ -127,8 +126,7 @@ public class DeerGodEntity extends BossEntity
 		goalSelector.add(2, new TeleportToTargetGoal(this));
 		goalSelector.add(3, new ApproachTargetGoal(this, 0.4f));
 		
-		targetSelector.add(0, new RevengeGoal(this));
-		targetSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, false));
+		targetSelector.add(0, bossTargetGoal = new BossTargetGoal(this, 16, 200, 0.4f));
 	}
 	
 	@Override
@@ -165,7 +163,7 @@ public class DeerGodEntity extends BossEntity
 	public void tick()
 	{
 		super.tick();
-		if(!dataTracker.get(SUMMONED) && !getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), getBoundingBox().expand(16), i -> true).isEmpty())
+		if(!dataTracker.get(SUMMONED) && !getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), getBoundingBox().expand(8), i -> true).isEmpty())
 		{
 			setAnimation(SPAWN_SEQUENCE_ANIM);
 			triggerMonologueSequence(SequenceTriggerPayload.SPAWN_SEQUENCE);
@@ -916,11 +914,7 @@ public class DeerGodEntity extends BossEntity
 			}
 			failed = mob.getTarget().getPos().distanceTo(new Vec3d(mob.dataTracker.get(ORIGIN))) > 32f || ++time > 200;
 			if(mob.distanceTo(mob.getTarget()) <= 4f || failed)
-			{
-				mob.navigation.stop();
-				stop();
 				return;
-			}
 			mob.navigation.startMovingTo(mob.getTarget(), speed);
 			mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, mob.getTarget().getEyePos());
 		}
@@ -1026,7 +1020,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean canStart()
 		{
-			return super.canStart() && mob.getTarget() != null && mob.distanceTo(mob.getTarget()) > 8;
+			return super.canStart() && mob.getTarget() != null && mob.distanceTo(mob.getTarget()) > 10;
 		}
 		
 		@Override
@@ -1048,7 +1042,7 @@ public class DeerGodEntity extends BossEntity
 			for (int i = 0; i < 36; i++)
 			{
 				float rot = i / 2f * (i % 2 == 0 ? -1 : 1) * 20f;
-				dest = target.getPos().add(dir.rotateY((float)Math.toRadians(rot)).multiply(3f + mob.random.nextFloat()));
+				dest = target.getPos().add(dir.rotateY((float)Math.toRadians(rot)).multiply(2.5f + mob.random.nextFloat()));
 				if(isDestinationFree(dest))
 					return dest;
 			}

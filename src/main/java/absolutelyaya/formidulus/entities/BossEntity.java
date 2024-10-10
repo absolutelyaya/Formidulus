@@ -1,8 +1,11 @@
 package absolutelyaya.formidulus.entities;
 
+import absolutelyaya.formidulus.entities.goal.BossTargetGoal;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.boss.ServerBossBar;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -15,6 +18,9 @@ public abstract class BossEntity extends AnimatedHostileEntity
 {
 	protected ServerBossBar bossBar;
 	boolean wasBossbarVisible;
+	float lastDamageTakenRaw, lastDamageTaken;
+	int lastTargetDamagedTime;
+	BossTargetGoal bossTargetGoal;
 	
 	protected BossEntity(EntityType<? extends AnimatedHostileEntity> entityType, World world)
 	{
@@ -88,5 +94,45 @@ public abstract class BossEntity extends AnimatedHostileEntity
 	public Vec3d getFocusPos()
 	{
 		return getEyePos().subtract(0f, 0.5f, 0f);
+	}
+	
+	public float getLastDamageTakenRaw()
+	{
+		return lastDamageTakenRaw;
+	}
+	
+	public float getLastDamageTaken()
+	{
+		return lastDamageTaken;
+	}
+	
+	public int getLastTargetDamagedTime()
+	{
+		return lastTargetDamagedTime;
+	}
+	
+	public @Nullable LivingEntity getRandomTarget()
+	{
+		if(bossTargetGoal != null)
+			return bossTargetGoal.getRandomTarget();
+		return null;
+	}
+	
+	@Override
+	public boolean damage(DamageSource source, float amount)
+	{
+		boolean b = super.damage(source, amount);
+		if(b)
+		{
+			lastDamageTakenRaw = amount;
+			lastDamageTaken = applyArmorToDamage(source, amount);
+		}
+		return b;
+	}
+	
+	public void onDamageEntity(LivingEntity damaged)
+	{
+		if(damaged.equals(getTarget()))
+			lastTargetDamagedTime = age;
 	}
 }

@@ -1,4 +1,4 @@
-package absolutelyaya.formidulus.entities.damage;
+package absolutelyaya.formidulus.damage;
 
 import absolutelyaya.formidulus.Formidulus;
 import net.minecraft.entity.Entity;

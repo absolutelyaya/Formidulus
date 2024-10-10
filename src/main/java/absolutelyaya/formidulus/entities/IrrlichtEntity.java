@@ -112,17 +112,23 @@ public class IrrlichtEntity extends MobEntity
 			Vec3d checkPos = getPos();
 			if(owner != null)
 				checkPos = owner.getPos();
-			List<PlayerEntity> targets = getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class),
-					Box.from(checkPos).expand(32), i -> isAlive() && !i.isSpectator());
-			if(!targets.isEmpty())
+			LivingEntity target = null;
+			if(owner instanceof BossEntity boss)
+				target = boss.getRandomTarget();
+			else
 			{
-				PlayerEntity target = targets.get(random.nextInt(targets.size()));
-				FireballProjectile fireball = new FireballProjectile(EntityRegistry.PUMPKIN, getWorld());
-				fireball.setOwner(owner);
-				fireball.setPosition(getPos());
+				List<PlayerEntity> targets = getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class),
+						Box.from(checkPos).expand(32), i -> isAlive() && !i.isSpectator());
+				target = targets.get(random.nextInt(targets.size()));
+			}
+			if(target != null)
+			{
+				PumpkinProjectile pumpkin = new PumpkinProjectile(EntityRegistry.PUMPKIN, getWorld());
+				pumpkin.setOwner(owner);
+				pumpkin.setPosition(getPos());
 				Vec3d vel = target.getBoundingBox().getCenter().subtract(getPos());
-				fireball.setVelocity(vel.normalize().multiply(0.5f * Math.max(getWorld().getDifficulty().getId(), 1f)));
-				getWorld().spawnEntity(fireball);
+				pumpkin.setVelocity(vel.normalize().multiply(0.5f * Math.max(getWorld().getDifficulty().getId(), 1f)));
+				getWorld().spawnEntity(pumpkin);
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 package absolutelyaya.formidulus.entities;
 
-import absolutelyaya.formidulus.entities.damage.DamageSources;
+import absolutelyaya.formidulus.damage.DamageSources;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
@@ -18,9 +18,9 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class FireballProjectile extends ThrownItemEntity
+public class PumpkinProjectile extends ThrownItemEntity
 {
-	public FireballProjectile(EntityType<? extends ThrownItemEntity> entityType, World world)
+	public PumpkinProjectile(EntityType<? extends ThrownItemEntity> entityType, World world)
 	{
 		super(entityType, world);
 		movementMultiplier = new Vec3d(1.01f, 1.01f, 1.01f);

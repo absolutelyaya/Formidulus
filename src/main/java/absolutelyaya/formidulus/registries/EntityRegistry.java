@@ -2,7 +2,7 @@ package absolutelyaya.formidulus.registries;
 
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.entities.DeerGodEntity;
-import absolutelyaya.formidulus.entities.FireballProjectile;
+import absolutelyaya.formidulus.entities.PumpkinProjectile;
 import absolutelyaya.formidulus.entities.IrrlichtEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.entity.*;
@@ -16,8 +16,8 @@ public class EntityRegistry
 			EntityType.Builder.create(DeerGodEntity::new, SpawnGroup.MONSTER).dimensions(1f, 3.65f).build("deer_god"));
 	public static final EntityType<IrrlichtEntity> IRRLICHT = Registry.register(Registries.ENTITY_TYPE, Formidulus.identifier("irrlicht"),
 			EntityType.Builder.create(IrrlichtEntity::new, SpawnGroup.MISC).dimensions(0.2f, 0.4f).build("irrlicht"));
-	public static final EntityType<FireballProjectile> PUMPKIN = Registry.register(Registries.ENTITY_TYPE, Formidulus.identifier("pumpkin"),
-			EntityType.Builder.create(FireballProjectile::new, SpawnGroup.MISC).dimensions(0.4f, 0.4f).build("pumpkin"));
+	public static final EntityType<PumpkinProjectile> PUMPKIN = Registry.register(Registries.ENTITY_TYPE, Formidulus.identifier("pumpkin"),
+			EntityType.Builder.create(PumpkinProjectile::new, SpawnGroup.MISC).dimensions(0.4f, 0.4f).build("pumpkin"));
 	
 	public static void register()
 	{
