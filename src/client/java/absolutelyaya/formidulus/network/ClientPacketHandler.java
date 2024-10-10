@@ -34,9 +34,9 @@ public class ClientPacketHandler
 				case SequenceTriggerPayload.PHASE_TRANSITION_SEQUENCE:
 				{
 					TitleHUD.queueTitle(TitleHUD.makeTextObject("Tus inprob modicas...").color(0) //You little brat...
-												.jitter(true).font(Formidulus.FONT).typeSpeed(40f).instability(0.3f).displayDuration(3f).clearPreceding(true));
+												.jitter(true).font(Formidulus.FONT).typeSpeed(40f).instability(0.3f).displayDuration(6f).clearPreceding(true));
 					TitleHUD.queueTitle(TitleHUD.makeTextObject("Terra, tus cruorem mihi!") //Earth, shed Blood for me!
-												.jitter(true).font(Formidulus.FONT).typeSpeed(80f).displayDuration(5f));
+												.jitter(true).font(Formidulus.FONT).typeSpeed(80f).displayDuration(6f));
 					TitleHUD.queueTitle(TitleHUD.makeTextObject("Videamus quomodo contra hoc vales.") //Let's see how you fare against this.
 												.jitter(true).font(Formidulus.FONT).typeSpeed(50f).delay(1f).displayDuration(5f));
 					break;

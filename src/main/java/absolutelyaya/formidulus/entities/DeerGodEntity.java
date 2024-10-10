@@ -336,8 +336,9 @@ public class DeerGodEntity extends BossEntity
 			if(!getWorld().isClient && getCurrentAnimationDuration() >= 18.05f)
 				setAnimation(IDLE_ANIM);
 		}
-		if(getCurrentAnimation() == DEATH_SEQUENCE_ANIM)
-			applyReverence(20f - getCurrentAnimationDuration());
+		//if(getCurrentAnimation() == DEATH_SEQUENCE_ANIM)
+		//	applyReverence(20f - getCurrentAnimationDuration());
+		//TODO: figure out reverence focusing for death sequence
 		
 		float vanishing = getVanishingPercent();
 		if(vanishing > 0f)
@@ -645,6 +646,14 @@ public class DeerGodEntity extends BossEntity
 		float armor = (float)getAttributeValue(EntityAttributes.GENERIC_ARMOR) * (getWorld().getDifficulty().getId() * 0.75f + 1f);
 		float toughness = (float)getAttributeValue(EntityAttributes.GENERIC_ARMOR_TOUGHNESS) * (getWorld().getDifficulty().getId() * 0.75f + 1f);
 		return DamageUtil.getDamageLeft(this, amount, source, armor, toughness);
+	}
+	
+	@Override
+	public void onDamageEntity(LivingEntity damaged)
+	{
+		super.onDamageEntity(damaged);
+		if(damaged.isDead() && damaged instanceof ServerPlayerEntity serverPlayer)
+			ServerPlayNetworking.send(serverPlayer, new SequenceTriggerPayload(SequenceTriggerPayload.PLAYER_DEATH_SEQUENCE));
 	}
 	
 	@Override
