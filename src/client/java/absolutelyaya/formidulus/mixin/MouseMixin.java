@@ -56,7 +56,7 @@ public abstract class MouseMixin
 			{
 				List<BossEntity> targets = world.getEntitiesByType(TypeFilter.instanceOf(BossEntity.class), p.getBoundingBox().expand(32), i -> true);
 				BossEntity closest = world.getClosestEntity(targets, TargetPredicate.createNonAttackable().setPredicate(i -> true), p, p.getX(), p.getY(), p.getZ());
-				if(closest == null || closest.distanceTo(p) > 16)
+				if(closest == null || closest.distanceTo(p) > 32)
 					return;
 				Vector2f targetRot = RotationUtil.getRotationTowards(p.getEyePos(), closest.getFocusPos());
 				Vector2f rot = new Vector2f(p.getYaw(), p.getPitch());

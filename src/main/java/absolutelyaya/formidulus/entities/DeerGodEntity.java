@@ -910,7 +910,7 @@ public class DeerGodEntity extends BossEntity
 			if(mob.distanceTo(mob.getTarget()) <= 3f || failed)
 				return;
 			mob.navigation.startMovingTo(mob.getTarget(), speed);
-			mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, mob.getTarget().getEyePos());
+			//mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, mob.getTarget().getEyePos());
 		}
 		
 		@Override
