@@ -1,6 +1,6 @@
 package absolutelyaya.formidulus.mixin;
 
-import absolutelyaya.formidulus.datagen.BaseTranslationProvider;
+import absolutelyaya.formidulus.datagen.Lang;
 import absolutelyaya.formidulus.item.components.AccessoryComponent;
 import absolutelyaya.formidulus.item.components.ExpandableLoreComponent;
 import absolutelyaya.formidulus.registries.DataComponentRegistry;
@@ -46,15 +46,15 @@ public abstract class ItemMixin
 				return;
 			}
 			else
-				tooltip.add(Text.translatable(BaseTranslationProvider.EXPANDABLE_LORE_HINT).getWithStyle(Style.EMPTY.withColor(Formatting.GRAY)).getFirst());
+				tooltip.add(Text.translatable(Lang.EXPANDABLE_LORE_HINT).getWithStyle(Style.EMPTY.withColor(Formatting.GRAY)).getFirst());
 		}
 		if(stack.contains(DataComponentRegistry.ACCESSORY))
 		{
 			AccessoryComponent component = stack.getComponents().getOrDefault(DataComponentRegistry.ACCESSORY, AccessoryComponent.DEFAULT);
 			int accessoryMode = component.activeMode() % component.modes().size();
-			tooltip.add(Text.translatable(BaseTranslationProvider.ACCESSORY_MODE_PREFIX,
+			tooltip.add(Text.translatable(Lang.ACCESSORY_MODE_PREFIX,
 					Text.translatable("item.accessory_mode." + component.modes().get(accessoryMode))));
-			tooltip.add(Text.translatable(BaseTranslationProvider.ACCESSORY_MODE_HINT)
+			tooltip.add(Text.translatable(Lang.ACCESSORY_MODE_HINT)
 								.getWithStyle(Style.EMPTY.withColor(shouldCycleAccessoryMode() ? Formatting.LIGHT_PURPLE : Formatting.GRAY)).getFirst());
 		}
 	}

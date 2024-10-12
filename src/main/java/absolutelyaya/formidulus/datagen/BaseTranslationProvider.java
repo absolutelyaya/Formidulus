@@ -11,12 +11,8 @@ import net.minecraft.registry.RegistryWrapper;
 
 import java.util.concurrent.CompletableFuture;
 
-public class BaseTranslationProvider extends FabricLanguageProvider
+public class BaseTranslationProvider extends FabricLanguageProvider implements Lang
 {
-	public static final String EXPANDABLE_LORE_HINT = modKey("item", "expandable_lore_hint");
-	public static final String ACCESSORY_MODE_PREFIX = modKey("item", "accessory_mode_prefix");
-	public static final String ACCESSORY_MODE_HINT = modKey("item", "accessory_mode_hint");
-	
 	protected BaseTranslationProvider(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup)
 	{
 		super(dataOutput, registryLookup);
