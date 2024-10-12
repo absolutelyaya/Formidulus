@@ -1,8 +1,8 @@
 package absolutelyaya.formidulus.mixin;
 
 import absolutelyaya.formidulus.datagen.BaseTranslationProvider;
-import absolutelyaya.formidulus.item.ExpandableLoreItem;
 import absolutelyaya.formidulus.item.components.AccessoryComponent;
+import absolutelyaya.formidulus.item.components.ExpandableLoreComponent;
 import absolutelyaya.formidulus.registries.DataComponentRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
@@ -32,22 +32,30 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 @Mixin(Item.class)
-public class ItemMixin
+public abstract class ItemMixin
 {
 	@Inject(method = "appendTooltip", at = @At("TAIL"))
 	void afterAppendToolTip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type, CallbackInfo ci)
 	{
-		if(stack.contains(DataComponentRegistry.ACCESSORY_COMPONENT))
+		if(stack.contains(DataComponentRegistry.EXPANDABLE_LORE))
 		{
-			if(stack.getItem() instanceof ExpandableLoreItem loreItem && !loreItem.shouldDisplayLore())
+			if(shouldDisplayLore())
 			{
-				AccessoryComponent component = stack.getComponents().getOrDefault(DataComponentRegistry.ACCESSORY_COMPONENT, AccessoryComponent.DEFAULT);
-				int accessoryMode = component.activeMode() % component.modes().size();
-				tooltip.add(Text.translatable(BaseTranslationProvider.ACCESSORY_MODE_PREFIX,
-						Text.translatable("item.accessory_mode." + component.modes().get(accessoryMode))));
-				tooltip.add(Text.translatable(BaseTranslationProvider.ACCESSORY_MODE_HINT)
-									.getWithStyle(Style.EMPTY.withColor(shouldCycleAccessoryMode() ? Formatting.LIGHT_PURPLE : Formatting.GRAY)).getFirst());
+				if(stack.getComponents().get(DataComponentRegistry.EXPANDABLE_LORE) instanceof ExpandableLoreComponent component)
+					tooltip.addAll(component.lines());
+				return;
 			}
+			else
+				tooltip.add(Text.translatable(BaseTranslationProvider.EXPANDABLE_LORE_HINT).getWithStyle(Style.EMPTY.withColor(Formatting.GRAY)).getFirst());
+		}
+		if(stack.contains(DataComponentRegistry.ACCESSORY))
+		{
+			AccessoryComponent component = stack.getComponents().getOrDefault(DataComponentRegistry.ACCESSORY, AccessoryComponent.DEFAULT);
+			int accessoryMode = component.activeMode() % component.modes().size();
+			tooltip.add(Text.translatable(BaseTranslationProvider.ACCESSORY_MODE_PREFIX,
+					Text.translatable("item.accessory_mode." + component.modes().get(accessoryMode))));
+			tooltip.add(Text.translatable(BaseTranslationProvider.ACCESSORY_MODE_HINT)
+								.getWithStyle(Style.EMPTY.withColor(shouldCycleAccessoryMode() ? Formatting.LIGHT_PURPLE : Formatting.GRAY)).getFirst());
 		}
 	}
 	
@@ -57,10 +65,10 @@ public class ItemMixin
 		if(!shouldCycleAccessoryMode() || !otherStack.isEmpty())
 			return;
 		cir.setReturnValue(true);
-		if(!stack.contains(DataComponentRegistry.ACCESSORY_COMPONENT))
+		if(!stack.contains(DataComponentRegistry.ACCESSORY))
 			return;
-		if(stack.get(DataComponentRegistry.ACCESSORY_COMPONENT) instanceof AccessoryComponent component)
-			stack.set(DataComponentRegistry.ACCESSORY_COMPONENT, component.cycle());
+		if(stack.get(DataComponentRegistry.ACCESSORY) instanceof AccessoryComponent component)
+			stack.set(DataComponentRegistry.ACCESSORY, component.cycle());
 		if(!player.getWorld().isClient && slot.id >= 5 && slot.id <= 8)
 		{
 			RegistryEntry<SoundEvent> sound = SoundEvents.ITEM_ARMOR_EQUIP_GENERIC;
@@ -75,5 +83,11 @@ public class ItemMixin
 	{
 		long windowHandle = MinecraftClient.getInstance().getWindow().getHandle();
 		return InputUtil.isKeyPressed(windowHandle, GLFW.GLFW_KEY_LEFT_ALT) || InputUtil.isKeyPressed(windowHandle, GLFW.GLFW_KEY_RIGHT_ALT);
+	}
+	
+	@Unique boolean shouldDisplayLore()
+	{
+		long windowHandle = MinecraftClient.getInstance().getWindow().getHandle();
+		return InputUtil.isKeyPressed(windowHandle, GLFW.GLFW_KEY_LEFT_SHIFT) || InputUtil.isKeyPressed(windowHandle, GLFW.GLFW_KEY_RIGHT_SHIFT);
 	}
 }

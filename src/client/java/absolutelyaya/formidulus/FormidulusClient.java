@@ -50,7 +50,7 @@ public class FormidulusClient implements ClientModInitializer
 		
 		ModelPredicateProviderRegistry.register(Formidulus.identifier("accessory_mode"),
 				(stack, world, entity, seed) -> {
-					AccessoryComponent component = stack.getOrDefault(DataComponentRegistry.ACCESSORY_COMPONENT, AccessoryComponent.DEFAULT);
+					AccessoryComponent component = stack.getOrDefault(DataComponentRegistry.ACCESSORY, AccessoryComponent.DEFAULT);
 					return (float)(component.activeMode() % component.modes().size());
 				});
 	}

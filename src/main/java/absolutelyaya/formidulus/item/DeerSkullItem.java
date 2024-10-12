@@ -7,10 +7,11 @@ import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Equipment;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.entry.RegistryEntry;
 
-public class DeerSkullItem extends ExpandableLoreItem implements Equipment
+public class DeerSkullItem extends Item implements Equipment
 {
 	public static final String ACCESSORY_MODE_MASK = "mask";
 	public static final String ACCESSORY_MODE_CAP = "cap";
