@@ -119,7 +119,8 @@ public class IrrlichtEntity extends MobEntity
 			{
 				List<PlayerEntity> targets = getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class),
 						Box.from(checkPos).expand(32), i -> isAlive() && !i.isSpectator());
-				target = targets.get(random.nextInt(targets.size()));
+				if(!targets.isEmpty())
+					target = targets.get(random.nextInt(targets.size()));
 			}
 			if(target != null)
 			{
