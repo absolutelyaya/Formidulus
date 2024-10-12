@@ -29,6 +29,7 @@ public class ExpandableLoreItem extends Item
 	@Override
 	public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type)
 	{
+		super.appendTooltip(stack, context, tooltip, type);
 		if(shouldDisplayLore())
 			for (int i = 0; i < 6; i++)
 				tooltip.addAll(Text.translatable(getTranslationKey() + ".lore" + i).getWithStyle(Style.EMPTY.withColor(Formatting.DARK_PURPLE).withItalic(true)));

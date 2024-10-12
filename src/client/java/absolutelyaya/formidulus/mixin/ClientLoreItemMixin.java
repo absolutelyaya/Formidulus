@@ -14,7 +14,7 @@ public class ClientLoreItemMixin
 	@ModifyReturnValue(remap = false, method = "Labsolutelyaya/formidulus/item/ExpandableLoreItem;shouldDisplayLore()Z", at = @At("RETURN"))
 	boolean modifyShouldDisplayLore(boolean original)
 	{
-		return InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.GLFW_KEY_LEFT_SHIFT) ||
-					   InputUtil.isKeyPressed(MinecraftClient.getInstance().getWindow().getHandle(), GLFW.GLFW_KEY_RIGHT_SHIFT);
+		long windowHandle = MinecraftClient.getInstance().getWindow().getHandle();
+		return InputUtil.isKeyPressed(windowHandle, GLFW.GLFW_KEY_LEFT_SHIFT) || InputUtil.isKeyPressed(windowHandle, GLFW.GLFW_KEY_RIGHT_SHIFT);
 	}
 }

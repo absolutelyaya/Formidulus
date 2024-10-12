@@ -1,8 +1,10 @@
 package absolutelyaya.formidulus;
 
 import absolutelyaya.formidulus.gui.TitleHUD;
+import absolutelyaya.formidulus.item.components.AccessoryComponent;
 import absolutelyaya.formidulus.network.ClientPacketHandler;
 import absolutelyaya.formidulus.particle.BloodDropParticle;
+import absolutelyaya.formidulus.registries.DataComponentRegistry;
 import absolutelyaya.formidulus.registries.EntityRegistry;
 import absolutelyaya.formidulus.registries.ItemRegistry;
 import absolutelyaya.formidulus.registries.ParticleRegistry;
@@ -13,6 +15,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 
 public class FormidulusClient implements ClientModInitializer
@@ -44,5 +47,11 @@ public class FormidulusClient implements ClientModInitializer
 		
 		BuiltinItemRendererRegistry builtinItemRendererRegistry = BuiltinItemRendererRegistry.INSTANCE;
 		builtinItemRendererRegistry.register(ItemRegistry.DEER_SKULL, new DeerGodSkullRenderer());
+		
+		ModelPredicateProviderRegistry.register(Formidulus.identifier("accessory_mode"),
+				(stack, world, entity, seed) -> {
+					AccessoryComponent component = stack.getOrDefault(DataComponentRegistry.ACCESSORY_COMPONENT, AccessoryComponent.DEFAULT);
+					return (float)(component.activeMode() % component.modes().size());
+				});
 	}
 }

@@ -1,6 +1,14 @@
 {
   "parent": "minecraft:builtin/entity",
   "gui_light": "front",
+  "overrides": [
+    {
+      "predicate": {
+        "formidulus:accessory_mode": 1
+      },
+      "model": "formidulus:item/deer_skull_mask"
+    }
+  ],
   "display": {
     "thirdperson_righthand": {
       "rotation": [75, 45, 0],

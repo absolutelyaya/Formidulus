@@ -1,0 +1,10 @@
+{
+  "parent": "formidulus:item/deer_skull",
+  "gui_light": "front",
+  "display": {
+    "head": {
+      "translation": [0, 5.25, -3.25],
+      "scale": [1.61, 1.61, 1.61]
+    }
+  }
+}

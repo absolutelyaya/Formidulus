@@ -13,6 +13,7 @@
   "mixins": [
     "BossBarHudMixin",
     "ClientBossBarMixin",
-    "ClientLoreItemMixin"
+    "ClientLoreItemMixin",
+    "ItemMixin"
   ]
 }
