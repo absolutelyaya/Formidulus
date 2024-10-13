@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "formidulus:block/deer_skull",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "formidulus:block/deer_skull"
+    },
+    "facing=south": {
+      "model": "formidulus:block/deer_skull",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "formidulus:block/deer_skull",
+      "y": 270
+    }
+  }
+}

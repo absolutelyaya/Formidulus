@@ -1,6 +1,7 @@
 package absolutelyaya.formidulus.registries;
 
 import absolutelyaya.formidulus.Formidulus;
+import absolutelyaya.formidulus.block.DeerSkullBlock;
 import net.minecraft.block.*;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
@@ -17,6 +18,8 @@ public class BlockRegistry
 {
 	public static final Block WEEN = Registry.register(Registries.BLOCK, Formidulus.identifier("ween"),
 			new WearableCarvedPumpkinBlock(AbstractBlock.Settings.copy(Blocks.CARVED_PUMPKIN)));
+	public static final Block DEER_SKULL = Registry.register(Registries.BLOCK, Formidulus.identifier("deer_skull"),
+			new DeerSkullBlock(AbstractBlock.Settings.copy(Blocks.SPRUCE_PLANKS).nonOpaque()));
 	
 	public static void register()
 	{

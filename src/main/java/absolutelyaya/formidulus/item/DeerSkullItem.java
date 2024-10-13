@@ -1,24 +1,25 @@
 package absolutelyaya.formidulus.item;
 
+import absolutelyaya.formidulus.registries.BlockRegistry;
 import net.fabricmc.fabric.api.item.v1.EnchantingContext;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.Equipment;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.*;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.util.ActionResult;
+import net.minecraft.world.World;
 
-public class DeerSkullItem extends Item implements Equipment
+public class DeerSkullItem extends BlockItem implements Equipment
 {
 	public static final String ACCESSORY_MODE_MASK = "mask";
 	public static final String ACCESSORY_MODE_CAP = "cap";
 	
 	public DeerSkullItem(Settings settings)
 	{
-		super(settings);
+		super(BlockRegistry.DEER_SKULL, settings);
 		DispenserBlock.registerBehavior(this, ArmorItem.DISPENSER_BEHAVIOR);
 	}
 	

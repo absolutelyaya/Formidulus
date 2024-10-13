@@ -19,7 +19,8 @@ public class BlockTagProvider extends FabricTagProvider.BlockTagProvider
 	protected void configure(RegistryWrapper.WrapperLookup wrapper)
 	{
 		getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
-				.add(BlockRegistry.WEEN);
+				.add(BlockRegistry.WEEN)
+				.add(BlockRegistry.DEER_SKULL);
 		getOrCreateTagBuilder(BlockTags.ENDERMAN_HOLDABLE)
 				.add(BlockRegistry.WEEN);
 	}

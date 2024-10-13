@@ -18,5 +18,6 @@ public class BlockLootTableProvider extends FabricBlockLootTableProvider
 	public void generate()
 	{
 		addDrop(BlockRegistry.WEEN);
+		addDrop(BlockRegistry.DEER_SKULL);
 	}
 }

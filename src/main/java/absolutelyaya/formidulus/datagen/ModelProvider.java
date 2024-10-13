@@ -20,6 +20,8 @@ public class ModelProvider extends FabricModelProvider
 	{
 		builder.registerNorthDefaultHorizontalRotatable(BlockRegistry.WEEN, TextureMap.textureSideTop(BlockRegistry.WEEN));
 		builder.registerParentedItemModel(BlockRegistry.WEEN, ModelIds.getBlockModelId(BlockRegistry.WEEN));
+		
+		builder.registerNorthDefaultHorizontalRotation(BlockRegistry.DEER_SKULL);
 	}
 	
 	@Override

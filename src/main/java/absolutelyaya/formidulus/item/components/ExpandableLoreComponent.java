@@ -30,6 +30,15 @@ public record ExpandableLoreComponent(List<Text> lines)
 		Lists.transform(list, line -> Texts.setStyleIfAbsent(line.copy(), STYLE));
 		return new ExpandableLoreComponent(list);
 	}
+	public static ExpandableLoreComponent makeGenericBlock(Identifier itemId, int lines)
+	{
+		String key = "block." + itemId.getNamespace() + "." + itemId.getPath() + ".lore";
+		List<Text> list = new ArrayList<>();
+		for (int i = 0; i < lines; i++)
+			list.add(Text.translatable(key + i).setStyle(STYLE));
+		Lists.transform(list, line -> Texts.setStyleIfAbsent(line.copy(), STYLE));
+		return new ExpandableLoreComponent(list);
+	}
 	
 	public static ExpandableLoreComponent makeGeneric(Identifier itemId, int lines, Style style)
 	{

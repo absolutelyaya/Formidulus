@@ -1,4 +1,11 @@
 {
+  "block.formidulus.deer_skull": "Deer Skull",
+  "block.formidulus.deer_skull.lore0": "The Skull of a horrid Skeletal Beast.",
+  "block.formidulus.deer_skull.lore1": "A third eye was carved into its forehead.",
+  "block.formidulus.deer_skull.lore2": "There's also strange patterns painted onto it using blood.",
+  "block.formidulus.deer_skull.lore3": " ",
+  "block.formidulus.deer_skull.lore4": "It was as though it spoke to us..",
+  "block.formidulus.deer_skull.lore5": "..but we couldn't comprehend it.",
   "block.formidulus.ween": "Ween",
   "block.formidulus.ween.lore": "it's ween",
   "death.attack.claw": "%1$s was torn apart by %2$s",
@@ -19,12 +26,5 @@
   "item.accessory_mode.mask": "Mask",
   "item.formidulus.accessory_mode_hint": "[Press Alt & Click to cycle]",
   "item.formidulus.accessory_mode_prefix": "Accessory Mode: %s",
-  "item.formidulus.deer_skull": "Deer Skull",
-  "item.formidulus.deer_skull.lore0": "The Skull of a horrid Skeletal Beast.",
-  "item.formidulus.deer_skull.lore1": "A third eye was carved into its forehead.",
-  "item.formidulus.deer_skull.lore2": "There's also strange patterns painted onto it using blood.",
-  "item.formidulus.deer_skull.lore3": " ",
-  "item.formidulus.deer_skull.lore4": "It was as though it spoke to us..",
-  "item.formidulus.deer_skull.lore5": "..but we couldn't comprehend it.",
   "item.formidulus.expandable_lore_hint": "[Press Shift for more Info]"
 }

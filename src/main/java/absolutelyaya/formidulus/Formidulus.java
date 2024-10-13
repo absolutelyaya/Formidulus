@@ -18,6 +18,7 @@ public class Formidulus implements ModInitializer
 	public void onInitialize()
 	{
 		BlockRegistry.register();
+		BlockEntityRegistry.register();
 		ItemRegistry.register();
 		ParticleRegistry.register();
 		EntityRegistry.register();

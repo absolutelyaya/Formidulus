@@ -37,18 +37,9 @@ public abstract class ItemMixin
 	@Inject(method = "appendTooltip", at = @At("TAIL"))
 	void afterAppendToolTip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type, CallbackInfo ci)
 	{
-		if(stack.contains(DataComponentRegistry.EXPANDABLE_LORE))
-		{
-			if(shouldDisplayLore())
-			{
-				if(stack.getComponents().get(DataComponentRegistry.EXPANDABLE_LORE) instanceof ExpandableLoreComponent component)
-					tooltip.addAll(component.lines());
-				return;
-			}
-			else
-				tooltip.add(Text.translatable(Lang.EXPANDABLE_LORE_HINT).getWithStyle(Style.EMPTY.withColor(Formatting.GRAY)).getFirst());
-		}
-		if(stack.contains(DataComponentRegistry.ACCESSORY))
+		boolean displayLore = stack.contains(DataComponentRegistry.EXPANDABLE_LORE) && shouldDisplayLore();
+		
+		if(stack.contains(DataComponentRegistry.ACCESSORY) && !displayLore)
 		{
 			AccessoryComponent component = stack.getComponents().getOrDefault(DataComponentRegistry.ACCESSORY, AccessoryComponent.DEFAULT);
 			int accessoryMode = component.activeMode() % component.modes().size();
@@ -57,6 +48,16 @@ public abstract class ItemMixin
 			tooltip.add(Text.translatable(Lang.ACCESSORY_MODE_HINT)
 								.getWithStyle(Style.EMPTY.withColor(shouldCycleAccessoryMode() ? Formatting.LIGHT_PURPLE : Formatting.GRAY)).getFirst());
 		}
+		
+		if(!stack.contains(DataComponentRegistry.EXPANDABLE_LORE))
+			return;
+		if(shouldDisplayLore())
+		{
+			if(stack.getComponents().get(DataComponentRegistry.EXPANDABLE_LORE) instanceof ExpandableLoreComponent component)
+				tooltip.addAll(component.lines());
+		}
+		else
+			tooltip.add(Text.translatable(Lang.EXPANDABLE_LORE_HINT).getWithStyle(Style.EMPTY.withColor(Formatting.GRAY)).getFirst());
 	}
 	
 	@Inject(method = "onClicked", at = @At("TAIL"), cancellable = true)

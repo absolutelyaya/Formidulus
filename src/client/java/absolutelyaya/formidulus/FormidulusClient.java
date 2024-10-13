@@ -4,18 +4,15 @@ import absolutelyaya.formidulus.gui.TitleHUD;
 import absolutelyaya.formidulus.item.components.AccessoryComponent;
 import absolutelyaya.formidulus.network.ClientPacketHandler;
 import absolutelyaya.formidulus.particle.BloodDropParticle;
-import absolutelyaya.formidulus.registries.DataComponentRegistry;
-import absolutelyaya.formidulus.registries.EntityRegistry;
-import absolutelyaya.formidulus.registries.ItemRegistry;
-import absolutelyaya.formidulus.registries.ParticleRegistry;
+import absolutelyaya.formidulus.registries.*;
+import absolutelyaya.formidulus.rendering.block.DeerSkullBlockEntityRenderer;
 import absolutelyaya.formidulus.rendering.entity.*;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 
 public class FormidulusClient implements ClientModInitializer
@@ -42,6 +39,9 @@ public class FormidulusClient implements ClientModInitializer
 		//Particles
 		ParticleFactoryRegistry particles = ParticleFactoryRegistry.getInstance();
 		particles.register(ParticleRegistry.BLOOD_DROP_PARTICLE, BloodDropParticle.Factory::new);
+		
+		//Block Entities
+		BlockEntityRendererFactories.register(BlockEntityRegistry.DEER_SKULL, DeerSkullBlockEntityRenderer::new);
 		
 		HudRenderCallback.EVENT.register((context, tickCounter) -> TitleHUD.render(context, tickCounter.getLastFrameDuration()));
 		

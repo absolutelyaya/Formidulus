@@ -25,7 +25,7 @@ public class ItemRegistry
 			id -> new DeerSkullItem(new Item.Settings().component(DataComponentTypes.MAX_STACK_SIZE, 1).component(DataComponentTypes.RARITY, Rarity.RARE)
 											.component(DataComponentRegistry.ACCESSORY,
 													new AccessoryComponent(List.of(DeerSkullItem.ACCESSORY_MODE_CAP, DeerSkullItem.ACCESSORY_MODE_MASK), 0))
-											.component(DataComponentRegistry.EXPANDABLE_LORE, ExpandableLoreComponent.makeGeneric(id, 6))));
+											.component(DataComponentRegistry.EXPANDABLE_LORE, ExpandableLoreComponent.makeGenericBlock(id, 6))));
 	public static final BlockItem WEEN = register(Formidulus.identifier("ween"),
 			id -> new BlockItem(BlockRegistry.WEEN,
 					new Item.Settings().component(DataComponentTypes.RARITY, Rarity.UNCOMMON)

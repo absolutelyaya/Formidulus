@@ -1,4 +1,11 @@
 {
+  "block.formidulus.deer_skull": "Hirsch Schädel",
+  "block.formidulus.deer_skull.lore0": "Der Schädel eines schrecklichen Skelettbiests,",
+  "block.formidulus.deer_skull.lore1": "in dessen Stirn ein drittes Auge geschnitzt wurde.",
+  "block.formidulus.deer_skull.lore2": "Zudem ist er in seltsamen Mustern mit Blut bemalt.",
+  "block.formidulus.deer_skull.lore3": " ",
+  "block.formidulus.deer_skull.lore4": "Es war als würde es mit uns reden..",
+  "block.formidulus.deer_skull.lore5": "..aber wir konnten nichts verstehen.",
   "block.formidulus.ween": "Ween",
   "block.formidulus.ween.lore": "es ist ween",
   "death.attack.claw": "%1$s wurde von %2$s zerrissen",
@@ -19,12 +26,5 @@
   "item.accessory_mode.mask": "Maske",
   "item.formidulus.accessory_mode_hint": "[Drück Alt & Klick zum Modus wechseln]",
   "item.formidulus.accessory_mode_prefix": "Accessoire Modus: %s",
-  "item.formidulus.deer_skull": "Hirsch Schädel",
-  "item.formidulus.deer_skull.lore0": "Der Schädel eines schrecklichen Skelettbiests,",
-  "item.formidulus.deer_skull.lore1": "in dessen Stirn ein drittes Auge geschnitzt wurde.",
-  "item.formidulus.deer_skull.lore2": "Zudem ist er in seltsamen Mustern mit Blut bemalt.",
-  "item.formidulus.deer_skull.lore3": " ",
-  "item.formidulus.deer_skull.lore4": "Es war als würde es mit uns reden..",
-  "item.formidulus.deer_skull.lore5": "..aber wir konnten nichts verstehen.",
   "item.formidulus.expandable_lore_hint": "[Drück Shift für mehr Infos]"
 }
