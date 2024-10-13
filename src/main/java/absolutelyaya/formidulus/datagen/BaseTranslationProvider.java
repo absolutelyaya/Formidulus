@@ -23,7 +23,7 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 	public void generateTranslations(RegistryWrapper.WrapperLookup registry, TranslationBuilder builder)
 	{
 		builder.add(EntityRegistry.DEER_GOD, "Cervus Cruoris");
-		//builder.add(EntityRegistry.DEER_FOLLOWER, "Cruoris Servus");
+		builder.add(EntityRegistry.DEER_FOLLOWER, "Cruoris Servus");
 		builder.add(EntityRegistry.IRRLICHT, "Scintilla Vitae");
 		builder.add(EntityRegistry.PUMPKIN, "Volatile Pumpkin");
 		

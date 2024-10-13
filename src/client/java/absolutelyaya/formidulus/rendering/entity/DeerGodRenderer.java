@@ -16,6 +16,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class DeerGodRenderer extends MobEntityRenderer<DeerGodEntity, DeerGodModel>
 {
+	static final Identifier TEX = Formidulus.identifier("textures/entity/deer_god.png");
+	
 	public DeerGodRenderer(EntityRendererFactory.Context ctx)
 	{
 		super(ctx, new DeerGodModel(ctx.getPart(FormidulusClient.DEER_GOD_LAYER)), 1f);
@@ -26,7 +28,7 @@ public class DeerGodRenderer extends MobEntityRenderer<DeerGodEntity, DeerGodMod
 	@Override
 	public Identifier getTexture(DeerGodEntity entity)
 	{
-		return Formidulus.identifier("textures/entity/deer_god.png");
+		return TEX;
 	}
 	
 	@Override

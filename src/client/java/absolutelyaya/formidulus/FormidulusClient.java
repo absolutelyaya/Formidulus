@@ -12,7 +12,6 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
 
 public class FormidulusClient implements ClientModInitializer
@@ -20,6 +19,7 @@ public class FormidulusClient implements ClientModInitializer
 	public static final EntityModelLayer DEER_GOD_LAYER = new EntityModelLayer(Formidulus.identifier("deer_god"), "deer_god");
 	public static final EntityModelLayer DEER_GOD_SKULL_LAYER = new EntityModelLayer(Formidulus.identifier("deer_god_skull"), "deer_god_skull");
 	public static final EntityModelLayer IRRLICHT_LAYER = new EntityModelLayer(Formidulus.identifier("irrlicht"), "irrlicht");
+	public static final EntityModelLayer DEER_FOLLOWER_LAYER = new EntityModelLayer(Formidulus.identifier("deer_follower"), "deer_follower");
 	
 	@Override
 	public void onInitializeClient()
@@ -30,11 +30,13 @@ public class FormidulusClient implements ClientModInitializer
 		EntityRendererRegistry.register(EntityRegistry.DEER_GOD, DeerGodRenderer::new);
 		EntityRendererRegistry.register(EntityRegistry.IRRLICHT, IrrlichtRenderer::new);
 		EntityRendererRegistry.register(EntityRegistry.PUMPKIN, PumpkinRenderer::new);
+		EntityRendererRegistry.register(EntityRegistry.DEER_FOLLOWER, DeerFollowerRenderer::new);
 		
 		//Entity Model Layers
 		EntityModelLayerRegistry.registerModelLayer(DEER_GOD_LAYER, DeerGodModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(DEER_GOD_SKULL_LAYER, DeerGodSkullModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(IRRLICHT_LAYER, IrrlichtModel::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(DEER_FOLLOWER_LAYER, DeerFollowerModel::getTexturedModelData);
 		
 		//Particles
 		ParticleFactoryRegistry particles = ParticleFactoryRegistry.getInstance();

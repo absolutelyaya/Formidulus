@@ -1,6 +1,7 @@
 package absolutelyaya.formidulus.registries;
 
 import absolutelyaya.formidulus.Formidulus;
+import absolutelyaya.formidulus.entities.DeerFollowerEntity;
 import absolutelyaya.formidulus.entities.DeerGodEntity;
 import absolutelyaya.formidulus.entities.PumpkinProjectile;
 import absolutelyaya.formidulus.entities.IrrlichtEntity;
@@ -18,6 +19,8 @@ public class EntityRegistry
 			EntityType.Builder.create(IrrlichtEntity::new, SpawnGroup.MISC).dimensions(0.2f, 0.4f).build("irrlicht"));
 	public static final EntityType<PumpkinProjectile> PUMPKIN = Registry.register(Registries.ENTITY_TYPE, Formidulus.identifier("pumpkin"),
 			EntityType.Builder.create(PumpkinProjectile::new, SpawnGroup.MISC).dimensions(0.4f, 0.4f).build("pumpkin"));
+	public static final EntityType<DeerFollowerEntity> DEER_FOLLOWER = Registry.register(Registries.ENTITY_TYPE, Formidulus.identifier("deer_follower"),
+			EntityType.Builder.create(DeerFollowerEntity::new, SpawnGroup.MONSTER).dimensions(0.6f, 1.95f).build("deer_follower"));
 	
 	public static void register()
 	{
@@ -29,5 +32,7 @@ public class EntityRegistry
 																  .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32));
 		FabricDefaultAttributeRegistry.register(IRRLICHT, IrrlichtEntity.createMobAttributes()
 																  .add(EntityAttributes.GENERIC_MAX_HEALTH, 1));
+		FabricDefaultAttributeRegistry.register(DEER_FOLLOWER, DeerFollowerEntity.createMobAttributes()
+																	   .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2f));
 	}
 }

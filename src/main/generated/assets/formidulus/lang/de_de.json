@@ -18,6 +18,7 @@
   "death.attack.sacrifice.item": "%1s wurde zu einer Opfergabe durch %2$s mit %3$s",
   "death.attack.sacrifice.player": "%1s wurde zu einer Opfergabe beim Versuch %2$s zu entkommen",
   "effect.formidulus.reverence": "Erzwungende Erfurcht",
+  "entity.formidulus.deer_follower": "Cruoris Servus",
   "entity.formidulus.deer_god": "Cervus Cruoris",
   "entity.formidulus.irrlicht": "Scintilla Vitae",
   "entity.formidulus.pumpkin": "Explosiver Kürbis",

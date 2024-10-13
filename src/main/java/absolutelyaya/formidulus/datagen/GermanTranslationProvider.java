@@ -24,7 +24,7 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 	public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder builder)
 	{
 		builder.add(EntityRegistry.DEER_GOD, "Cervus Cruoris");
-		//builder.add(EntityRegistry.DEER_FOLLOWER, "Cruoris Servus");
+		builder.add(EntityRegistry.DEER_FOLLOWER, "Cruoris Servus");
 		builder.add(EntityRegistry.IRRLICHT, "Scintilla Vitae");
 		builder.add(EntityRegistry.PUMPKIN, "Explosiver Kürbis");
 		

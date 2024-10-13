@@ -18,6 +18,7 @@
   "death.attack.sacrifice.item": "%1s was sacrificed by %2$s using %3$s",
   "death.attack.sacrifice.player": "%1s was sacrificed trying to escape %2$s",
   "effect.formidulus.reverence": "Unwilling Reverence",
+  "entity.formidulus.deer_follower": "Cruoris Servus",
   "entity.formidulus.deer_god": "Cervus Cruoris",
   "entity.formidulus.irrlicht": "Scintilla Vitae",
   "entity.formidulus.pumpkin": "Volatile Pumpkin",
