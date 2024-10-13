@@ -122,4 +122,9 @@ public abstract class AnimatedHostileEntity extends HostileEntity
 	}
 	
 	public abstract boolean isNotInAttackAnimation();
+	
+	protected float getHealthPercent()
+	{
+		return getHealth() / getMaxHealth();
+	}
 }

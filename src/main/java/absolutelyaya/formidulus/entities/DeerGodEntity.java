@@ -36,10 +36,13 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.TypeFilter;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
@@ -123,7 +126,7 @@ public class DeerGodEntity extends BossEntity
 		goalSelector.add(1, new LanternSlamGoal(this));
 		goalSelector.add(1, new ProjectileGoal(this));
 		goalSelector.add(2, new TeleportToTargetGoal(this));
-		goalSelector.add(3, new ApproachTargetGoal(this, 0.4f));
+		goalSelector.add(2, new ApproachTargetGoal(this, 0.4f));
 		
 		targetSelector.add(0, bossTargetGoal = new BossTargetGoal(this, 16, 200, 0.4f));
 	}
@@ -144,6 +147,12 @@ public class DeerGodEntity extends BossEntity
 	BossBar.Style getBossBarStyle()
 	{
 		return ClassTinkerers.getEnum(BossBar.Style.class, "DEER");
+	}
+	
+	@Override
+	public float getStepHeight()
+	{
+		return 1f;
 	}
 	
 	@Override
@@ -186,18 +195,23 @@ public class DeerGodEntity extends BossEntity
 		if((getTarget() == null || getTarget().isRemoved()) && !isNotInAttackAnimation() && !isInSequence())
 			cancelActiveGoals();
 		if(getHealth() < getMaxHealth() * 0.75f && dataTracker.get(TELEPORT_COOLDOWN) > 0)
-			dataTracker.set(TELEPORT_COOLDOWN, dataTracker.get(TELEPORT_COOLDOWN) - 1);
+			dataTracker.set(TELEPORT_COOLDOWN, dataTracker.get(TELEPORT_COOLDOWN) - (int)(1 + getCooldownBonusSpeed()));
 		if(isTeleporting())
 			dataTracker.set(TELEPORT_TIMER, dataTracker.get(TELEPORT_TIMER) - 1);
 		if(rangedDamageTaken > 0f)
 			rangedDamageTaken -= 0.05f;
 		if(dataTracker.get(RANGED) && hasLivingTarget())
-			dataTracker.set(RANGED_COOLDOWN, dataTracker.get(RANGED_COOLDOWN) - 1);
+			dataTracker.set(RANGED_COOLDOWN, dataTracker.get(RANGED_COOLDOWN) - (int)(1 + getCooldownBonusSpeed()));
 		if(!dataTracker.get(RANGED) && rangedDamageTaken > 50)
 		{
 			dataTracker.set(RANGED, true);
 			triggerMonologueSequence(SequenceTriggerPayload.PROJECTILE_SEQUENCE);
 		}
+	}
+	
+	float getCooldownBonusSpeed()
+	{
+		return getWorld().getDifficulty().getId() * 0.44f * (1f - getHealthPercent());
 	}
 	
 	@Override
@@ -322,8 +336,12 @@ public class DeerGodEntity extends BossEntity
 				{
 					Vec3d dir = Vec3d.ZERO.addRandom(random, 1f).multiply(1f, 0f, 1f);
 					Vec3d pos = getPos().add(dir.normalize().multiply((getRandom().nextFloat() - 0.5f) * 2f * 16f));
+					BlockHitResult bHit = getWorld().raycast(new RaycastContext(pos.add(0f, 2f, 0f), pos.subtract(0f, 2f, 0f),
+							RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this));
+					if(bHit.getType().equals(HitResult.Type.MISS))
+						continue;
 					getWorld().addParticle(new BloodDropParticleEffect(dest.toVector3f()),
-							(float)pos.x, (float)getY(), (float)pos.z, 0f, 0f, 0f);
+							(float)pos.x, (float)bHit.getPos().y, (float)pos.z, 0f, 0f, 0f);
 				}
 			}
 			if(!getAnimationFlag(4) && getCurrentAnimationDuration() >= 13f)
@@ -612,12 +630,12 @@ public class DeerGodEntity extends BossEntity
 	
 	public boolean isReadyToAttack()
 	{
-		return super.isReadyToAttack() && dataTracker.get(SUMMONED) && !isInSequence() && getVanishingPercent() < 0.5f && !isAboutToTeleport() && navigation.isIdle();
+		return super.isReadyToAttack() && dataTracker.get(SUMMONED) && !isInSequence() && getVanishingPercent() < 0.5f && !isAboutToTeleport();
 	}
 	
 	public boolean isReadyToTeleport()
 	{
-		return dataTracker.get(TELEPORT_COOLDOWN) <= 0 && getHealth() / getMaxHealth() <= 0.75f && rangedDamageTaken < 100f;
+		return dataTracker.get(TELEPORT_COOLDOWN) <= 0 && getHealthPercent() <= 0.75f;
 	}
 	
 	public void setTeleportCooldown(int cooldown)
@@ -627,7 +645,7 @@ public class DeerGodEntity extends BossEntity
 	
 	public int getTeleportFadeDuration()
 	{
-		return 40 - (20 * Math.round(1f - (Math.max(getHealth() / getMaxHealth(), 0.5f) - 0.5f) * 4f));
+		return 40 - (20 * Math.round(1f - (Math.max(getHealthPercent(), 0.5f) - 0.5f) * 4f));
 	}
 	
 	public boolean isTeleporting()
@@ -708,6 +726,7 @@ public class DeerGodEntity extends BossEntity
 		public void start()
 		{
 			super.start();
+			mob.navigation.stop();
 			mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
 			mob.prevBodyYaw = mob.bodyYaw = mob.headYaw;
 			mob.swingChain++;
@@ -767,6 +786,7 @@ public class DeerGodEntity extends BossEntity
 		public void start()
 		{
 			super.start();
+			mob.navigation.stop();
 			mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, target.getEyePos());
 			mob.prevBodyYaw = mob.bodyYaw = mob.headYaw;
 			mob.swingChain = 0;
@@ -808,15 +828,15 @@ public class DeerGodEntity extends BossEntity
 				mob.setHasLantern(false);
 				Vec3d impact = mob.getPos().add(new Vec3d(0.5, 0, 3).rotateY((float)Math.toRadians(-mob.getYaw())));
 				List<LivingEntity> hits = mob.getWorld().getNonSpectatingEntities(LivingEntity.class,
-						Box.from(impact).expand(8f));
+						Box.from(impact).expand(9f));
 				for (LivingEntity hit : hits)
 				{
 					if(hit instanceof IrrlichtEntity || hit instanceof DeerGodEntity)
 						continue;
-					float strength = Math.max(1f - (float)impact.distanceTo(hit.getPos()) / 6f, 0f);
+					float strength = Math.max(1f - (float)impact.distanceTo(hit.getPos()) / 7.5f, 0f);
 					if(strength <= 0f)
 						continue;
-					if(hit.damage(DamageSources.get(mob.getWorld(), DamageSources.LANTERN, mob), strength * 20f))
+					if(strength * 20f > 0f && hit.damage(DamageSources.get(mob.getWorld(), DamageSources.LANTERN, mob), strength * 20f))
 					{
 						hit.setVelocity(hit.getPos().subtract(impact).normalize().multiply(strength * 4f).add(0f, strength, 0f));
 						mob.onDamageEntity(hit);
@@ -828,7 +848,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		protected int getAttackCooldown()
 		{
-			return 20 + (int)(mob.random.nextFloat() * 30);
+			return (int)((20 + mob.random.nextFloat() * 30) *  Math.max(mob.getHealth() / mob.getMaxHealth(), 0.2f));
 		}
 	}
 	
@@ -846,11 +866,24 @@ public class DeerGodEntity extends BossEntity
 		}
 		
 		@Override
+		public void start()
+		{
+			super.start();
+			mob.navigation.stop();
+		}
+		
+		@Override
 		public void tick()
 		{
 			super.tick();
 			if(time == 35)
 				mob.setHasLantern(true);
+		}
+		
+		@Override
+		public boolean canStop()
+		{
+			return true;
 		}
 		
 		@Override
@@ -877,7 +910,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean canStart()
 		{
-			return mob.isReadyToAttack() && !mob.isTeleporting();
+			return mob.isReadyToAttack();
 		}
 		
 		@Override
@@ -891,7 +924,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean shouldContinue()
 		{
-			return mob.hasLivingTarget() && mob.isNotInAttackAnimation() && !(mob.distanceTo(mob.getTarget()) <= 3f || failed);
+			return mob.hasLivingTarget() && mob.isNotInAttackAnimation() && !(mob.distanceTo(mob.getTarget()) <= 3f || failed) && !mob.isTeleporting();
 		}
 		
 		@Override
@@ -925,6 +958,7 @@ public class DeerGodEntity extends BossEntity
 	
 	static abstract class DeerTeleportGoal extends InterruptableGoal
 	{
+		int pathCheckIntervall;
 		final DeerGodEntity mob;
 		
 		public DeerTeleportGoal(DeerGodEntity mob)
@@ -951,7 +985,7 @@ public class DeerGodEntity extends BossEntity
 			}
 			else
 				Formidulus.LOGGER.warn("Deer couldn't find a free spot to teleport to!");
-			mob.setTeleportCooldown((int)((100 + (mob.random.nextFloat())) * Math.max(mob.getHealth() / mob.getMaxHealth(), 0.1f)));
+			mob.setTeleportCooldown((int)((200 + (mob.random.nextFloat())) * Math.max(mob.getHealth() / mob.getMaxHealth(), 0.2f)));
 			stop();
 		}
 		
@@ -965,6 +999,14 @@ public class DeerGodEntity extends BossEntity
 		boolean isDestinationFree(Vec3d dest)
 		{
 			return mob.getWorld().isSpaceEmpty(mob.getBoundingBox().offset(mob.getPos().multiply(-1)).offset(dest));
+		}
+		
+		protected boolean isCanReachTarget()
+		{
+			if(pathCheckIntervall-- > 0)
+				return false;
+			pathCheckIntervall = 20;
+			return mob.navigation.findPathTo(mob.getTarget(), 16) != null;
 		}
 	}
 	
@@ -980,7 +1022,8 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean canStart()
 		{
-			return super.canStart() && ((!mob.hasLantern() && mob.getTarget() != null && mob.distanceTo(mob.getTarget()) < 5) || mob.random.nextFloat() < 0.01f);
+			return super.canStart() && ((!mob.hasLantern() && mob.getTarget() != null && mob.distanceTo(mob.getTarget()) < 5) ||
+												(mob.random.nextFloat() < (isCanReachTarget() ? 0.01f : 0.05f)));
 		}
 		
 		@Override
@@ -993,12 +1036,13 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		protected @Nullable Vec3d getTeleportDestination()
 		{
-			Vec3d dest;
 			for (int i = 0; i < 8; i++)
 			{
-				dest = origin.add((mob.random.nextFloat() - 0.5) * 2f * 16f, 0f, (mob.random.nextFloat() - 0.5) * 2f * 16f);
-				if(isDestinationFree(dest))
-					return dest;
+				Vec3d dest = origin.add((mob.random.nextFloat() - 0.5) * 2f * 16f, 8f, (mob.random.nextFloat() - 0.5) * 2f * 16f);
+				BlockHitResult bHit = mob.getWorld().raycast(new RaycastContext(dest, dest.subtract(0, 16f, 0), RaycastContext.ShapeType.COLLIDER,
+						RaycastContext.FluidHandling.NONE, mob));
+				if(!bHit.getType().equals(HitResult.Type.MISS) && isDestinationFree(bHit.getPos()))
+					return bHit.getPos();
 			}
 			return null;
 		}
@@ -1014,7 +1058,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean canStart()
 		{
-			return super.canStart() && mob.getTarget() != null && mob.distanceTo(mob.getTarget()) > 10;
+			return super.canStart() && mob.getTarget() != null && (mob.distanceTo(mob.getTarget()) > 10 || !isCanReachTarget());
 		}
 		
 		@Override
@@ -1032,13 +1076,14 @@ public class DeerGodEntity extends BossEntity
 			if(target == null)
 				return null;
 			Vec3d dir = mob.getPos().subtract(target.getPos()).multiply(1f, 0f, 1f).normalize();
-			Vec3d dest;
 			for (int i = 0; i < 36; i++)
 			{
 				float rot = i / 2f * (i % 2 == 0 ? -1 : 1) * 20f;
-				dest = target.getPos().add(dir.rotateY((float)Math.toRadians(rot)).multiply(2.5f + mob.random.nextFloat()));
-				if(isDestinationFree(dest))
-					return dest;
+				Vec3d dest = target.getPos().add(dir.rotateY((float)Math.toRadians(rot)).multiply(2.5f + mob.random.nextFloat()));
+				BlockHitResult bHit = mob.getWorld().raycast(new RaycastContext(dest.add(0, 2, 0), dest.subtract(0, 2, 0), RaycastContext.ShapeType.COLLIDER,
+						RaycastContext.FluidHandling.NONE, mob));
+				if(!bHit.getType().equals(HitResult.Type.MISS) && isDestinationFree(bHit.getPos()))
+					return bHit.getPos();
 			}
 			return null;
 		}
