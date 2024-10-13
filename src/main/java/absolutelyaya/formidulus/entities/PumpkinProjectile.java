@@ -1,6 +1,7 @@
 package absolutelyaya.formidulus.entities;
 
 import absolutelyaya.formidulus.damage.DamageSources;
+import absolutelyaya.formidulus.registries.ItemRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
@@ -24,6 +25,8 @@ public class PumpkinProjectile extends ThrownItemEntity
 	{
 		super(entityType, world);
 		movementMultiplier = new Vec3d(1.01f, 1.01f, 1.01f);
+		if(random.nextFloat() <= 0.25f)
+			setItem(ItemRegistry.WEEN.getDefaultStack());
 	}
 	
 	@Override
@@ -94,7 +97,7 @@ public class PumpkinProjectile extends ThrownItemEntity
 			discard();
 		}
 		getWorld().getEntitiesByType(TypeFilter.instanceOf(LivingEntity.class), getBoundingBox().expand(0.2f), i -> !i.equals(getOwner())).forEach(this::hitLiving);
-		getWorld().playSound(null, getBlockPos(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.HOSTILE, 1f, 1f);
+		getWorld().playSound(null, getBlockPos(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.HOSTILE, 0.4f, 1f);
 	}
 	
 	@Override

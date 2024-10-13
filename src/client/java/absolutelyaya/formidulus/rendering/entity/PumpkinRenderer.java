@@ -12,9 +12,9 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 
-public class FireballRenderer extends FlyingItemEntityRenderer<PumpkinProjectile>
+public class PumpkinRenderer extends FlyingItemEntityRenderer<PumpkinProjectile>
 {
-	public FireballRenderer(EntityRendererFactory.Context context)
+	public PumpkinRenderer(EntityRendererFactory.Context context)
 	{
 		super(context);
 	}
