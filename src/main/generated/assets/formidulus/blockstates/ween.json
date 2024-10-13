@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "formidulus:block/ween",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "formidulus:block/ween"
+    },
+    "facing=south": {
+      "model": "formidulus:block/ween",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "formidulus:block/ween",
+      "y": 270
+    }
+  }
+}

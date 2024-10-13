@@ -1,4 +1,6 @@
 {
+  "block.formidulus.ween": "Ween",
+  "block.formidulus.ween.lore": "es ist ween",
   "death.attack.claw": "%1$s wurde von %2$s zerrissen",
   "death.attack.claw.item": "%1s wurde von %2$s mit %3$s zerrissen",
   "death.attack.claw.player": "%1s wurde zerrissen beim Versuch %2$s zu entkommen",

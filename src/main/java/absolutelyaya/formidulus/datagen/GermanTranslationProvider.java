@@ -1,6 +1,7 @@
 package absolutelyaya.formidulus.datagen;
 
 import absolutelyaya.formidulus.item.DeerSkullItem;
+import absolutelyaya.formidulus.registries.BlockRegistry;
 import absolutelyaya.formidulus.registries.EntityRegistry;
 import absolutelyaya.formidulus.registries.ItemRegistry;
 import absolutelyaya.formidulus.registries.StatusEffectRegistry;
@@ -40,6 +41,9 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(genericKey("item.accessory_mode", DeerSkullItem.ACCESSORY_MODE_CAP), "Kappe");
 		builder.add(genericKey("item.accessory_mode", DeerSkullItem.ACCESSORY_MODE_MASK), "Maske");
 		builder.add(ACCESSORY_MODE_HINT, "[Drück Alt & Klick zum Modus wechseln]");
+		
+		builder.add(BlockRegistry.WEEN, "Ween");
+		builder.add(BlockRegistry.WEEN.getTranslationKey() + ".lore", "es ist ween");
 		
 		builder.add("death.attack.lantern", "%1$s wurde von %2$s ins Licht geführt");
 		builder.add("death.attack.lantern.item", "%1$s wurde von %2$s mittels %3$s ins Licht geführt");

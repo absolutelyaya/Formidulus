@@ -1,4 +1,6 @@
 {
+  "block.formidulus.ween": "Ween",
+  "block.formidulus.ween.lore": "it's ween",
   "death.attack.claw": "%1$s was torn apart by %2$s",
   "death.attack.claw.item": "%1s was torn apart by %2$s using %3$s",
   "death.attack.claw.player": "%1s was torn apart trying to escape %2$s",

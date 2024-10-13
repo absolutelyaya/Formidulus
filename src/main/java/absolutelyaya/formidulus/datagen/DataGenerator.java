@@ -12,5 +12,8 @@ public class DataGenerator implements DataGeneratorEntrypoint
 		pack.addProvider(BaseTranslationProvider::new);
 		pack.addProvider(GermanTranslationProvider::new); //there isn't too much to translate, so might as well
 		pack.addProvider(EntityLootTableProvider::new);
+		pack.addProvider(ModelProvider::new);
+		pack.addProvider(BlockLootTableProvider::new);
+		pack.addProvider(BlockTagProvider::new);
 	}
 }
