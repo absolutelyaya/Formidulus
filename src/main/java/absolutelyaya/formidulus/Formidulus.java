@@ -23,6 +23,7 @@ public class Formidulus implements ModInitializer
 		EntityRegistry.register();
 		PacketRegistry.register();
 		StatusEffectRegistry.register();
+		SoundRegistry.register();
 	}
 	
 	public static Identifier identifier(String path)

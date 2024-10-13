@@ -1,0 +1,22 @@
+{
+  "ween": {
+    "sounds": [
+      "formidulus:ween/talonween-01",
+      "formidulus:ween/talonween-02",
+      "formidulus:ween/talonween-03",
+      "formidulus:ween/talonween-04",
+      "formidulus:ween/talonween-05",
+      "formidulus:ween/talonween-06",
+      "formidulus:ween/talonween-07",
+      "formidulus:ween/talonween-08",
+      "formidulus:ween/yayaween-01",
+      "formidulus:ween/yayaween-02",
+      "formidulus:ween/yayaween-03",
+      "formidulus:ween/yayaween-04",
+      "formidulus:ween/yayaween-05",
+      "formidulus:ween/yayaween-06",
+      "formidulus:ween/yayaween-07",
+      "formidulus:ween/yayaween-08"
+    ]
+  }
+}
