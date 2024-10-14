@@ -8,11 +8,12 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.entity.feature.HeldItemFeatureRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.util.Identifier;
 
 public class DeerFollowerRenderer extends MobEntityRenderer<DeerFollowerEntity, DeerFollowerModel>
 {
-	static final Identifier TEX = Formidulus.identifier("textures/entity/deer_follower0.png");
+	static final Identifier TEX = Formidulus.identifier("textures/entity/deer_follower");
 	
 	public DeerFollowerRenderer(EntityRendererFactory.Context context)
 	{
@@ -21,7 +22,7 @@ public class DeerFollowerRenderer extends MobEntityRenderer<DeerFollowerEntity, 
 			@Override
 			public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, DeerFollowerEntity livingEntity, float f, float g, float h, float j, float k, float l)
 			{
-				if(livingEntity.isAttacking())
+				if(livingEntity.isArmsVisible())
 					super.render(matrixStack, vertexConsumerProvider, i, livingEntity, f, g, h, j, k, l);
 			}
 		});
@@ -30,6 +31,16 @@ public class DeerFollowerRenderer extends MobEntityRenderer<DeerFollowerEntity, 
 	@Override
 	public Identifier getTexture(DeerFollowerEntity entity)
 	{
-		return TEX;
+		return TEX.withSuffixedPath(entity.getVariant() + ".png");
+	}
+	
+	@Override
+	public void render(DeerFollowerEntity mob, float f, float g, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int i)
+	{
+		matrices.push();
+		if(mob.getPose().equals(EntityPose.SITTING))
+			matrices.translate(0f, -0.5f, 0f);
+		super.render(mob, f, g, matrices, vertexConsumerProvider, i);
+		matrices.pop();
 	}
 }

@@ -674,6 +674,11 @@ public class DeerGodEntity extends BossEntity
 			ServerPlayNetworking.send(serverPlayer, new SequenceTriggerPayload(SequenceTriggerPayload.PLAYER_DEATH_SEQUENCE));
 	}
 	
+	public Vector3f getOrigin()
+	{
+		return dataTracker.get(ORIGIN);
+	}
+	
 	@Override
 	public void readCustomDataFromNbt(NbtCompound nbt)
 	{

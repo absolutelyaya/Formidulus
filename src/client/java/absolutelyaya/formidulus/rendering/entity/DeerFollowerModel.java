@@ -5,6 +5,9 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.EntityPose;
+import net.minecraft.util.Arm;
+import org.joml.Vector3f;
 
 // Made with Blockbench 4.11.1
 // Exported for Minecraft version 1.17+ for Yarn
@@ -13,6 +16,7 @@ public class DeerFollowerModel extends BipedEntityModel<DeerFollowerEntity>
 {
 	private final ModelPart root;
 	private final ModelPart crossedArms;
+	private final ModelPart mask;
 	
 	public DeerFollowerModel(ModelPart root)
 	{
@@ -20,7 +24,7 @@ public class DeerFollowerModel extends BipedEntityModel<DeerFollowerEntity>
 		this.root = root;
 		ModelPart body = root.getChild("body");
 		ModelPart head = root.getChild("head");
-		head.getChild("mask");
+		mask = head.getChild("mask");
 		head.getChild("hood");
 		ModelPart rightLeg = root.getChild("right_leg");
 		rightLeg.getChild("rightLegLower");
@@ -89,12 +93,25 @@ public class DeerFollowerModel extends BipedEntityModel<DeerFollowerEntity>
 	}
 	
 	@Override
-	public void setAngles(DeerFollowerEntity livingEntity, float f, float g, float h, float i, float j)
+	public void setAngles(DeerFollowerEntity mob, float f, float g, float h, float i, float j)
 	{
-		super.setAngles(livingEntity, f, g, h, i, j);
-		crossedArms.visible = !livingEntity.isAttacking();
-		leftArm.traverse().forEach(part -> part.visible = livingEntity.isAttacking());
-		rightArm.traverse().forEach(part -> part.visible = livingEntity.isAttacking());
+		riding = riding || mob.getPose().equals(EntityPose.SITTING);
+		super.setAngles(mob, f, g, h, i, j);
+		crossedArms.visible = !mob.isArmsVisible();
+		leftArm.traverse().forEach(part -> part.visible = mob.isArmsVisible());
+		rightArm.traverse().forEach(part -> part.visible = mob.isArmsVisible());
+		
+		mask.visible = mob.isHasMask();
+		
+		if(mob.isReading())
+		{
+			float amount = mob.getPose().equals(EntityPose.SITTING) ? 20f : 35f;
+			if(mob.getMainArm().equals(Arm.RIGHT))
+				leftArm.rotate(new Vector3f((float)Math.toRadians(-amount), 0f, 0f));
+			else
+				rightArm.rotate(new Vector3f((float)Math.toRadians(-amount), 0f, 0f));
+		}
+		
 	}
 	
 	@Override
