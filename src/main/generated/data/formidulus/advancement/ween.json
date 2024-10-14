@@ -1,0 +1,27 @@
+{
+  "parent": "formidulus:root",
+  "criteria": {
+    "ween": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.formidulus.ween.description"
+    },
+    "hidden": true,
+    "icon": {
+      "count": 1,
+      "id": "formidulus:ween"
+    },
+    "title": {
+      "translate": "advancement.formidulus.ween.title"
+    }
+  },
+  "requirements": [
+    [
+      "ween"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

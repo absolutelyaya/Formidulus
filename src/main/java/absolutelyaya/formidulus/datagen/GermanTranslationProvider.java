@@ -45,6 +45,15 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(BlockRegistry.WEEN, "Ween");
 		builder.add(BlockRegistry.WEEN.getTranslationKey() + ".lore", "es ist ween");
 		
+		builder.add(ADVANCEMENT_ROOT_TITLE, "Absolute Spooky Month 24");
+		builder.add(ADVANCEMENT_ROOT_DESCRIPTION, "es ist ween");
+		builder.add(ADVANCEMENT_CULTISTS_TITLE, "Kultisten ? In meinem Computer ?");
+		builder.add(ADVANCEMENT_CULTISTS_DESCRIPTION, "Es ist wahrscheinlicher als sie denken.");
+		builder.add(ADVANCEMENT_DEER_TITLE, "Ein Licht in der Dunkelheit");
+		builder.add(ADVANCEMENT_DEER_DESCRIPTION, "Erschlage das Skelettbiest das der Kult verehrt.");
+		builder.add(ADVANCEMENT_WEEN_TITLE, "es ist ween");
+		builder.add(ADVANCEMENT_WEEN_DESCRIPTION, "ich hoffe du hast dich nicht zu sehr erschreckt-");
+		
 		builder.add("death.attack.lantern", "%1$s wurde von %2$s ins Licht geführt");
 		builder.add("death.attack.lantern.item", "%1$s wurde von %2$s mittels %3$s ins Licht geführt");
 		builder.add("death.attack.lantern.player", "%1s wurde ins Licht geführt, während eines Kampfes mit %2$s");

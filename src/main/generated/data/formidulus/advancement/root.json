@@ -1,0 +1,28 @@
+{
+  "criteria": {
+    "tick": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "formidulus:textures/block/ween_side.png",
+    "description": {
+      "translate": "advancement.formidulus.root.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:pumpkin"
+    },
+    "show_toast": false,
+    "title": {
+      "translate": "advancement.formidulus.root.title"
+    }
+  },
+  "requirements": [
+    [
+      "tick"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -44,6 +44,15 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(BlockRegistry.WEEN, "Ween");
 		builder.add(BlockRegistry.WEEN.getTranslationKey() + ".lore", "it's ween");
 		
+		builder.add(ADVANCEMENT_ROOT_TITLE, "Absolute Spooky Month 24");
+		builder.add(ADVANCEMENT_ROOT_DESCRIPTION, "it's ween");
+		builder.add(ADVANCEMENT_CULTISTS_TITLE, "Cultists ? In MY Video Game ?");
+		builder.add(ADVANCEMENT_CULTISTS_DESCRIPTION, "It's more likely than you think.");
+		builder.add(ADVANCEMENT_DEER_TITLE, "A light in the Darkness");
+		builder.add(ADVANCEMENT_DEER_DESCRIPTION, "Slay the Skeletal Beast worshipped by the Cult.");
+		builder.add(ADVANCEMENT_WEEN_TITLE, "it's ween");
+		builder.add(ADVANCEMENT_WEEN_DESCRIPTION, "hope you didn't get scared too bad-");
+		
 		builder.add("death.attack.lantern", "%1$s was shown the Light by %2$s");
 		builder.add("death.attack.lantern.item", "%1s was shown the Light by %2$s using %3$s");
 		builder.add("death.attack.lantern.player", "%1s was shown the Light whilst fighting %2$s");
