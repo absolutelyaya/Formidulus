@@ -170,12 +170,20 @@ public class DeerGodEntity extends BossEntity
 	public void tick()
 	{
 		super.tick();
-		if(!dataTracker.get(SUMMONED) && !isAnyCultistNearby() && !getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class),
-				getBoundingBox().expand(8), p -> !p.isSpectator() && !p.isCreative()).isEmpty())
+		if(!dataTracker.get(SUMMONED))
 		{
-			setAnimation(SPAWN_SEQUENCE_ANIM);
-			triggerMonologueSequence(SequenceTriggerPayload.SPAWN_SEQUENCE);
-			dataTracker.set(SUMMONED, true);
+			if(age % 20 != 0)
+				return;
+			if(!isAnyCultistNearby() && !getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class),
+					getBoundingBox().expand(8), p -> !p.isSpectator() && !p.isCreative()).isEmpty())
+			{
+				setAnimation(SPAWN_SEQUENCE_ANIM);
+				triggerMonologueSequence(SequenceTriggerPayload.SPAWN_SEQUENCE);
+				dataTracker.set(SUMMONED, true);
+			}
+			else if(age % 300 == 0 && getAllNearbyCultists().size() < getMaxPreSummonCultists())
+				spawnCultist(new Vec2f(3f, 8f));
+			return;
 		}
 		int teleportTimer = getTeleportTimer();
 		if(teleportTimer == getTeleportFadeDuration() - 1)
@@ -675,14 +683,24 @@ public class DeerGodEntity extends BossEntity
 	public void afterBossReset()
 	{
 		Vec2f range = new Vec2f(2f, 7f);
-		for (int i = 0; i < 5 + (Math.max(getWorld().getDifficulty().getId() - 2, 0) * 2); i++)
+		for (int i = 0; i < getMaxPreSummonCultists(); i++)
 			spawnCultist(range);
+	}
+	
+	int getMaxPreSummonCultists()
+	{
+		return 5 + (Math.max(getWorld().getDifficulty().getId() - 2, 0) * 2);
 	}
 	
 	boolean isAnyCultistNearby()
 	{
-		return !getWorld().getEntitiesByType(TypeFilter.instanceOf(DeerFollowerEntity.class),
-				Box.from(new Vec3d(getOrigin())).expand(48), LivingEntity::isPartOfGame).isEmpty();
+		return !getAllNearbyCultists().isEmpty();
+	}
+	
+	List<DeerFollowerEntity> getAllNearbyCultists()
+	{
+		return getWorld().getEntitiesByType(TypeFilter.instanceOf(DeerFollowerEntity.class),
+				Box.from(new Vec3d(getOrigin())).expand(48), LivingEntity::isPartOfGame);
 	}
 	
 	public void spawnCultist(Vec2f distanceRange)
