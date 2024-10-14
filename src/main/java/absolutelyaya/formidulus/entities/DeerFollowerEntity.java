@@ -2,6 +2,12 @@ package absolutelyaya.formidulus.entities;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.ItemEnchantmentsComponent;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.EnchantmentLevelEntry;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.control.LookControl;
 import net.minecraft.entity.ai.goal.*;
@@ -18,6 +24,11 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
@@ -36,6 +47,7 @@ import org.joml.Vector3f;
 
 import java.util.EnumSet;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class DeerFollowerEntity extends HostileEntity
 {
@@ -131,18 +143,43 @@ public class DeerFollowerEntity extends HostileEntity
 		if(getWorld() instanceof ServerWorld serverWorld && random.nextFloat() < localDifficulty.getLocalDifficulty() / 10f)
 			enchantEquipment(serverWorld, random, EquipmentSlot.MAINHAND, localDifficulty);
 		setEquipmentDropChance(EquipmentSlot.MAINHAND, 0.1f);
-		if(random.nextFloat() < 0.1f + localDifficulty.getLocalDifficulty() / 10f)
+		if(random.nextFloat() > 0.1f + localDifficulty.getLocalDifficulty() / 10f)
+			return;
+		if(getWorld() instanceof ServerWorld serverWorld && random.nextFloat() < localDifficulty.getLocalDifficulty() / 10f)
 		{
-			if(getWorld() instanceof ServerWorld serverWorld && random.nextFloat() < localDifficulty.getLocalDifficulty() / 10f)
-			{
-				equipStack(EquipmentSlot.OFFHAND, Items.ENCHANTED_BOOK.getDefaultStack());
-				enchantEquipment(serverWorld, random, EquipmentSlot.OFFHAND, localDifficulty); //TODO: fix the enchanted books not actually having an enchantment
-				setEquipmentDropChance(EquipmentSlot.OFFHAND, 1f);
-			}
-			else
-				equipStack(EquipmentSlot.OFFHAND, Items.BOOK.getDefaultStack());
+			ItemStack enchantedBook = Items.ENCHANTED_BOOK.getDefaultStack();
+			DynamicRegistryManager registryManager = serverWorld.getRegistryManager();
+			Registry<Enchantment> reg = registryManager.get(RegistryKeys.ENCHANTMENT);
+			// I couldn't figure out how this shit works properly
+			// This is definitely not the right way to do it, but it works well enough for now
+			List<EnchantmentLevelEntry> enchantments =  EnchantmentHelper.generateEnchantments(random, Items.BOOK.getDefaultStack(), 30,
+					getEnchantmentEntryStream(reg, List.of(Enchantments.BINDING_CURSE, Enchantments.VANISHING_CURSE, Enchantments.FLAME, Enchantments.FIRE_ASPECT,
+							Enchantments.SHARPNESS, Enchantments.SMITE, Enchantments.FIRE_PROTECTION)));
+			ItemEnchantmentsComponent.Builder componentBuilder = new ItemEnchantmentsComponent.Builder(
+					enchantedBook.getOrDefault(DataComponentTypes.ENCHANTMENTS, ItemEnchantmentsComponent.DEFAULT));
+			if(random.nextFloat() < 0.01f)
+				enchantments.add(new EnchantmentLevelEntry(reg.getEntry(reg.get(Enchantments.MENDING)), 1));
+			for (EnchantmentLevelEntry e : enchantments)
+				componentBuilder.add(e.enchantment, e.level);
+			enchantedBook.set(DataComponentTypes.ENCHANTMENTS, componentBuilder.build());
+			equipStack(EquipmentSlot.OFFHAND, enchantedBook);
+			setEquipmentDropChance(EquipmentSlot.OFFHAND, 1f);
+		}
+		else
+		{
+			equipStack(EquipmentSlot.OFFHAND, Items.BOOK.getDefaultStack());
 			setEquipmentDropChance(EquipmentSlot.OFFHAND, 0.33f);
 		}
+	}
+	
+	Stream<RegistryEntry<Enchantment>> getEnchantmentEntryStream(Registry<Enchantment> reg, List<RegistryKey<Enchantment>> keys)
+	{
+		Stream.Builder<RegistryEntry<Enchantment>> builder = Stream.builder();
+		for (RegistryKey<Enchantment> key : keys)
+		{
+			builder.add(reg.getEntry(reg.get(key)));
+		}
+		return builder.build();
 	}
 	
 	@Override
