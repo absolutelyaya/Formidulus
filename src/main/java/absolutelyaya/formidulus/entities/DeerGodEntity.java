@@ -3,6 +3,7 @@ package absolutelyaya.formidulus.entities;
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.damage.DamageSources;
 import absolutelyaya.formidulus.entities.goal.AnimatedAttackGoal;
+import absolutelyaya.formidulus.entities.goal.BossOutOfCombatGoal;
 import absolutelyaya.formidulus.entities.goal.BossTargetGoal;
 import absolutelyaya.formidulus.entities.goal.InterruptableGoal;
 import absolutelyaya.formidulus.network.SequenceTriggerPayload;
@@ -31,6 +32,7 @@ import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Style;
@@ -38,10 +40,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -119,7 +118,7 @@ public class DeerGodEntity extends BossEntity
 	protected void initGoals()
 	{
 		super.initGoals();
-		goalSelector.add(0, new OutOfCombatGoal(this, OutOfCombatGoal.BEHAVIOR_RESPAWN_AT_ORIGIN));
+		goalSelector.add(0, new BossOutOfCombatGoal(this, BossOutOfCombatGoal.BEHAVIOR_RESPAWN_AT_ORIGIN));
 		goalSelector.add(0, new TeleportRandomlyGoal(this));
 		goalSelector.add(1, new SummonLanternGoal(this));
 		goalSelector.add(1, new LanternSwingGoal(this));
@@ -171,7 +170,7 @@ public class DeerGodEntity extends BossEntity
 	public void tick()
 	{
 		super.tick();
-		if(!dataTracker.get(SUMMONED) && !getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class),
+		if(!dataTracker.get(SUMMONED) && !isAnyCultistNearby() && !getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class),
 				getBoundingBox().expand(8), p -> !p.isSpectator() && !p.isCreative()).isEmpty())
 		{
 			setAnimation(SPAWN_SEQUENCE_ANIM);
@@ -670,8 +669,63 @@ public class DeerGodEntity extends BossEntity
 	public void onDamageEntity(LivingEntity damaged)
 	{
 		super.onDamageEntity(damaged);
-		if(damaged.isDead() && damaged instanceof ServerPlayerEntity serverPlayer)
+	}
+	
+	@Override
+	public void afterBossReset()
+	{
+		Vec2f range = new Vec2f(2f, 7f);
+		for (int i = 0; i < 5 + (Math.max(getWorld().getDifficulty().getId() - 2, 0) * 2); i++)
+			spawnCultist(range);
+	}
+	
+	boolean isAnyCultistNearby()
+	{
+		return !getWorld().getEntitiesByType(TypeFilter.instanceOf(DeerFollowerEntity.class),
+				Box.from(new Vec3d(getOrigin())).expand(48), LivingEntity::isPartOfGame).isEmpty();
+	}
+	
+	public void spawnCultist(Vec2f distanceRange)
+	{
+		if(!(getWorld() instanceof ServerWorld serverWorld))
+			return;
+		DeerFollowerEntity cultist = new DeerFollowerEntity(EntityRegistry.DEER_FOLLOWER, getWorld());
+		Vec3d pos = null;
+		for (int ii = 0; ii < 16; ii++)
+		{
+			Vec3d dir = Vec3d.ZERO.addRandom(random, 1f).multiply(1f, 0f, 1f).normalize();
+			Vec3d randomPos = getPos().add(dir.multiply(MathHelper.lerp(random.nextFloat(), distanceRange.x, distanceRange.y)));
+			BlockHitResult bHit = getWorld().raycast(new RaycastContext(randomPos.add(0f, 6f, 0f), randomPos.subtract(0f, 12f, 0f),
+					RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this));
+			if(!bHit.getType().equals(HitResult.Type.MISS) && getWorld().isSpaceEmpty(cultist.getBoundingBox().offset(bHit.getPos())))
+			{
+				pos = bHit.getPos();
+				break;
+			}
+		}
+		if(pos == null)
+		{
+			cultist.discard();
+			Formidulus.LOGGER.warn("Couldn't find valid spot to spawn Cultist around Deer at [{} {} {}]", getX(), getY(), getZ());
+			return;
+		}
+		cultist.setPosition(pos);
+		cultist.setPersistent();
+		if(getWorld().spawnEntity(cultist))
+		{
+			getWorld().sendEntityStatus(cultist, EntityStatuses.PLAY_SPAWN_EFFECTS);
+			cultist.initialize(serverWorld, getWorld().getLocalDifficulty(getBlockPos()), SpawnReason.SPAWNER, null);
+		}
+	}
+	
+	@Override
+	public boolean onKilledOther(ServerWorld world, LivingEntity other)
+	{
+		if(other instanceof ServerPlayerEntity serverPlayer)
 			ServerPlayNetworking.send(serverPlayer, new SequenceTriggerPayload(SequenceTriggerPayload.PLAYER_DEATH_SEQUENCE));
+		if(bossTargetGoal.isHasNoTargets())
+			combatTimer = 0;
+		return super.onKilledOther(world, other);
 	}
 	
 	public Vector3f getOrigin()

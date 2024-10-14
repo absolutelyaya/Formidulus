@@ -96,7 +96,7 @@ public class DeerFollowerEntity extends HostileEntity
 		super.initDataTracker(builder);
 		builder.add(MASK, true);
 		builder.add(ACTIVITY, ACTIVITY_IDLE);
-		builder.add(VARIANT, (byte)0);
+		builder.add(VARIANT, (byte)(random.nextFloat() * 3.99));
 		builder.add(ALTAR, new Vector3f());
 	}
 	
@@ -271,7 +271,6 @@ public class DeerFollowerEntity extends HostileEntity
 	@Override
 	public void handleStatus(byte status)
 	{
-		super.handleStatus(status);
 		if(status == EntityStatuses.ADD_VILLAGER_HAPPY_PARTICLES)
 		{
 			for (int i = 0; i < 8; i++)
@@ -280,14 +279,25 @@ public class DeerFollowerEntity extends HostileEntity
 				getWorld().addParticle(ParticleTypes.HAPPY_VILLAGER, pos.x, pos.y, pos.z, 0, 0, 0);
 			}
 		}
+		else if(status == EntityStatuses.PLAY_SPAWN_EFFECTS)
+		{
+			for (int i = 0; i < 16; i++)
+			{
+				Vec3d pos = getBoundingBox().getCenter().add(Vec3d.ZERO.addRandom(random, 1f).multiply(1f, 2f, 1f));
+				getWorld().addParticle(new DustParticleEffect(new Vector3f(0f, 0f, 0f), 5f), pos.x, pos.y, pos.z,
+						0, 0, 0);
+			}
+			return;
+		}
+		super.handleStatus(status);
 	}
 	
 	@Override
 	public void readCustomDataFromNbt(NbtCompound nbt)
 	{
 		super.readCustomDataFromNbt(nbt);
-		if(nbt.contains("Variant", NbtElement.BYTE_TYPE))
-			dataTracker.set(VARIANT, nbt.getByte("Variant"));
+		if(nbt.contains("Variante", NbtElement.BYTE_TYPE))
+			dataTracker.set(VARIANT, nbt.getByte("Variante"));
 		else
 			dataTracker.set(VARIANT, (byte)(random.nextFloat() * 3.99));
 		if(nbt.contains("Mask", NbtElement.BYTE_TYPE))
@@ -303,7 +313,7 @@ public class DeerFollowerEntity extends HostileEntity
 	public void writeCustomDataToNbt(NbtCompound nbt)
 	{
 		super.writeCustomDataToNbt(nbt);
-		nbt.putByte("Variant", dataTracker.get(VARIANT));
+		nbt.putByte("Variante", dataTracker.get(VARIANT));
 		nbt.putBoolean("Mask", dataTracker.get(MASK));
 		if(isHasAltar())
 		{

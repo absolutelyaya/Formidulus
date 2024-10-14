@@ -130,4 +130,15 @@ public class BossTargetGoal extends Goal
 			return null;
 		return knownTargets.keySet().toArray(new LivingEntity[0])[mob.getRandom().nextInt(knownTargets.size())];
 	}
+	
+	public List<LivingEntity> getAllTargets()
+	{
+		validateTargetList();
+		return new ArrayList<>(knownTargets.keySet());
+	}
+	
+	public boolean isHasNoTargets()
+	{
+		return knownTargets.isEmpty();
+	}
 }
