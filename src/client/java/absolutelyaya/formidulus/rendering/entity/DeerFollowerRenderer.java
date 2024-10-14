@@ -20,10 +20,10 @@ public class DeerFollowerRenderer extends MobEntityRenderer<DeerFollowerEntity, 
 		super(context, new DeerFollowerModel(context.getPart(FormidulusClient.DEER_FOLLOWER_LAYER)), 0.25f);
 		addFeature(new HeldItemFeatureRenderer<>(this, context.getHeldItemRenderer()) {
 			@Override
-			public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, DeerFollowerEntity livingEntity, float f, float g, float h, float j, float k, float l)
+			public void render(MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, DeerFollowerEntity entity, float f, float g, float h, float j, float k, float l)
 			{
-				if(livingEntity.isArmsVisible())
-					super.render(matrixStack, vertexConsumerProvider, i, livingEntity, f, g, h, j, k, l);
+				if(entity.isArmsVisible() && !entity.isWorshipping())
+					super.render(matrixStack, vertexConsumerProvider, i, entity, f, g, h, j, k, l);
 			}
 		});
 	}

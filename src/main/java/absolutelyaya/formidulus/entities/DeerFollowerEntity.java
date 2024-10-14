@@ -39,10 +39,13 @@ import java.util.List;
 
 public class DeerFollowerEntity extends HostileEntity
 {
-	static final TrackedData<Boolean> READING = DataTracker.registerData(DeerFollowerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Boolean> MASK = DataTracker.registerData(DeerFollowerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	static final TrackedData<Byte> ACTIVITY = DataTracker.registerData(DeerFollowerEntity.class, TrackedDataHandlerRegistry.BYTE);
 	static final TrackedData<Byte> VARIANT = DataTracker.registerData(DeerFollowerEntity.class, TrackedDataHandlerRegistry.BYTE);
 	static final TrackedData<Vector3f> ALTAR = DataTracker.registerData(DeerFollowerEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
+	public static final byte ACTIVITY_IDLE = 0;
+	public static final byte ACTIVITY_READING = 1;
+	public static final byte ACTIVITY_WORSHIP = 2;
 	
 	boolean hasAltar;
 	
@@ -78,8 +81,8 @@ public class DeerFollowerEntity extends HostileEntity
 	protected void initDataTracker(DataTracker.Builder builder)
 	{
 		super.initDataTracker(builder);
-		builder.add(READING, false);
 		builder.add(MASK, true);
+		builder.add(ACTIVITY, ACTIVITY_IDLE);
 		builder.add(VARIANT, (byte)0);
 		builder.add(ALTAR, new Vector3f());
 	}
@@ -184,12 +187,27 @@ public class DeerFollowerEntity extends HostileEntity
 	
 	public boolean isReading()
 	{
-		return dataTracker.get(READING);
+		return dataTracker.get(ACTIVITY) == ACTIVITY_READING;
+	}
+	
+	public boolean isWorshipping()
+	{
+		return dataTracker.get(ACTIVITY) == ACTIVITY_WORSHIP;
+	}
+	
+	public byte getActivity()
+	{
+		return dataTracker.get(ACTIVITY);
+	}
+	
+	public void setActivity(byte activity)
+	{
+		dataTracker.set(ACTIVITY, activity);
 	}
 	
 	public boolean isArmsVisible()
 	{
-		return isReading() || isAttacking();
+		return isReading() || isAttacking() || isWorshipping();
 	}
 	
 	public boolean isHasMask()
@@ -213,6 +231,20 @@ public class DeerFollowerEntity extends HostileEntity
 	}
 	
 	@Override
+	public void handleStatus(byte status)
+	{
+		super.handleStatus(status);
+		if(status == EntityStatuses.ADD_VILLAGER_HAPPY_PARTICLES)
+		{
+			for (int i = 0; i < 8; i++)
+			{
+				Vec3d pos = getEyePos().addRandom(random, 0.75f);
+				getWorld().addParticle(ParticleTypes.HAPPY_VILLAGER, pos.x, pos.y, pos.z, 0, 0, 0);
+			}
+		}
+	}
+	
+	@Override
 	public void readCustomDataFromNbt(NbtCompound nbt)
 	{
 		super.readCustomDataFromNbt(nbt);
@@ -220,8 +252,6 @@ public class DeerFollowerEntity extends HostileEntity
 			dataTracker.set(VARIANT, nbt.getByte("Variant"));
 		else
 			dataTracker.set(VARIANT, (byte)(random.nextFloat() * 3.99));
-		if(nbt.contains("Sitting", NbtElement.BYTE_TYPE) && nbt.getBoolean("Sitting"))
-			setPose(EntityPose.SITTING);
 		if(nbt.contains("Mask", NbtElement.BYTE_TYPE))
 			dataTracker.set(MASK, nbt.getBoolean("Mask"));
 		if(nbt.contains("Altar", NbtElement.COMPOUND_TYPE))
@@ -236,7 +266,6 @@ public class DeerFollowerEntity extends HostileEntity
 	{
 		super.writeCustomDataToNbt(nbt);
 		nbt.putByte("Variant", dataTracker.get(VARIANT));
-		nbt.putBoolean("Sitting", getPose().equals(EntityPose.SITTING));
 		nbt.putBoolean("Mask", dataTracker.get(MASK));
 		if(isHasAltar())
 		{
@@ -332,7 +361,7 @@ public class DeerFollowerEntity extends HostileEntity
 		{
 			duration = 200 + (int)(mob.random.nextFloat() * 300);
 			mob.navigation.stop();
-			mob.dataTracker.set(READING, true);
+			mob.setActivity(ACTIVITY_READING);
 			if(mob.random.nextFloat() < 0.5)
 				mob.setPose(EntityPose.SITTING);
 		}
@@ -360,7 +389,8 @@ public class DeerFollowerEntity extends HostileEntity
 		public void stop()
 		{
 			super.stop();
-			mob.dataTracker.set(READING, false);
+			if(mob.isReading())
+				mob.setActivity(ACTIVITY_IDLE);
 			if(mob.getPose().equals(EntityPose.SITTING))
 				mob.setPose(EntityPose.STANDING);
 			mob.setPitch(0f);
@@ -385,7 +415,8 @@ public class DeerFollowerEntity extends HostileEntity
 		@Override
 		public boolean canStart()
 		{
-			return mob.getTarget() == null && mob.hasAltar && (mob.random.nextFloat() < 0.005f || (!mob.isHasMask() && mob.random.nextFloat() < 0.1));
+			return mob.getTarget() == null && mob.hasAltar && (mob.random.nextFloat() < 0.0001f || (!mob.isHasMask() && mob.random.nextFloat() < 0.1) ||
+									(mob.getHealth() < mob.getMaxHealth() && mob.random.nextFloat() < 0.05));
 		}
 		
 		@Override
@@ -422,8 +453,7 @@ public class DeerFollowerEntity extends HostileEntity
 				mob.navigation.stop();
 			}
 			time--;
-			//TODO: start worship animation
-			mob.setPose(EntityPose.SITTING);
+			mob.setActivity(ACTIVITY_WORSHIP);
 			mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, altar);
 		}
 		
@@ -443,13 +473,16 @@ public class DeerFollowerEntity extends HostileEntity
 		public void stop()
 		{
 			super.stop();
-			if(time <= 0 && !mob.isHasMask())
+			if(time <= 0)
 			{
-				mob.dataTracker.set(MASK, true);
+				if(!mob.isHasMask())
+					mob.dataTracker.set(MASK, true);
+				else
+					mob.getWorld().sendEntityStatus(mob, EntityStatuses.ADD_VILLAGER_HAPPY_PARTICLES);
 				mob.heal(15f);
 			}
-			//TODO: stop worship animation
-			mob.setPose(EntityPose.STANDING);
+			if(mob.isWorshipping())
+				mob.setActivity(ACTIVITY_IDLE);
 			mob.setPitch(0f);
 		}
 	}

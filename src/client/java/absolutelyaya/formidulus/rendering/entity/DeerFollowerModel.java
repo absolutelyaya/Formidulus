@@ -7,6 +7,7 @@ import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.util.Arm;
+import net.minecraft.util.math.MathHelper;
 import org.joml.Vector3f;
 
 // Made with Blockbench 4.11.1
@@ -17,6 +18,10 @@ public class DeerFollowerModel extends BipedEntityModel<DeerFollowerEntity>
 	private final ModelPart root;
 	private final ModelPart crossedArms;
 	private final ModelPart mask;
+	private final ModelPart rightLegLower;
+	private final ModelPart leftLegLower;
+	private final ModelPart rightArmLower;
+	private final ModelPart leftArmLower;
 	
 	public DeerFollowerModel(ModelPart root)
 	{
@@ -27,14 +32,14 @@ public class DeerFollowerModel extends BipedEntityModel<DeerFollowerEntity>
 		mask = head.getChild("mask");
 		head.getChild("hood");
 		ModelPart rightLeg = root.getChild("right_leg");
-		rightLeg.getChild("rightLegLower");
+		rightLegLower = rightLeg.getChild("rightLegLower");
 		ModelPart leftLeg = root.getChild("left_leg");
-		leftLeg.getChild("leftLegLower");
+		leftLegLower = leftLeg.getChild("leftLegLower");
 		crossedArms = body.getChild("crossedArms");
 		ModelPart rightArm = root.getChild("right_arm");
-		rightArm.getChild("rightArmLower");
+		rightArmLower = rightArm.getChild("rightArmLower");
 		ModelPart leftArm = root.getChild("left_arm");
-		leftArm.getChild("leftArmLower");
+		leftArmLower = leftArm.getChild("leftArmLower");
 	}
 	
 	public static TexturedModelData getTexturedModelData()
@@ -93,25 +98,55 @@ public class DeerFollowerModel extends BipedEntityModel<DeerFollowerEntity>
 	}
 	
 	@Override
-	public void setAngles(DeerFollowerEntity mob, float f, float g, float h, float i, float j)
+	public void setAngles(DeerFollowerEntity entity, float f, float g, float h, float i, float j)
 	{
-		riding = riding || mob.getPose().equals(EntityPose.SITTING);
-		super.setAngles(mob, f, g, h, i, j);
-		crossedArms.visible = !mob.isArmsVisible();
-		leftArm.traverse().forEach(part -> part.visible = mob.isArmsVisible());
-		rightArm.traverse().forEach(part -> part.visible = mob.isArmsVisible());
+		root.traverse().forEach(ModelPart::resetTransform);
 		
-		mask.visible = mob.isHasMask();
-		
-		if(mob.isReading())
+		riding = riding || entity.getPose().equals(EntityPose.SITTING);
+		super.setAngles(entity, f, g, h, i, j);
+		crossedArms.visible = !entity.isArmsVisible();
+		leftArm.traverse().forEach(part -> part.visible = entity.isArmsVisible());
+		rightArm.traverse().forEach(part -> part.visible = entity.isArmsVisible());
+		mask.visible = entity.isHasMask();
+		switch(entity.getActivity())
 		{
-			float amount = mob.getPose().equals(EntityPose.SITTING) ? 20f : 35f;
-			if(mob.getMainArm().equals(Arm.RIGHT))
-				leftArm.rotate(new Vector3f((float)Math.toRadians(-amount), 0f, 0f));
-			else
-				rightArm.rotate(new Vector3f((float)Math.toRadians(-amount), 0f, 0f));
+			case DeerFollowerEntity.ACTIVITY_READING -> applyReadingPose(entity);
+			case DeerFollowerEntity.ACTIVITY_WORSHIP -> applyWorshipPose();
 		}
-		
+	}
+	
+	void applyReadingPose(DeerFollowerEntity entity)
+	{
+		float amount = entity.getPose().equals(EntityPose.SITTING) ? 20f : 35f;
+		if(entity.getMainArm().equals(Arm.RIGHT))
+			leftArm.rotate(new Vector3f((float)Math.toRadians(-amount), 0f, 0f));
+		else
+			rightArm.rotate(new Vector3f((float)Math.toRadians(-amount), 0f, 0f));
+	}
+	
+	void applyWorshipPose()
+	{
+		body.translate(new Vector3f(0f, 7f, -8f));
+		body.rotate(new Vector3f(32.5f, 0f, 0f).mul(MathHelper.RADIANS_PER_DEGREE));
+		rightLeg.translate(new Vector3f(0f, 5.9f, -1f));
+		Vector3f rot = new Vector3f(17.6922f, -4.1807f, 3.6993f).mul(MathHelper.RADIANS_PER_DEGREE);
+		rightLeg.pitch = rot.x;
+		rightLeg.yaw = rot.y;
+		rightLeg.roll = rot.z;
+		rightLegLower.rotate(new Vector3f(75f, 0f, 0f).mul(MathHelper.RADIANS_PER_DEGREE));
+		leftLeg.translate(new Vector3f(0f, 5.9f, -1f));
+		rot = new Vector3f(-0.1f, 2.88f, -4.79f).mul(MathHelper.RADIANS_PER_DEGREE);
+		leftLeg.pitch = rot.x;
+		leftLeg.yaw = rot.y;
+		leftLeg.roll = rot.z;
+		leftLegLower.rotate(new Vector3f(80f, 0f, 0f).mul(MathHelper.RADIANS_PER_DEGREE));
+		rightArm.translate(new Vector3f(0f, 9f, -7f));
+		rightArm.rotate(new Vector3f(-40.1785f, -17.3519f, -21.6708f).mul(MathHelper.RADIANS_PER_DEGREE));
+		rightArmLower.rotate(new Vector3f(-30f, 0f, 0f).mul(MathHelper.RADIANS_PER_DEGREE));
+		leftArm.translate(new Vector3f(0f, 9.5f, -7f));
+		leftArm.rotate(new Vector3f(-50.1379f, 21.4894f, 17.5835f).mul(MathHelper.RADIANS_PER_DEGREE));
+		leftArmLower.rotate(new Vector3f(-25f, 0f, 0f).mul(MathHelper.RADIANS_PER_DEGREE));
+		head.translate(new Vector3f(0f, 7.6f, -7.8f));
 	}
 	
 	@Override
