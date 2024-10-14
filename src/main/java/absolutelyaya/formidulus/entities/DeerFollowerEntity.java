@@ -24,6 +24,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.DustParticleEffect;
+import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registry;
@@ -59,8 +60,10 @@ public class DeerFollowerEntity extends HostileEntity
 	public static final byte ACTIVITY_IDLE = 0;
 	public static final byte ACTIVITY_READING = 1;
 	public static final byte ACTIVITY_WORSHIP = 2;
+	public static final byte ACTIVITY_HUMMING = 3;
 	
 	boolean hasAltar;
+	byte activity;
 	
 	public DeerFollowerEntity(EntityType<? extends HostileEntity> entityType, World world)
 	{
@@ -82,7 +85,8 @@ public class DeerFollowerEntity extends HostileEntity
 		goalSelector.add(1, new SearchForAltarGoal(this, 0.3f));
 		goalSelector.add(1, new PatrolAltarGoal(this, 0.25f));
 		goalSelector.add(1, new WorshipGoal(this, 0.4f));
-		goalSelector.add(3, new ReadBookGoal(this));
+		goalSelector.add(3, new ReadBookGoal(this, 0.01f));
+		goalSelector.add(3, new HumGoal(this, 0.001f));
 		goalSelector.add(4, new LookAroundGoal(this));
 		goalSelector.add(4, new LookAtEntityGoal(this, DeerFollowerEntity.class, 6));
 		
@@ -106,27 +110,15 @@ public class DeerFollowerEntity extends HostileEntity
 		super.onTrackedDataSet(data);
 		if(getWorld().isClient && data.equals(MASK))
 		{
-			if(!dataTracker.get(MASK))
-			{
-				for (int i = 0; i < 32; i++)
-				{
-					Vec3d pos = getEyePos().addRandom(random, 1f);
-					getWorld().addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.BONE_BLOCK.getDefaultState()), pos.x, pos.y, pos.z,
-							0, 0, 0);
-				}
-			}
+			if (!dataTracker.get(MASK))
+				addHeadParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.BONE_BLOCK.getDefaultState()), 1f, 32);
 			else
-			{
-				for (int i = 0; i < 16; i++)
-				{
-					Vec3d pos = getEyePos().addRandom(random, 1f);
-					getWorld().addParticle(new DustParticleEffect(new Vector3f(0f, 0f, 0f), 5f), pos.x, pos.y, pos.z,
-							0, 0, 0);
-				}
-			}
+				addHeadParticles(new DustParticleEffect(new Vector3f(0f, 0f, 0f), 5f), 1f, 16);
 		}
 		if(data.equals(ALTAR))
 			hasAltar = !dataTracker.get(ALTAR).equals(new Vector3f());
+		if(data.equals(ACTIVITY))
+			activity = dataTracker.get(ACTIVITY);
 	}
 	
 	@Nullable
@@ -206,8 +198,13 @@ public class DeerFollowerEntity extends HostileEntity
 	public void tickMovement()
 	{
 		super.tickMovement();
-		if(isReading() && age % 40 == 0 && random.nextFloat() < 0.33f)
-			swingHand(Hand.OFF_HAND);
+		if(age % 40 == 0 && random.nextFloat() < 0.33f)
+		{
+			if(isReading())
+				swingHand(Hand.OFF_HAND);
+			if(isHumming())
+				addHeadParticles(ParticleTypes.NOTE, 1f, (int)(2 + random.nextFloat() * 2.5f));
+		}
 		if(getPose().equals(EntityPose.SITTING) && moveControl.isMoving())
 			setPose(EntityPose.STANDING);
 		
@@ -223,19 +220,33 @@ public class DeerFollowerEntity extends HostileEntity
 		}
 	}
 	
+	void addHeadParticles(ParticleEffect type, float range, int count)
+	{
+		for (int i = 0; i < count; i++)
+		{
+			Vec3d pos = getEyePos().addRandom(random, range);
+			getWorld().addParticle(type, pos.x, pos.y, pos.z, 0, 0, 0);
+		}
+	}
+	
 	public boolean isReading()
 	{
-		return dataTracker.get(ACTIVITY) == ACTIVITY_READING;
+		return getActivity() == ACTIVITY_READING;
 	}
 	
 	public boolean isWorshipping()
 	{
-		return dataTracker.get(ACTIVITY) == ACTIVITY_WORSHIP;
+		return getActivity() == ACTIVITY_WORSHIP;
+	}
+	
+	public boolean isHumming()
+	{
+		return getActivity() == ACTIVITY_HUMMING;
 	}
 	
 	public byte getActivity()
 	{
-		return dataTracker.get(ACTIVITY);
+		return activity;
 	}
 	
 	public void setActivity(byte activity)
@@ -272,13 +283,7 @@ public class DeerFollowerEntity extends HostileEntity
 	public void handleStatus(byte status)
 	{
 		if(status == EntityStatuses.ADD_VILLAGER_HAPPY_PARTICLES)
-		{
-			for (int i = 0; i < 8; i++)
-			{
-				Vec3d pos = getEyePos().addRandom(random, 0.75f);
-				getWorld().addParticle(ParticleTypes.HAPPY_VILLAGER, pos.x, pos.y, pos.z, 0, 0, 0);
-			}
-		}
+			addHeadParticles(ParticleTypes.HAPPY_VILLAGER, 0.8f, 8);
 		else if(status == EntityStatuses.PLAY_SPAWN_EFFECTS)
 		{
 			for (int i = 0; i < 16; i++)
@@ -385,14 +390,60 @@ public class DeerFollowerEntity extends HostileEntity
 		}
 	}
 	
-	static class ReadBookGoal extends Goal
+	static class ActivityGoal extends Goal
 	{
 		final DeerFollowerEntity mob;
+		final byte activity;
+		final float chance;
 		int duration;
 		
-		public ReadBookGoal(DeerFollowerEntity mob)
+		ActivityGoal(DeerFollowerEntity mob, byte activity, float chance)
 		{
 			this.mob = mob;
+			this.activity = activity;
+			this.chance = chance;
+		}
+		
+		@Override
+		public boolean canStart()
+		{
+			return mob.isHasAltar() && mob.getTarget() == null && mob.navigation.isIdle() &&
+						   (mob.random.nextFloat() < chance || mob.getActivity() == activity);
+		}
+		
+		@Override
+		public void start()
+		{
+			duration = 300 + (int)(mob.random.nextFloat() * 700);
+			mob.setActivity(activity);
+		}
+		
+		@Override
+		public boolean shouldContinue()
+		{
+			return canStart() && duration-- > 0;
+		}
+		
+		@Override
+		public boolean canStop()
+		{
+			return !shouldContinue();
+		}
+		
+		@Override
+		public void stop()
+		{
+			super.stop();
+			if(mob.getActivity() == activity)
+				mob.setActivity(ACTIVITY_IDLE);
+		}
+	}
+	
+	static class ReadBookGoal extends ActivityGoal
+	{
+		public ReadBookGoal(DeerFollowerEntity mob, float chance)
+		{
+			super(mob, ACTIVITY_READING, chance);
 			setControls(EnumSet.of(Control.MOVE, Control.LOOK));
 		}
 		
@@ -400,30 +451,16 @@ public class DeerFollowerEntity extends HostileEntity
 		public boolean canStart()
 		{
 			ItemStack offHand = mob.getOffHandStack();
-			return mob.isHasAltar() && mob.getTarget() == null && mob.navigation.isIdle() && (offHand.isOf(Items.BOOK) || offHand.isOf(Items.ENCHANTED_BOOK)) &&
-						   (mob.random.nextFloat() < 0.05f || mob.isReading());
+			return (offHand.isOf(Items.BOOK) || offHand.isOf(Items.ENCHANTED_BOOK)) && super.canStart();
 		}
 		
 		@Override
 		public void start()
 		{
-			duration = 200 + (int)(mob.random.nextFloat() * 300);
+			super.start();
 			mob.navigation.stop();
-			mob.setActivity(ACTIVITY_READING);
 			if(mob.random.nextFloat() < 0.5)
 				mob.setPose(EntityPose.SITTING);
-		}
-		
-		@Override
-		public boolean shouldContinue()
-		{
-			return super.shouldContinue() && duration-- > 0;
-		}
-		
-		@Override
-		public boolean canStop()
-		{
-			return !shouldContinue();
 		}
 		
 		@Override
@@ -437,11 +474,17 @@ public class DeerFollowerEntity extends HostileEntity
 		public void stop()
 		{
 			super.stop();
-			if(mob.isReading())
-				mob.setActivity(ACTIVITY_IDLE);
 			if(mob.getPose().equals(EntityPose.SITTING))
 				mob.setPose(EntityPose.STANDING);
 			mob.setPitch(0f);
+		}
+	}
+	
+	static class HumGoal extends ActivityGoal
+	{
+		public HumGoal(DeerFollowerEntity mob, float chance)
+		{
+			super(mob, ACTIVITY_HUMMING, chance);
 		}
 	}
 	
@@ -463,7 +506,7 @@ public class DeerFollowerEntity extends HostileEntity
 		@Override
 		public boolean canStart()
 		{
-			return mob.getTarget() == null && mob.hasAltar && (mob.random.nextFloat() < 0.0001f || (!mob.isHasMask() && mob.random.nextFloat() < 0.1) ||
+			return mob.getTarget() == null && mob.hasAltar && (mob.random.nextFloat() < 0.001f || (!mob.isHasMask() && mob.random.nextFloat() < 0.1) ||
 									(mob.getHealth() < mob.getMaxHealth() && mob.random.nextFloat() < 0.05));
 		}
 		
@@ -490,7 +533,7 @@ public class DeerFollowerEntity extends HostileEntity
 			{
 				if(!mob.navigation.isIdle())
 					return;
-				Vec3d dest = altar.add(mob.getPos().subtract(altar).multiply(1f, 0f, 1f).normalize().multiply(1.5f + mob.random.nextFloat()));
+				Vec3d dest = altar.add(mob.getPos().subtract(altar).multiply(1f, 0f, 1f).normalize().multiply(2f + mob.random.nextFloat()));
 				if(!mob.navigation.startMovingTo(dest.x, dest.y, dest.z, speed))
 					stop();
 				return;
