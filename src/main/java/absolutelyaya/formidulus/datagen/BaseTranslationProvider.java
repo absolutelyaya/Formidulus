@@ -40,6 +40,7 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(genericKey("item.accessory_mode", DeerSkullItem.ACCESSORY_MODE_CAP), "Cap");
 		builder.add(genericKey("item.accessory_mode", DeerSkullItem.ACCESSORY_MODE_MASK), "Mask");
 		builder.add(ACCESSORY_MODE_HINT, "[Press Alt & Click to cycle]");
+		builder.add(ItemRegistry.SACRIFICIAL_DAGGER, "Sacrificial Dagger");
 		
 		builder.add(BlockRegistry.WEEN, "Ween");
 		builder.add(BlockRegistry.WEEN.getTranslationKey() + ".lore", "it's ween");

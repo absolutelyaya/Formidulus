@@ -41,6 +41,7 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(genericKey("item.accessory_mode", DeerSkullItem.ACCESSORY_MODE_CAP), "Kappe");
 		builder.add(genericKey("item.accessory_mode", DeerSkullItem.ACCESSORY_MODE_MASK), "Maske");
 		builder.add(ACCESSORY_MODE_HINT, "[Drück Alt & Klick zum Modus wechseln]");
+		builder.add(ItemRegistry.SACRIFICIAL_DAGGER, "Opferdolch");
 		
 		builder.add(BlockRegistry.WEEN, "Ween");
 		builder.add(BlockRegistry.WEEN.getTranslationKey() + ".lore", "es ist ween");

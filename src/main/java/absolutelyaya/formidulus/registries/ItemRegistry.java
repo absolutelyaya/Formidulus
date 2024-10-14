@@ -1,15 +1,16 @@
 package absolutelyaya.formidulus.registries;
 
 import absolutelyaya.formidulus.Formidulus;
+import absolutelyaya.formidulus.damage.DamageSources;
 import absolutelyaya.formidulus.item.DeerSkullItem;
+import absolutelyaya.formidulus.item.SacrificialDaggerItem;
 import absolutelyaya.formidulus.item.components.AccessoryComponent;
+import absolutelyaya.formidulus.item.components.DamageTypeComponent;
 import absolutelyaya.formidulus.item.components.ExpandableLoreComponent;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroups;
+import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.text.Text;
@@ -30,6 +31,11 @@ public class ItemRegistry
 			id -> new BlockItem(BlockRegistry.WEEN,
 					new Item.Settings().component(DataComponentTypes.RARITY, Rarity.UNCOMMON)
 							.component(DataComponentTypes.LORE, new LoreComponent(List.of(Text.translatable(BlockRegistry.WEEN.getTranslationKey() + ".lore"))))));
+	public static final SacrificialDaggerItem SACRIFICIAL_DAGGER = register(Formidulus.identifier("sacrificial_dagger"),
+			id -> new SacrificialDaggerItem(ToolMaterials.IRON, new Item.Settings().component(DataComponentTypes.RARITY, Rarity.UNCOMMON)
+															.component(DataComponentTypes.MAX_DAMAGE, 640)
+															.component(DataComponentRegistry.DAMAGE_TYPE, new DamageTypeComponent(DamageSources.SACRIFICE))
+															.component(DataComponentTypes.ATTRIBUTE_MODIFIERS, SacrificialDaggerItem.createAttributeModifiers())));
 	
 	public static <T extends Item> T register(Identifier id, Function<Identifier, T> factory)
 	{
@@ -43,6 +49,7 @@ public class ItemRegistry
 		});
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register((entries) -> {
 			entries.add(DEER_SKULL);
+			entries.add(SACRIFICIAL_DAGGER);
 		});
 	}
 }

@@ -1,5 +1,6 @@
 package absolutelyaya.formidulus.entities;
 
+import absolutelyaya.formidulus.registries.ItemRegistry;
 import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.component.DataComponentTypes;
@@ -139,7 +140,7 @@ public class DeerFollowerEntity extends HostileEntity
 	@Override
 	protected void initEquipment(Random random, LocalDifficulty localDifficulty)
 	{
-		equipStack(EquipmentSlot.MAINHAND, Items.IRON_SWORD.getDefaultStack());
+		equipStack(EquipmentSlot.MAINHAND, ItemRegistry.SACRIFICIAL_DAGGER.getDefaultStack());
 		if(getWorld() instanceof ServerWorld serverWorld && random.nextFloat() < localDifficulty.getLocalDifficulty() / 10f)
 			enchantEquipment(serverWorld, random, EquipmentSlot.MAINHAND, localDifficulty);
 		setEquipmentDropChance(EquipmentSlot.MAINHAND, 0.1f);

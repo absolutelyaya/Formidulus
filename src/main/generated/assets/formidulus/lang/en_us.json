@@ -35,5 +35,6 @@
   "item.accessory_mode.mask": "Mask",
   "item.formidulus.accessory_mode_hint": "[Press Alt & Click to cycle]",
   "item.formidulus.accessory_mode_prefix": "Accessory Mode: %s",
-  "item.formidulus.expandable_lore_hint": "[Press Shift for more Info]"
+  "item.formidulus.expandable_lore_hint": "[Press Shift for more Info]",
+  "item.formidulus.sacrificial_dagger": "Sacrificial Dagger"
 }

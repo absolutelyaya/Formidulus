@@ -1,12 +1,10 @@
 package absolutelyaya.formidulus.datagen;
 
 import absolutelyaya.formidulus.registries.BlockRegistry;
+import absolutelyaya.formidulus.registries.ItemRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.minecraft.data.client.BlockStateModelGenerator;
-import net.minecraft.data.client.ItemModelGenerator;
-import net.minecraft.data.client.ModelIds;
-import net.minecraft.data.client.TextureMap;
+import net.minecraft.data.client.*;
 
 public class ModelProvider extends FabricModelProvider
 {
@@ -27,6 +25,6 @@ public class ModelProvider extends FabricModelProvider
 	@Override
 	public void generateItemModels(ItemModelGenerator builder)
 	{
-	
+		builder.register(ItemRegistry.SACRIFICIAL_DAGGER, Models.HANDHELD);
 	}
 }
