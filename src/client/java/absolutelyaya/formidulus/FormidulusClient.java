@@ -4,6 +4,7 @@ import absolutelyaya.formidulus.gui.TitleHUD;
 import absolutelyaya.formidulus.item.components.AccessoryComponent;
 import absolutelyaya.formidulus.network.ClientPacketHandler;
 import absolutelyaya.formidulus.particle.BloodDropParticle;
+import absolutelyaya.formidulus.particle.DarknessParticle;
 import absolutelyaya.formidulus.registries.*;
 import absolutelyaya.formidulus.rendering.block.DeerSkullBlockEntityRenderer;
 import absolutelyaya.formidulus.rendering.entity.*;
@@ -41,6 +42,7 @@ public class FormidulusClient implements ClientModInitializer
 		//Particles
 		ParticleFactoryRegistry particles = ParticleFactoryRegistry.getInstance();
 		particles.register(ParticleRegistry.BLOOD_DROP_PARTICLE, BloodDropParticle.Factory::new);
+		particles.register(ParticleRegistry.DARKNESS, DarknessParticle.Factory::new);
 		
 		//Block Entities
 		BlockEntityRendererFactories.register(BlockEntityRegistry.DEER_SKULL, DeerSkullBlockEntityRenderer::new);

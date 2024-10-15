@@ -67,6 +67,7 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add("death.attack.sacrifice.item", "%1s wurde zu einer Opfergabe durch %2$s mit %3$s");
 		builder.add("death.attack.sacrifice.player", "%1s wurde zu einer Opfergabe beim Versuch %2$s zu entkommen");
 		
-		builder.add(StatusEffectRegistry.REVERENCE.value(), "Erzwungende Erfurcht");
+		builder.add(StatusEffectRegistry.REVERENCE.value(), "Erzwungende Ehrfurcht");
+		builder.add(StatusEffectRegistry.DARKNESS.value(), "Drückende Dunkelheit");
 	}
 }

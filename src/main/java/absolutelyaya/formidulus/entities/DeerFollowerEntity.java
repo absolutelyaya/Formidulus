@@ -1,6 +1,7 @@
 package absolutelyaya.formidulus.entities;
 
 import absolutelyaya.formidulus.registries.ItemRegistry;
+import absolutelyaya.formidulus.registries.ParticleRegistry;
 import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.component.DataComponentTypes;
@@ -23,7 +24,6 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.DynamicRegistryManager;
@@ -113,7 +113,7 @@ public class DeerFollowerEntity extends HostileEntity
 			if (!dataTracker.get(MASK))
 				addHeadParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.BONE_BLOCK.getDefaultState()), 1f, 32);
 			else
-				addHeadParticles(new DustParticleEffect(new Vector3f(0f, 0f, 0f), 5f), 1f, 16);
+				addHeadParticles(ParticleRegistry.DARKNESS, 1f, 16);
 		}
 		if(data.equals(ALTAR))
 			hasAltar = !dataTracker.get(ALTAR).equals(new Vector3f());
@@ -289,7 +289,7 @@ public class DeerFollowerEntity extends HostileEntity
 			for (int i = 0; i < 16; i++)
 			{
 				Vec3d pos = getBoundingBox().getCenter().add(Vec3d.ZERO.addRandom(random, 1f).multiply(1f, 2f, 1f));
-				getWorld().addParticle(new DustParticleEffect(new Vector3f(0f, 0f, 0f), 5f), pos.x, pos.y, pos.z,
+				getWorld().addParticle(ParticleRegistry.DARKNESS, pos.x, pos.y, pos.z,
 						0, 0, 0);
 			}
 			return;

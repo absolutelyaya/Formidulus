@@ -67,6 +67,7 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add("death.attack.sacrifice.player", "%1s was sacrificed trying to escape %2$s");
 		
 		builder.add(StatusEffectRegistry.REVERENCE.value(), "Unwilling Reverence");
+		builder.add(StatusEffectRegistry.DARKNESS.value(), "Encroaching Darkness");
 	}
 	
 	public static String modKey(String category, String path)

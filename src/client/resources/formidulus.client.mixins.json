@@ -4,8 +4,10 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "AbstractInventoryScreenMixin",
+    "BackgroundRendererMixin",
     "InGameHudMixin",
-    "MouseMixin"
+    "MouseMixin",
+    "WorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

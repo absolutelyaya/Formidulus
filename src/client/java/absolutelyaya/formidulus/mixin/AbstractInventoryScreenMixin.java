@@ -2,6 +2,7 @@ package absolutelyaya.formidulus.mixin;
 
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.registries.StatusEffectRegistry;
+import absolutelyaya.formidulus.registries.TagRegistry;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -24,10 +25,10 @@ public class AbstractInventoryScreenMixin
 	@WrapOperation(method = "drawStatusEffectBackgrounds", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawGuiTexture(Lnet/minecraft/util/Identifier;IIII)V"))
 	void onDrawStatusEffectBackground(DrawContext context, Identifier texture, int x, int y, int width, int height, Operation<Void> original, @Local StatusEffectInstance effect, @Local(argsOnly = true) boolean wide)
 	{
-		if(effect.getEffectType().equals(StatusEffectRegistry.REVERENCE))
+		if(effect.getEffectType().isIn(TagRegistry.DEER_EFFECTS))
 		{
 			if(wide)
-				context.drawTexture(DEER_EFFECT_WIDE_TEX, x, y, 0, 0, 141, 32, 141, 32);
+				context.drawTexture(DEER_EFFECT_WIDE_TEX, x, y, 0, 0, 145, 32, 145, 32);
 			else
 				context.drawTexture(DEER_EFFECT_SMOL_TEX, x, y, 0, 0, 32, 32, 32, 32);
 		}
@@ -38,10 +39,9 @@ public class AbstractInventoryScreenMixin
 	@WrapOperation(method = "drawStatusEffectDescriptions", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/DrawContext;drawTextWithShadow(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/text/Text;III)I"))
 	int onDrawStatusEffectDescription(DrawContext context, TextRenderer textRenderer, Text text, int x, int y, int color, Operation<Integer> original, @Local StatusEffectInstance effect)
 	{
-		if(effect.getEffectType().equals(StatusEffectRegistry.REVERENCE))
-			original.call(context, textRenderer, text, x, y + 2, color);
+		if(effect.getEffectType().isIn(TagRegistry.DEER_EFFECTS))
+			return original.call(context, textRenderer, text, x, y + 2, color);
 		else
-			original.call(context, textRenderer, text, x, y, color);
-		return 0;
+			return original.call(context, textRenderer, text, x, y, color);
 	}
 }

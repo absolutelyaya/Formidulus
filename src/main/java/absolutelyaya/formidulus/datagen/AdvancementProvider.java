@@ -45,7 +45,7 @@ public class AdvancementProvider extends FabricAdvancementProvider
 	
 	static {
 		ROOT = Advancement.Builder.create()
-					   .display(new AdvancementDisplay(Items.PUMPKIN.getDefaultStack(),
+					   .display(new AdvancementDisplay(Items.JACK_O_LANTERN.getDefaultStack(),
 							   Text.translatable(Lang.ADVANCEMENT_ROOT_TITLE),
 							   Text.translatable(Lang.ADVANCEMENT_ROOT_DESCRIPTION),
 							   Optional.of(Formidulus.identifier("textures/block/ween_side.png")),
@@ -58,7 +58,7 @@ public class AdvancementProvider extends FabricAdvancementProvider
 		
 		CULTISTS = Advancement.Builder.create()
 						   .parent(ROOT)
-						   .display(new AdvancementDisplay(Items.IRON_SWORD.getDefaultStack(),
+						   .display(new AdvancementDisplay(ItemRegistry.SACRIFICIAL_DAGGER.getDefaultStack(),
 								   Text.translatable(Lang.ADVANCEMENT_CULTISTS_TITLE),
 								   Text.translatable(Lang.ADVANCEMENT_CULTISTS_DESCRIPTION),
 								   Optional.empty(),

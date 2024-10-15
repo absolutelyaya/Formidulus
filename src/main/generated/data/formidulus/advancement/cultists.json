@@ -22,7 +22,7 @@
     },
     "icon": {
       "count": 1,
-      "id": "minecraft:iron_sword"
+      "id": "formidulus:sacrificial_dagger"
     },
     "title": {
       "translate": "advancement.formidulus.cultists.title"

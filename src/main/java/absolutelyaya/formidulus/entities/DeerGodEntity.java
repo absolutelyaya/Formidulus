@@ -9,6 +9,7 @@ import absolutelyaya.formidulus.entities.goal.InterruptableGoal;
 import absolutelyaya.formidulus.network.SequenceTriggerPayload;
 import absolutelyaya.formidulus.particle.BloodDropParticleEffect;
 import absolutelyaya.formidulus.registries.EntityRegistry;
+import absolutelyaya.formidulus.registries.ParticleRegistry;
 import absolutelyaya.formidulus.registries.StatusEffectRegistry;
 import com.chocohead.mm.api.ClassTinkerers;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -16,6 +17,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.damage.DamageSource;
@@ -29,7 +31,6 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.DustParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -58,6 +59,8 @@ public class DeerGodEntity extends BossEntity
 	static final TrackedData<Integer> TELEPORT_TIMER = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	static final TrackedData<Integer> TELEPORT_COOLDOWN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	static final TrackedData<Integer> RANGED_COOLDOWN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	static final TrackedData<Integer> SCHEDULED_SPAWNS = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	static final TrackedData<Integer> SWARM_TRANSITION_TICKS = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	static final TrackedData<Vector3f> NEXT_TELEPORT_DEST = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
 	
 	static final byte UNSUMMONED_POSE = 0;
@@ -82,10 +85,11 @@ public class DeerGodEntity extends BossEntity
 	public AnimationState showClawWithoutExtrasAnimationState = new AnimationState();
 	public AnimationState phaseTransitionAnimationState = new AnimationState();
 	public AnimationState deathAnimationState = new AnimationState();
-	int deathTime, swingChain;
+	int deathTime, swingChain, swarmAttack;
 	DamageSource killingBlow;
 	PlayerEntity killer;
 	float rangedDamageTaken;
+	boolean swarmAttackPending;
 	
 	public DeerGodEntity(EntityType<? extends BossEntity> entityType, World world)
 	{
@@ -111,6 +115,8 @@ public class DeerGodEntity extends BossEntity
 		builder.add(TELEPORT_TIMER, Integer.MIN_VALUE);
 		builder.add(TELEPORT_COOLDOWN, 200);
 		builder.add(RANGED_COOLDOWN, 100);
+		builder.add(SCHEDULED_SPAWNS, 0);
+		builder.add(SWARM_TRANSITION_TICKS, 0);
 		builder.add(NEXT_TELEPORT_DEST, getPos().toVector3f());
 	}
 	
@@ -118,6 +124,7 @@ public class DeerGodEntity extends BossEntity
 	protected void initGoals()
 	{
 		super.initGoals();
+		goalSelector.add(0, new SwarmGoal(this));
 		goalSelector.add(0, new BossOutOfCombatGoal(this, BossOutOfCombatGoal.BEHAVIOR_RESPAWN_AT_ORIGIN));
 		goalSelector.add(0, new TeleportRandomlyGoal(this));
 		goalSelector.add(1, new SummonLanternGoal(this));
@@ -181,8 +188,8 @@ public class DeerGodEntity extends BossEntity
 				triggerMonologueSequence(SequenceTriggerPayload.SPAWN_SEQUENCE);
 				dataTracker.set(SUMMONED, true);
 			}
-			else if(age % 300 == 0 && getAllNearbyCultists().size() < getMaxPreSummonCultists())
-				spawnCultist(new Vec2f(3f, 8f));
+			else if(age % 300 == 0 && getAllNearbyCultists().size() < getMaxCultists())
+				spawnCultist(new Vec2f(3f, 8f), true);
 			return;
 		}
 		int teleportTimer = getTeleportTimer();
@@ -241,7 +248,7 @@ public class DeerGodEntity extends BossEntity
 				for (int i = 0; i < darkness * 3; i++)
 				{
 					Vec3d pos = new Vec3d(getX(), getY(), getZ()).add((random.nextFloat() - 0.5f) * 2.2f, random.nextFloat() * 4.5f * darkness / (8.7 - 6.5), (random.nextFloat() - 0.5f) * 2.2f);
-					getWorld().addParticle(new DustParticleEffect(new Vector3f(0f, 0f, 0f), 5f), pos.x, pos.y, pos.z, 0f, 0f, 0f);
+					getWorld().addParticle(ParticleRegistry.DARKNESS, pos.x, pos.y, pos.z, 0f, 0f, 0f);
 				}
 			}
 			applyReverence(18f - getCurrentAnimationDuration());
@@ -368,18 +375,42 @@ public class DeerGodEntity extends BossEntity
 		float vanishing = getVanishingPercent();
 		if(vanishing > 0f)
 		{
-			spawnVanishingParticles((int)Math.ceil(vanishing * 3), new Vec3d(getX(), getY(), getZ()));
-			spawnVanishingParticles((int)Math.ceil(vanishing * 3), getNextTeleportDestination());
+			int particles = (int)Math.ceil(vanishing * 6);
+			if(isTeleporting())
+			{
+				spawnVanishingParticles(particles, new Vec3d(getX(), getY(), getZ()));
+				spawnVanishingParticles(particles, getNextTeleportDestination());
+				return;
+			}
+			int swarmTicks = dataTracker.get(SWARM_TRANSITION_TICKS);
+			if(swarmTicks > 0)
+			{
+				if(swarmTicks < 50)
+					spawnVanishingParticles(particles, new Vec3d(getX(), getY(), getZ()), dataTracker.get(SCHEDULED_SPAWNS) == 0 ? 1f : 1f - vanishing);
+				if(swarmTicks < 50 && dataTracker.get(SCHEDULED_SPAWNS) > 0)
+				{
+					for (int i = 0; i < (1f - (Math.abs(swarmTicks - 25) / 25f)) * 32; i++)
+					{
+						Vec3d dir = Vec3d.ZERO.addRandom(random, 1f).multiply(1, 0, 1).normalize().multiply(0.05f + random.nextFloat() * 0.1f);
+						getWorld().addParticle(ParticleRegistry.DARKNESS, true, getX(), getY() + 0.2f, getZ(), dir.x, dir.y, dir.z);
+					}
+				}
+			}
 		}
 	}
 	
 	void spawnVanishingParticles(int count, Vec3d origin)
 	{
+		spawnVanishingParticles(count, origin, 1f);
+	}
+	
+	void spawnVanishingParticles(int count, Vec3d origin, float heightPercent)
+	{
 		for (int i = 0; i < count; i++)
 		{
-			Vec3d pos = origin.add((random.nextFloat() - 0.5f) * 2f, random.nextFloat() * 4.5f, (random.nextFloat() - 0.5f) * 2f);
-			getWorld().addParticle(new DustParticleEffect(new Vector3f(0f, 0f, 0f), 5f),
-					true, pos.x, pos.y, pos.z, 0f, 0f, 0f);
+			Vec3d pos = origin.add((random.nextFloat() - 0.5f) * 2f, random.nextFloat() * 4.5f * heightPercent, (random.nextFloat() - 0.5f) * 2f);
+			Vec3d vel = Vec3d.ZERO.addRandom(random, 0.02f);
+			getWorld().addParticle(ParticleRegistry.DARKNESS, true, pos.x, pos.y, pos.z, vel.x, vel.y, vel.z);
 		}
 	}
 	
@@ -408,6 +439,14 @@ public class DeerGodEntity extends BossEntity
 							living.addStatusEffect(new StatusEffectInstance(StatusEffectRegistry.REVERENCE, 40, 0, false, true));
 					});
 		}
+	}
+	
+	void applyDarkness(int duration)
+	{
+		if(getWorld().isClient)
+			return;
+		getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), getBoundingBox().expand(16), i -> true)
+				.forEach(p -> p.addStatusEffect(new StatusEffectInstance(StatusEffectRegistry.DARKNESS, duration, 0, false, false, true)));
 	}
 	
 	@Override
@@ -526,12 +565,6 @@ public class DeerGodEntity extends BossEntity
 	}
 	
 	@Override
-	public boolean isInvulnerable()
-	{
-		return super.isInvulnerable();
-	}
-	
-	@Override
 	public boolean damage(DamageSource source, float amount)
 	{
 		if(source.isOf(DamageTypes.OUT_OF_WORLD) || source.isOf(DamageTypes.GENERIC_KILL))
@@ -543,13 +576,6 @@ public class DeerGodEntity extends BossEntity
 			return b;
 		if(b && (source.getAttacker() != null && distanceTo(source.getAttacker()) > 10) || (source.getSource() != null && source.getSource() instanceof ProjectileEntity))
 			rangedDamageTaken += amount; //let's keep it raw
-		if(!dataTracker.get(CLAW) && b && getHealth() <= getMaxHealth() / 2f && getHealth() > 0f)
-		{
-			cancelActiveGoals();
-			setAnimation(PHASE_TRANSITION_ANIM);
-			dataTracker.set(CLAW, true);
-			setHealth(getMaxHealth() / 2f);
-		}
 		if(getHealth() <= 0)
 		{
 			cancelActiveGoals();
@@ -562,6 +588,20 @@ public class DeerGodEntity extends BossEntity
 				killer = player;
 			if(killer == null && source.getSource() instanceof PlayerEntity player)
 				killer = player;
+			return b;
+		}
+		if(!dataTracker.get(CLAW) && b && getHealth() <= getMaxHealth() / 2f && getHealth() > 0f)
+		{
+			cancelActiveGoals();
+			setAnimation(PHASE_TRANSITION_ANIM);
+			dataTracker.set(CLAW, true);
+			setHealth(getMaxHealth() / 2f);
+			return true;
+		}
+		if((swarmAttack == 0 && getHealthPercent() < 0.75f) || (swarmAttack == 1 && getHealthPercent() < 0.25f))
+		{
+			swarmAttackPending = true;
+			swarmAttack++;
 		}
 		return b;
 	}
@@ -606,8 +646,8 @@ public class DeerGodEntity extends BossEntity
 			{
 				Vec3d pos = new Vec3d(getX(), getY(), getZ()).add(new Vec3d((random.nextFloat() - 0.5f) * 2f, random.nextFloat() * 0.75f,
 						(random.nextFloat() - 0.5f) * 4f).rotateY((float)Math.toRadians(-bodyYaw)));
-				Vec3d vel = Vec3d.ZERO.addRandom(random, 0.2f);
-				getWorld().addParticle(new DustParticleEffect(new Vector3f(0f, 0f, 0f), 5f), pos.x, pos.y, pos.z, vel.x, vel.y, vel.z);
+				Vec3d vel = Vec3d.ZERO.addRandom(random, 0.02f);
+				getWorld().addParticle(ParticleRegistry.DARKNESS, pos.x, pos.y, pos.z, vel.x, vel.y, vel.z);
 			}
 			return;
 		}
@@ -632,12 +672,15 @@ public class DeerGodEntity extends BossEntity
 	
 	public float getVanishingPercent()
 	{
+		if(dataTracker.get(SWARM_TRANSITION_TICKS) > 0)
+			return Math.min(dataTracker.get(SWARM_TRANSITION_TICKS) / 20f, 1f);
 		return MathHelper.clamp(1f - (Math.abs((float)getTeleportTimer()) / (float) getTeleportFadeDuration()), 0f, 1f);
 	}
 	
 	public boolean isReadyToAttack()
 	{
-		return super.isReadyToAttack() && dataTracker.get(SUMMONED) && !isInSequence() && getVanishingPercent() < 0.5f && !isAboutToTeleport();
+		return super.isReadyToAttack() && dataTracker.get(SUMMONED) && !isInSequence() && getVanishingPercent() < 0.5f && !isAboutToTeleport() &&
+					   dataTracker.get(SCHEDULED_SPAWNS) == 0;
 	}
 	
 	public boolean isReadyToTeleport()
@@ -683,11 +726,11 @@ public class DeerGodEntity extends BossEntity
 	public void afterBossReset()
 	{
 		Vec2f range = new Vec2f(2f, 7f);
-		for (int i = 0; i < getMaxPreSummonCultists(); i++)
-			spawnCultist(range);
+		for (int i = 0; i < getMaxCultists(); i++)
+			spawnCultist(range, true);
 	}
 	
-	int getMaxPreSummonCultists()
+	int getMaxCultists()
 	{
 		return 5 + (Math.max(getWorld().getDifficulty().getId() - 2, 0) * 2);
 	}
@@ -703,7 +746,13 @@ public class DeerGodEntity extends BossEntity
 				Box.from(new Vec3d(getOrigin())).expand(48), LivingEntity::isPartOfGame);
 	}
 	
-	public void spawnCultist(Vec2f distanceRange)
+	@Override
+	public boolean isInvisible()
+	{
+		return super.isInvisible() || dataTracker.get(SWARM_TRANSITION_TICKS) == 50;
+	}
+	
+	public void spawnCultist(Vec2f distanceRange, boolean persistent)
 	{
 		if(!(getWorld() instanceof ServerWorld serverWorld))
 			return;
@@ -728,7 +777,8 @@ public class DeerGodEntity extends BossEntity
 			return;
 		}
 		cultist.setPosition(pos);
-		cultist.setPersistent();
+		if(persistent)
+			cultist.setPersistent();
 		if(getWorld().spawnEntity(cultist))
 		{
 			getWorld().sendEntityStatus(cultist, EntityStatuses.PLAY_SPAWN_EFFECTS);
@@ -768,6 +818,8 @@ public class DeerGodEntity extends BossEntity
 			dataTracker.set(RANGED, nbt.getBoolean("Ranged"));
 		if(nbt.contains("RangedDamageTaken", NbtElement.FLOAT_TYPE))
 			rangedDamageTaken = nbt.getFloat("RangedDamageTaken");
+		if(nbt.contains("SwarmAttack", NbtElement.INT_TYPE))
+			swarmAttack = nbt.getInt("SwarmAttack");
 	}
 	
 	@Override
@@ -784,6 +836,8 @@ public class DeerGodEntity extends BossEntity
 			nbt.putBoolean("Ranged", true);
 		if(rangedDamageTaken > 0f)
 			nbt.putFloat("RangedDamageTaken", rangedDamageTaken);
+		if(swarmAttack > 0)
+			nbt.putInt("SwarmAttack", swarmAttack);
 	}
 	
 	static class LanternSwingGoal extends AnimatedAttackGoal<DeerGodEntity>
@@ -1035,7 +1089,6 @@ public class DeerGodEntity extends BossEntity
 	
 	static abstract class DeerTeleportGoal extends InterruptableGoal
 	{
-		int pathCheckIntervall;
 		final DeerGodEntity mob;
 		
 		public DeerTeleportGoal(DeerGodEntity mob)
@@ -1080,9 +1133,6 @@ public class DeerGodEntity extends BossEntity
 		
 		protected boolean isCanReachTarget()
 		{
-			if(pathCheckIntervall-- > 0)
-				return false;
-			pathCheckIntervall = 20;
 			return mob.navigation.findPathTo(mob.getTarget(), 16) != null;
 		}
 	}
@@ -1200,6 +1250,77 @@ public class DeerGodEntity extends BossEntity
 			mob.dataTracker.set(RANGED_COOLDOWN, (int)(((100 + mob.random.nextFloat() * 200) - mob.getWorld().getDifficulty().getId() * 20) *
 								  ((mob.getHealth() / mob.getMaxHealth() < 0.5f ? 0.5f : 1f))));
 			mob.rangedDamageTaken -= amount / Math.max(mob.getWorld().getDifficulty().getId(), 1);
+		}
+	}
+	
+	static class SwarmGoal extends Goal
+	{
+		final DeerGodEntity mob;
+		int fade, spawnCooldown;
+		
+		public SwarmGoal(DeerGodEntity mob)
+		{
+			this.mob = mob;
+		}
+		
+		@Override
+		public boolean canStart()
+		{
+			return mob.swarmAttackPending && mob.isReadyToAttack();
+		}
+		
+		@Override
+		public void start()
+		{
+			super.start();
+			mob.dataTracker.set(SCHEDULED_SPAWNS, 4 + mob.getWorld().getDifficulty().getId() * mob.swarmAttack);
+			mob.navigation.stop();
+			mob.cancelActiveGoals();
+		}
+		
+		@Override
+		public boolean shouldRunEveryTick()
+		{
+			return true;
+		}
+		
+		@Override
+		public boolean shouldContinue()
+		{
+			return fade > 0 || mob.dataTracker.get(SCHEDULED_SPAWNS) > 0 || mob.dataTracker.get(SWARM_TRANSITION_TICKS) > 0 || mob.isAnyCultistNearby();
+		}
+		
+		@Override
+		public void tick()
+		{
+			int cultists = mob.getAllNearbyCultists().size();
+			if(fade < 50 && mob.dataTracker.get(SCHEDULED_SPAWNS) > 0)
+				mob.dataTracker.set(SWARM_TRANSITION_TICKS, ++fade);
+			else if(fade > 0 && mob.dataTracker.get(SCHEDULED_SPAWNS) <= 0 && cultists == 0)
+				mob.dataTracker.set(SWARM_TRANSITION_TICKS, --fade);
+			if(fade > 20)
+				mob.applyDarkness((fade - 10));
+			if(fade < 50 || mob.dataTracker.get(SCHEDULED_SPAWNS) <= 0 || spawnCooldown-- > 0 || cultists >= mob.getMaxCultists())
+				return;
+			if(mob.getPos().distanceTo(new Vec3d(mob.getOrigin())) > 1f)
+				mob.setPosition(new Vec3d(mob.getOrigin()));
+			mob.spawnCultist(new Vec2f(13, 16), false);
+			mob.setTarget(mob.getRandomTarget());
+			spawnCooldown = 100 * cultists;
+			mob.dataTracker.set(SCHEDULED_SPAWNS, mob.dataTracker.get(SCHEDULED_SPAWNS) - 1);
+		}
+		
+		@Override
+		public boolean canStop()
+		{
+			return false;//!shouldContinue();
+		}
+		
+		@Override
+		public void stop()
+		{
+			super.stop();
+			mob.swarmAttackPending = false;
 		}
 	}
 }
