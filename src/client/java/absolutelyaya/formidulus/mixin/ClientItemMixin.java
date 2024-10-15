@@ -1,6 +1,7 @@
 package absolutelyaya.formidulus.mixin;
 
 import absolutelyaya.formidulus.datagen.Lang;
+import absolutelyaya.formidulus.item.components.AbilityComponent;
 import absolutelyaya.formidulus.item.components.AccessoryComponent;
 import absolutelyaya.formidulus.item.components.ExpandableLoreComponent;
 import absolutelyaya.formidulus.registries.DataComponentRegistry;
@@ -32,12 +33,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 @Mixin(Item.class)
-public abstract class ItemMixin
+public abstract class ClientItemMixin
 {
 	@Inject(method = "appendTooltip", at = @At("TAIL"))
 	void afterAppendToolTip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type, CallbackInfo ci)
 	{
-		boolean displayLore = stack.contains(DataComponentRegistry.EXPANDABLE_LORE) && shouldDisplayLore();
+		boolean displayLore = (stack.contains(DataComponentRegistry.EXPANDABLE_LORE)) && shouldDisplayLore();
+		AbilityComponent abilityComponent = null;
+		
+		if(stack.contains(DataComponentRegistry.ABILITY))
+		{
+			abilityComponent = stack.getComponents().getOrDefault(DataComponentRegistry.ABILITY, AbilityComponent.DEFAULT);
+			tooltip.add(abilityComponent.ability().getNameText());
+		}
 		
 		if(stack.contains(DataComponentRegistry.ACCESSORY) && !displayLore)
 		{
@@ -49,10 +57,16 @@ public abstract class ItemMixin
 								.getWithStyle(Style.EMPTY.withColor(shouldCycleAccessoryMode() ? Formatting.LIGHT_PURPLE : Formatting.GRAY)).getFirst());
 		}
 		
-		if(!stack.contains(DataComponentRegistry.EXPANDABLE_LORE))
+		boolean hasAbilityDescription = abilityComponent != null && abilityComponent.ability().getDescriptionLines() > 0;
+		if(!stack.contains(DataComponentRegistry.EXPANDABLE_LORE) && !hasAbilityDescription)
 			return;
 		if(shouldDisplayLore())
 		{
+			if(hasAbilityDescription)
+			{
+				tooltip.addAll(abilityComponent.ability().makeDescriptionLines());
+				tooltip.add(Text.empty()); //line break
+			}
 			if(stack.getComponents().get(DataComponentRegistry.EXPANDABLE_LORE) instanceof ExpandableLoreComponent component)
 				tooltip.addAll(component.lines());
 		}

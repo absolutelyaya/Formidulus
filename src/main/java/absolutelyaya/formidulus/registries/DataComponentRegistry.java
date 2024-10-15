@@ -1,6 +1,7 @@
 package absolutelyaya.formidulus.registries;
 
 import absolutelyaya.formidulus.Formidulus;
+import absolutelyaya.formidulus.item.components.AbilityComponent;
 import absolutelyaya.formidulus.item.components.AccessoryComponent;
 import absolutelyaya.formidulus.item.components.DamageTypeComponent;
 import absolutelyaya.formidulus.item.components.ExpandableLoreComponent;
@@ -18,6 +19,8 @@ public class DataComponentRegistry
 			builder -> builder.codec(ExpandableLoreComponent.CODEC).packetCodec(ExpandableLoreComponent.PACKET_CODEC));
 	public static final ComponentType<DamageTypeComponent> DAMAGE_TYPE = register("expandable_lore",
 			builder -> builder.codec(DamageTypeComponent.CODEC).packetCodec(DamageTypeComponent.PACKET_CODEC));
+	public static final ComponentType<AbilityComponent> ABILITY = register("ability",
+			builder -> builder.codec(AbilityComponent.CODEC).packetCodec(AbilityComponent.PACKET_CODEC));
 		
 		static <T> ComponentType<T> register(String id, UnaryOperator<ComponentType.Builder<T>> builder)
 		{

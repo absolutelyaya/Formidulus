@@ -2,6 +2,7 @@ package absolutelyaya.formidulus.datagen;
 
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.item.DeerSkullItem;
+import absolutelyaya.formidulus.item.abilities.ItemAbilities;
 import absolutelyaya.formidulus.registries.BlockRegistry;
 import absolutelyaya.formidulus.registries.EntityRegistry;
 import absolutelyaya.formidulus.registries.ItemRegistry;
@@ -41,13 +42,19 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(genericKey("item.accessory_mode", DeerSkullItem.ACCESSORY_MODE_MASK), "Mask");
 		builder.add(ACCESSORY_MODE_HINT, "[Press Alt & Click to cycle]");
 		builder.add(ItemRegistry.SACRIFICIAL_DAGGER, "Sacrificial Dagger");
+		builder.add(ItemRegistry.SACRIFICIAL_DAGGER.getTranslationKey() + ".lore0", "The Dagger of a Cultist.");
+		builder.add(ItemRegistry.SACRIFICIAL_DAGGER.getTranslationKey() + ".lore1", "Previously used to make Blood Sacrifices.");
+		
+		builder.add(ItemAbilities.NONE.getTranslationKey(), "unremarkable");
+		builder.add(ItemAbilities.VAMPIRISM.getTranslationKey(), "- VAMPIRISM -");
+		builder.add(ItemAbilities.VAMPIRISM.getTranslationKey() + ".desc0", "Harming others replenishes Health.");
 		
 		builder.add(BlockRegistry.WEEN, "Ween");
 		builder.add(BlockRegistry.WEEN.getTranslationKey() + ".lore", "it's ween");
 		
 		builder.add(ADVANCEMENT_ROOT_TITLE, "Absolute Spooky Month 24");
 		builder.add(ADVANCEMENT_ROOT_DESCRIPTION, "it's ween");
-		builder.add(ADVANCEMENT_CULTISTS_TITLE, "Cultists ? In MY Video Game ?");
+		builder.add(ADVANCEMENT_CULTISTS_TITLE, "Cultists ? In §omy§r Computer ?");
 		builder.add(ADVANCEMENT_CULTISTS_DESCRIPTION, "It's more likely than you think.");
 		builder.add(ADVANCEMENT_DEER_TITLE, "A light in the Darkness");
 		builder.add(ADVANCEMENT_DEER_DESCRIPTION, "Slay the Skeletal Beast worshipped by the Cult.");

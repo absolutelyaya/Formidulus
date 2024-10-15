@@ -4,6 +4,8 @@ import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.damage.DamageSources;
 import absolutelyaya.formidulus.item.DeerSkullItem;
 import absolutelyaya.formidulus.item.SacrificialDaggerItem;
+import absolutelyaya.formidulus.item.abilities.ItemAbilities;
+import absolutelyaya.formidulus.item.components.AbilityComponent;
 import absolutelyaya.formidulus.item.components.AccessoryComponent;
 import absolutelyaya.formidulus.item.components.DamageTypeComponent;
 import absolutelyaya.formidulus.item.components.ExpandableLoreComponent;
@@ -32,10 +34,13 @@ public class ItemRegistry
 					new Item.Settings().component(DataComponentTypes.RARITY, Rarity.UNCOMMON)
 							.component(DataComponentTypes.LORE, new LoreComponent(List.of(Text.translatable(BlockRegistry.WEEN.getTranslationKey() + ".lore"))))));
 	public static final SacrificialDaggerItem SACRIFICIAL_DAGGER = register(Formidulus.identifier("sacrificial_dagger"),
-			id -> new SacrificialDaggerItem(ToolMaterials.IRON, new Item.Settings().component(DataComponentTypes.RARITY, Rarity.UNCOMMON)
-															.component(DataComponentTypes.MAX_DAMAGE, 640)
-															.component(DataComponentRegistry.DAMAGE_TYPE, new DamageTypeComponent(DamageSources.SACRIFICE))
-															.component(DataComponentTypes.ATTRIBUTE_MODIFIERS, SacrificialDaggerItem.createAttributeModifiers())));
+			id -> new SacrificialDaggerItem(ToolMaterials.IRON,
+					new Item.Settings().component(DataComponentTypes.RARITY, Rarity.UNCOMMON)
+							.component(DataComponentTypes.MAX_DAMAGE, 640)
+							.component(DataComponentRegistry.DAMAGE_TYPE, new DamageTypeComponent(DamageSources.SACRIFICE))
+							.component(DataComponentTypes.ATTRIBUTE_MODIFIERS, SacrificialDaggerItem.createAttributeModifiers())
+							.component(DataComponentRegistry.ABILITY, new AbilityComponent(ItemAbilities.VAMPIRISM))
+							.component(DataComponentRegistry.EXPANDABLE_LORE, ExpandableLoreComponent.makeGeneric(id, 2))));
 	
 	public static <T extends Item> T register(Identifier id, Function<Identifier, T> factory)
 	{
