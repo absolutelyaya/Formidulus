@@ -26,5 +26,6 @@ public class ModelProvider extends FabricModelProvider
 	public void generateItemModels(ItemModelGenerator builder)
 	{
 		builder.register(ItemRegistry.SACRIFICIAL_DAGGER, Models.HANDHELD);
+		builder.register(ItemRegistry.SOUL_DAGGER, Models.HANDHELD);
 	}
 }

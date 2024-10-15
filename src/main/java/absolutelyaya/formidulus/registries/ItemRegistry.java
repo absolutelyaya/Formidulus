@@ -41,6 +41,14 @@ public class ItemRegistry
 							.component(DataComponentTypes.ATTRIBUTE_MODIFIERS, SacrificialDaggerItem.createAttributeModifiers())
 							.component(DataComponentRegistry.ABILITY, new AbilityComponent(ItemAbilities.VAMPIRISM))
 							.component(DataComponentRegistry.EXPANDABLE_LORE, ExpandableLoreComponent.makeGeneric(id, 2))));
+	public static final SacrificialDaggerItem SOUL_DAGGER = register(Formidulus.identifier("soul_dagger"),
+			id -> new SacrificialDaggerItem(ToolMaterials.DIAMOND,
+					new Item.Settings().component(DataComponentTypes.RARITY, Rarity.UNCOMMON)
+							.component(DataComponentTypes.MAX_DAMAGE, 320)
+							.component(DataComponentRegistry.DAMAGE_TYPE, new DamageTypeComponent(DamageSources.SACRIFICE))
+							.component(DataComponentTypes.ATTRIBUTE_MODIFIERS, SacrificialDaggerItem.createAttributeModifiers())
+							.component(DataComponentRegistry.ABILITY, new AbilityComponent(ItemAbilities.SOULSTEAL))
+							.component(DataComponentRegistry.EXPANDABLE_LORE, ExpandableLoreComponent.makeGeneric(id, 2))));
 	
 	public static <T extends Item> T register(Identifier id, Function<Identifier, T> factory)
 	{

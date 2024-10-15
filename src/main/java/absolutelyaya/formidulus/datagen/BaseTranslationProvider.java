@@ -44,10 +44,17 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(ItemRegistry.SACRIFICIAL_DAGGER, "Sacrificial Dagger");
 		builder.add(ItemRegistry.SACRIFICIAL_DAGGER.getTranslationKey() + ".lore0", "The Dagger of a Cultist.");
 		builder.add(ItemRegistry.SACRIFICIAL_DAGGER.getTranslationKey() + ".lore1", "Previously used to make Blood Sacrifices.");
+		builder.add(ItemRegistry.SOUL_DAGGER, "Soul Dagger");
+		builder.add(ItemRegistry.SOUL_DAGGER.getTranslationKey() + ".lore0", "A superior version of those Daggers the Cultists carry.");
+		builder.add(ItemRegistry.SOUL_DAGGER.getTranslationKey() + ".lore1", "Instead of the Body, it leeches directly off of the soul.");
 		
 		builder.add(ItemAbilities.NONE.getTranslationKey(), "unremarkable");
 		builder.add(ItemAbilities.VAMPIRISM.getTranslationKey(), "- VAMPIRISM -");
 		builder.add(ItemAbilities.VAMPIRISM.getTranslationKey() + ".desc0", "Harming others replenishes Health.");
+		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey(), "- SOUL STEAL -");
+		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc0", "Harm others to chip pieces off of their Soul.");
+		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc1", "Consuming them replenishes high amounts of Health.");
+		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc2", "+2 §bsoulsteal§r damage; §6ignores Armor§r.");
 		
 		builder.add(BlockRegistry.WEEN, "Ween");
 		builder.add(BlockRegistry.WEEN.getTranslationKey() + ".lore", "it's ween");
@@ -72,6 +79,10 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add("death.attack.sacrifice", "%1$s was sacrificed by %2$s");
 		builder.add("death.attack.sacrifice.item", "%1s was sacrificed by %2$s using %3$s");
 		builder.add("death.attack.sacrifice.player", "%1s was sacrificed trying to escape %2$s");
+		
+		builder.add("death.attack.soulsteal", "%1$s soul was consumed by %2$s");
+		builder.add("death.attack.soulsteal.item", "%1s soul was consumed by %2$s using %3$s");
+		builder.add("death.attack.soulsteal.player", "%1s soul was consumed trying to escape %2$s");
 		
 		builder.add(StatusEffectRegistry.REVERENCE.value(), "Unwilling Reverence");
 		builder.add(StatusEffectRegistry.DARKNESS.value(), "Encroaching Darkness");

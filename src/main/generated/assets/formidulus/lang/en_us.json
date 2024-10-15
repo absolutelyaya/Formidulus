@@ -25,6 +25,9 @@
   "death.attack.sacrifice": "%1$s was sacrificed by %2$s",
   "death.attack.sacrifice.item": "%1s was sacrificed by %2$s using %3$s",
   "death.attack.sacrifice.player": "%1s was sacrificed trying to escape %2$s",
+  "death.attack.soulsteal": "%1$s soul was consumed by %2$s",
+  "death.attack.soulsteal.item": "%1s soul was consumed by %2$s using %3$s",
+  "death.attack.soulsteal.player": "%1s soul was consumed trying to escape %2$s",
   "effect.formidulus.darkness": "Encroaching Darkness",
   "effect.formidulus.reverence": "Unwilling Reverence",
   "entity.formidulus.deer_follower": "Cruoris Servus",
@@ -32,6 +35,10 @@
   "entity.formidulus.irrlicht": "Scintilla Vitae",
   "entity.formidulus.pumpkin": "Volatile Pumpkin",
   "item-ability.formidulus.none": "unremarkable",
+  "item-ability.formidulus.soulsteal": "- SOUL STEAL -",
+  "item-ability.formidulus.soulsteal.desc0": "Harm others to chip pieces off of their Soul.",
+  "item-ability.formidulus.soulsteal.desc1": "Consuming them replenishes high amounts of Health.",
+  "item-ability.formidulus.soulsteal.desc2": "+2 §bsoulsteal§r damage; §6ignores Armor§r.",
   "item-ability.formidulus.vampirism": "- VAMPIRISM -",
   "item-ability.formidulus.vampirism.desc0": "Harming others replenishes Health.",
   "item.accessory_mode.cap": "Cap",
@@ -42,5 +49,8 @@
   "item.formidulus.expandable_lore_hint": "[Press Shift for more Info]",
   "item.formidulus.sacrificial_dagger": "Sacrificial Dagger",
   "item.formidulus.sacrificial_dagger.lore0": "The Dagger of a Cultist.",
-  "item.formidulus.sacrificial_dagger.lore1": "Previously used to make Blood Sacrifices."
+  "item.formidulus.sacrificial_dagger.lore1": "Previously used to make Blood Sacrifices.",
+  "item.formidulus.soul_dagger": "Soul Dagger",
+  "item.formidulus.soul_dagger.lore0": "A superior version of those Daggers the Cultists carry.",
+  "item.formidulus.soul_dagger.lore1": "Instead of the Body, it leeches directly off of the soul."
 }

@@ -19,6 +19,8 @@ public abstract class LivingEntityMixin
 {
 	@Shadow public abstract boolean hasStatusEffect(RegistryEntry<StatusEffect> effect);
 	
+	@Shadow public abstract boolean isInvulnerableTo(DamageSource damageSource);
+	
 	@ModifyReturnValue(method = "isInvulnerableTo", at = @At("RETURN"))
 	private boolean modifyIsInvulnerable(boolean original)
 	{
@@ -28,6 +30,8 @@ public abstract class LivingEntityMixin
 	@Inject(method = "applyDamage", at = @At("TAIL"))
 	void onDamage(DamageSource source, float amount, CallbackInfo ci)
 	{
+		if(isInvulnerableTo(source) || amount <= 0f)
+			return;
 		if(source.getAttacker() instanceof LivingEntity attacker && attacker.getWeaponStack().get(DataComponentRegistry.ABILITY) instanceof AbilityComponent component)
 			component.ability().onDamageEntity(attacker.getWeaponStack(), attacker, source, amount, (LivingEntity)((Object)this));
 	}

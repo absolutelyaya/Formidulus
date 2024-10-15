@@ -25,6 +25,9 @@
   "death.attack.sacrifice": "%1$s wurde von %2$s geopfert",
   "death.attack.sacrifice.item": "%1s wurde von %2$s mit %3$s geopfert",
   "death.attack.sacrifice.player": "%1s wurde geopfert beim Versuch %2$s zu entkommen",
+  "death.attack.soulsteal": "%1$ss Seele wurde von %2$s verschlungen",
+  "death.attack.soulsteal.item": "%1ss Seele wurde von %2$s verschlungen, mit hilfe von %3$s",
+  "death.attack.soulsteal.player": "%1ss Seele wurde verschlungen bei dem Versuch %2$s zu entkommen",
   "effect.formidulus.darkness": "Drückende Dunkelheit",
   "effect.formidulus.reverence": "Erzwungende Ehrfurcht",
   "entity.formidulus.deer_follower": "Cruoris Servus",
@@ -32,6 +35,10 @@
   "entity.formidulus.irrlicht": "Scintilla Vitae",
   "entity.formidulus.pumpkin": "Explosiver Kürbis",
   "item-ability.formidulus.none": "langweilig",
+  "item-ability.formidulus.soulsteal": "- SEELEN BRECHER -",
+  "item-ability.formidulus.soulsteal.desc0": "Schlage kleine Teile der Seele deines Feindes ab.",
+  "item-ability.formidulus.soulsteal.desc1": "Der Konsum jener heilt den Nutzer erheblich.",
+  "item-ability.formidulus.soulsteal.desc2": "+2 §bSeelen Brecher§r Schaden; §6ignoriert Rüstung§r.",
   "item-ability.formidulus.vampirism": "- VAMPIRISMUS -",
   "item-ability.formidulus.vampirism.desc0": "Das Verletzen anderer heilt den Nutzer.",
   "item.accessory_mode.cap": "Kappe",
@@ -42,5 +49,8 @@
   "item.formidulus.expandable_lore_hint": "[Drück Shift für mehr Infos]",
   "item.formidulus.sacrificial_dagger": "Opferdolch",
   "item.formidulus.sacrificial_dagger.lore0": "Der Dolch eines Kultisten.",
-  "item.formidulus.sacrificial_dagger.lore1": "Zuvor wurde er benutzt um Blutopfer zu erbringen."
+  "item.formidulus.sacrificial_dagger.lore1": "Zuvor wurde er benutzt um Blutopfer zu erbringen.",
+  "item.formidulus.soul_dagger": "Seelendolch",
+  "item.formidulus.soul_dagger.lore0": "Eine bessere Version der Dolche die diese Kultisten mit sich tragen.",
+  "item.formidulus.soul_dagger.lore1": "Anstelle von dem Körper, blutet dieser Dolch direkt die Seele aus."
 }

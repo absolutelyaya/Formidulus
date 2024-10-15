@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "*": {
+      "item": "formidulus:sacrificial_dagger"
+    },
+    "b": {
+      "item": "minecraft:blaze_rod"
+    },
+    "d": {
+      "item": "minecraft:diamond"
+    },
+    "e": {
+      "item": "minecraft:echo_shard"
+    }
+  },
+  "pattern": [
+    " e ",
+    "d*d",
+    " b "
+  ],
+  "result": {
+    "count": 1,
+    "id": "formidulus:soul_dagger"
+  },
+  "show_notification": false
+}

@@ -20,6 +20,7 @@ public class ItemAbilities
 		}
 	});
 	public static final ItemAbility VAMPIRISM = register(Formidulus.identifier("vampirism"), new VampirismAbility());
+	public static final ItemAbility SOULSTEAL = register(Formidulus.identifier("soulsteal"), new SoulStealAbility());
 	
 	public static ItemAbility register(Identifier id, ItemAbility ability)
 	{

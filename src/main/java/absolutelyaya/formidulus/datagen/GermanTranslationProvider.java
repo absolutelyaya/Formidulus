@@ -45,10 +45,17 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(ItemRegistry.SACRIFICIAL_DAGGER, "Opferdolch");
 		builder.add(ItemRegistry.SACRIFICIAL_DAGGER.getTranslationKey() + ".lore0", "Der Dolch eines Kultisten.");
 		builder.add(ItemRegistry.SACRIFICIAL_DAGGER.getTranslationKey() + ".lore1", "Zuvor wurde er benutzt um Blutopfer zu erbringen.");
+		builder.add(ItemRegistry.SOUL_DAGGER, "Seelendolch");
+		builder.add(ItemRegistry.SOUL_DAGGER.getTranslationKey() + ".lore0", "Eine bessere Version der Dolche die diese Kultisten mit sich tragen.");
+		builder.add(ItemRegistry.SOUL_DAGGER.getTranslationKey() + ".lore1", "Anstelle von dem Körper, blutet dieser Dolch direkt die Seele aus.");
 		
 		builder.add(ItemAbilities.NONE.getTranslationKey(), "langweilig");
 		builder.add(ItemAbilities.VAMPIRISM.getTranslationKey(), "- VAMPIRISMUS -");
 		builder.add(ItemAbilities.VAMPIRISM.getTranslationKey() + ".desc0", "Das Verletzen anderer heilt den Nutzer.");
+		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey(), "- SEELEN BRECHER -");
+		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc0", "Schlage kleine Teile der Seele deines Feindes ab.");
+		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc1", "Der Konsum jener heilt den Nutzer erheblich.");
+		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc2", "+2 §bSeelen Brecher§r Schaden; §6ignoriert Rüstung§r.");
 		
 		builder.add(BlockRegistry.WEEN, "Ween");
 		builder.add(BlockRegistry.WEEN.getTranslationKey() + ".lore", "es ist ween");
@@ -73,6 +80,10 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add("death.attack.sacrifice", "%1$s wurde von %2$s geopfert");
 		builder.add("death.attack.sacrifice.item", "%1s wurde von %2$s mit %3$s geopfert");
 		builder.add("death.attack.sacrifice.player", "%1s wurde geopfert beim Versuch %2$s zu entkommen");
+		
+		builder.add("death.attack.soulsteal", "%1$ss Seele wurde von %2$s verschlungen");
+		builder.add("death.attack.soulsteal.item", "%1ss Seele wurde von %2$s verschlungen, mit hilfe von %3$s");
+		builder.add("death.attack.soulsteal.player", "%1ss Seele wurde verschlungen bei dem Versuch %2$s zu entkommen");
 		
 		builder.add(StatusEffectRegistry.REVERENCE.value(), "Erzwungende Ehrfurcht");
 		builder.add(StatusEffectRegistry.DARKNESS.value(), "Drückende Dunkelheit");
