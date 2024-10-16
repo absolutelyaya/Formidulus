@@ -8,7 +8,9 @@ import absolutelyaya.formidulus.particle.DarknessParticle;
 import absolutelyaya.formidulus.registries.*;
 import absolutelyaya.formidulus.rendering.block.DeerSkullBlockEntityRenderer;
 import absolutelyaya.formidulus.rendering.entity.*;
+import absolutelyaya.formidulus.sound.BossMusicHandler;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
@@ -21,6 +23,7 @@ public class FormidulusClient implements ClientModInitializer
 	public static final EntityModelLayer DEER_GOD_SKULL_LAYER = new EntityModelLayer(Formidulus.identifier("deer_god_skull"), "deer_god_skull");
 	public static final EntityModelLayer IRRLICHT_LAYER = new EntityModelLayer(Formidulus.identifier("irrlicht"), "irrlicht");
 	public static final EntityModelLayer DEER_FOLLOWER_LAYER = new EntityModelLayer(Formidulus.identifier("deer_follower"), "deer_follower");
+	public static BossMusicHandler bossMusicHandler;
 	
 	@Override
 	public void onInitializeClient()
@@ -57,5 +60,8 @@ public class FormidulusClient implements ClientModInitializer
 					AccessoryComponent component = stack.getOrDefault(DataComponentRegistry.ACCESSORY, AccessoryComponent.DEFAULT);
 					return (float)(component.activeMode() % component.modes().size());
 				});
+		
+		bossMusicHandler = new BossMusicHandler();
+		ClientTickEvents.END_CLIENT_TICK.register(client -> bossMusicHandler.tick());
 	}
 }

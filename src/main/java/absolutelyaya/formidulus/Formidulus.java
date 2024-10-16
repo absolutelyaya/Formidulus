@@ -1,8 +1,10 @@
 package absolutelyaya.formidulus;
 
+import absolutelyaya.formidulus.entities.boss.BossFightManager;
 import absolutelyaya.formidulus.registries.*;
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,10 @@ public class Formidulus implements ModInitializer
 		PacketRegistry.register();
 		StatusEffectRegistry.register();
 		SoundRegistry.register();
+		
+		ServerTickEvents.END_SERVER_TICK.register((server) -> {
+			BossFightManager.INSTANCE.tick();
+		});
 	}
 	
 	public static Identifier identifier(String path)

@@ -1,5 +1,7 @@
 package absolutelyaya.formidulus.entities;
 
+import absolutelyaya.formidulus.entities.boss.BossType;
+import absolutelyaya.formidulus.entities.goal.BossOutOfCombatGoal;
 import absolutelyaya.formidulus.entities.goal.BossTargetGoal;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -27,7 +29,8 @@ public abstract class BossEntity extends AnimatedHostileEntity
 	boolean wasBossbarVisible;
 	float lastDamageTakenRaw, lastDamageTaken;
 	int lastTargetDamagedTime, combatTimer;
-	BossTargetGoal bossTargetGoal;
+	BossTargetGoal targetGoal;
+	BossOutOfCombatGoal outOfCombatGoal;
 	
 	protected BossEntity(EntityType<? extends AnimatedHostileEntity> entityType, World world)
 	{
@@ -133,8 +136,8 @@ public abstract class BossEntity extends AnimatedHostileEntity
 	
 	public @Nullable LivingEntity getRandomTarget()
 	{
-		if(bossTargetGoal != null)
-			return bossTargetGoal.getRandomTarget();
+		if(targetGoal != null)
+			return targetGoal.getRandomTarget();
 		return null;
 	}
 	
@@ -167,6 +170,8 @@ public abstract class BossEntity extends AnimatedHostileEntity
 	 */
 	public abstract void afterBossReset();
 	
+	public abstract BossType getBossType();
+	
 	@Override
 	public void readCustomDataFromNbt(NbtCompound nbt)
 	{
@@ -192,5 +197,4 @@ public abstract class BossEntity extends AnimatedHostileEntity
 			nbt.put("Origin", origin);
 		}
 	}
-	
 }

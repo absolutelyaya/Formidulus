@@ -1,6 +1,7 @@
 package absolutelyaya.formidulus.network;
 
 import absolutelyaya.formidulus.Formidulus;
+import absolutelyaya.formidulus.FormidulusClient;
 import absolutelyaya.formidulus.gui.TitleHUD;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
@@ -68,5 +69,12 @@ public class ClientPacketHandler
 				}
 			}
 		});
+		ClientPlayNetworking.registerGlobalReceiver(BossMusicUpdatePayload.ID, ((payload, context) -> {
+			String key = payload.trackKey();
+			if(key.equals("stop") || key.equals("null"))
+				FormidulusClient.bossMusicHandler.stopCurrentTrack();
+			else
+				FormidulusClient.bossMusicHandler.startTrack(payload.bossId(), key);
+		}));
 	}
 }

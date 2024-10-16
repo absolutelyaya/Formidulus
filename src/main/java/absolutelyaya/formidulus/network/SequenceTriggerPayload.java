@@ -9,7 +9,8 @@ import net.minecraft.network.packet.CustomPayload;
 public record SequenceTriggerPayload(byte sequenceID) implements CustomPayload
 {
 	public static final Id<SequenceTriggerPayload> ID = new Id<>(Formidulus.identifier("sequence_trigger_packet"));
-	public static final PacketCodec<RegistryByteBuf, SequenceTriggerPayload> CODEC = PacketCodec.tuple(PacketCodecs.BYTE, SequenceTriggerPayload::sequenceID, SequenceTriggerPayload::new);
+	public static final PacketCodec<RegistryByteBuf, SequenceTriggerPayload> CODEC =
+			PacketCodec.tuple(PacketCodecs.BYTE, SequenceTriggerPayload::sequenceID, SequenceTriggerPayload::new);
 	public static final byte SPAWN_SEQUENCE = 0;
 	public static final byte PROJECTILE_SEQUENCE = 1;
 	public static final byte PHASE_TRANSITION_SEQUENCE = 2;

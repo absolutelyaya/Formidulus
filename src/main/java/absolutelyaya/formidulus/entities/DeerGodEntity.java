@@ -2,6 +2,9 @@ package absolutelyaya.formidulus.entities;
 
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.damage.DamageSources;
+import absolutelyaya.formidulus.entities.boss.BossFightManager;
+import absolutelyaya.formidulus.entities.boss.BossType;
+import absolutelyaya.formidulus.entities.boss.DeerBossFight;
 import absolutelyaya.formidulus.entities.goal.AnimatedAttackGoal;
 import absolutelyaya.formidulus.entities.goal.BossOutOfCombatGoal;
 import absolutelyaya.formidulus.entities.goal.BossTargetGoal;
@@ -125,7 +128,7 @@ public class DeerGodEntity extends BossEntity
 	{
 		super.initGoals();
 		goalSelector.add(0, new SwarmGoal(this));
-		goalSelector.add(0, new BossOutOfCombatGoal(this, BossOutOfCombatGoal.BEHAVIOR_RESPAWN_AT_ORIGIN));
+		goalSelector.add(0, outOfCombatGoal = new BossOutOfCombatGoal(this, BossOutOfCombatGoal.BEHAVIOR_RESPAWN_AT_ORIGIN));
 		goalSelector.add(0, new TeleportRandomlyGoal(this));
 		goalSelector.add(1, new SummonLanternGoal(this));
 		goalSelector.add(1, new LanternSwingGoal(this));
@@ -134,7 +137,7 @@ public class DeerGodEntity extends BossEntity
 		goalSelector.add(2, new TeleportToTargetGoal(this));
 		goalSelector.add(2, new ApproachTargetGoal(this, 0.4f));
 		
-		targetSelector.add(0, bossTargetGoal = new BossTargetGoal(this, 16, 200, 0.4f));
+		targetSelector.add(0, targetGoal = new BossTargetGoal(this, 16, 200, 0.4f));
 	}
 	
 	@Override
@@ -182,11 +185,12 @@ public class DeerGodEntity extends BossEntity
 			if(age % 20 != 0)
 				return;
 			if(!isAnyCultistNearby() && !getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class),
-					getBoundingBox().expand(8), p -> !p.isSpectator() && !p.isCreative()).isEmpty())
+					getBoundingBox().expand(12), p -> !p.isSpectator() && !p.isCreative()).isEmpty())
 			{
 				setAnimation(SPAWN_SEQUENCE_ANIM);
 				triggerMonologueSequence(SequenceTriggerPayload.SPAWN_SEQUENCE);
 				dataTracker.set(SUMMONED, true);
+				BossFightManager.INSTANCE.beginFight(new DeerBossFight(this));
 			}
 			else if(age % 300 == 0 && getAllNearbyCultists().size() < getMaxCultists())
 				spawnCultist(new Vec2f(3f, 8f), true);
@@ -722,12 +726,24 @@ public class DeerGodEntity extends BossEntity
 		super.onDamageEntity(damaged);
 	}
 	
+	public void forceReset()
+	{
+		cancelActiveGoals();
+		outOfCombatGoal.start(); //discard this entity and respawn at Origin
+	}
+	
 	@Override
 	public void afterBossReset()
 	{
 		Vec2f range = new Vec2f(2f, 7f);
 		for (int i = 0; i < getMaxCultists(); i++)
 			spawnCultist(range, true);
+	}
+	
+	@Override
+	public BossType getBossType()
+	{
+		return BossType.DEER;
 	}
 	
 	int getMaxCultists()
@@ -791,7 +807,7 @@ public class DeerGodEntity extends BossEntity
 	{
 		if(other instanceof ServerPlayerEntity serverPlayer)
 			ServerPlayNetworking.send(serverPlayer, new SequenceTriggerPayload(SequenceTriggerPayload.PLAYER_DEATH_SEQUENCE));
-		if(bossTargetGoal.isHasNoTargets())
+		if(targetGoal.isHasNoTargets())
 			combatTimer = 0;
 		return super.onKilledOther(world, other);
 	}

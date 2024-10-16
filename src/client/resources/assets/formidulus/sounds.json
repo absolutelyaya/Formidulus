@@ -18,5 +18,11 @@
       "formidulus:ween/yayaween-07",
       "formidulus:ween/yayaween-08"
     ]
+  },
+
+  "music.deer.phase1": {
+    "sounds": [
+      "formidulus:music/boss/deer_phase1"
+    ]
   }
 }
