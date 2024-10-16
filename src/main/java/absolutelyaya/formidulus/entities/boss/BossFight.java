@@ -22,7 +22,7 @@ public abstract class BossFight
 	protected final List<BossEntity> bossEntities = new ArrayList<>();
 	
 	protected int phase;
-	protected List<ServerPlayerEntity> participants = new ArrayList<>();
+	protected List<ServerPlayerEntity> participants;
 	protected int playerCheckIntervall = 20;
 	protected int playerCheckRange = 48;
 	

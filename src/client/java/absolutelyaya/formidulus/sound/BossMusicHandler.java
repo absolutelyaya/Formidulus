@@ -13,12 +13,13 @@ import java.util.List;
 public class BossMusicHandler
 {
 	static SoundManager manager;
-	ClientBossMusicEntry current, next;
-	boolean playingIntro, playingOutro, stopping;
+	ClientBossMusicEntry last, current, next;
+	boolean playingIntro, playingOutro, stopping, late;
 	List<PositionedSoundInstance> soundInstances = new ArrayList<>();
 	
-	public void startTrack(Identifier bossId, String musicKey)
+	public void startTrack(Identifier bossId, String musicKey, boolean late)
 	{
+		this.late = late;
 		try
 		{
 			BossType type = BossType.fromId(bossId);
@@ -46,11 +47,6 @@ public class BossMusicHandler
 		}
 	}
 	
-	public void startTrack(ClientBossMusicEntry track)
-	{
-		next = track;
-	}
-	
 	public void stopCurrentTrack()
 	{
 		stopping = true;
@@ -63,7 +59,8 @@ public class BossMusicHandler
 			manager = MinecraftClient.getInstance().getSoundManager();
 			return;
 		}
-		if(current != null && (manager.isPlaying(current.intro) || manager.isPlaying(current.outro)))
+		if((current != null && (manager.isPlaying(current.introInstance) || manager.isPlaying(current.outroInstance))) ||
+				   (last != null && manager.isPlaying(last.outroInstance)))
 			return;
 		if(current != null)
 		{
@@ -72,56 +69,49 @@ public class BossMusicHandler
 				if(current.hasOutro())
 					playingOutro = true;
 				else
-					current.main.startFadeOut();
+				{
+					current.mainInstance.startFadeOut();
+					current = null;
+				}
 				stopping = false;
-				current = null;
 				return;
 			}
 			if(playingIntro)
 			{
-				if(next != null)
+				if(next == null)
 				{
-					current.main.setFullVolume();
-					manager.play(current.main);
+					current.mainInstance.setFullVolume();
+					manager.play(current.mainInstance);
 				}
 				playingIntro = false;
-			}
-			if(next == null)
-				return;
-			if(!current.hasOutro())
-			{
-				current.main.startFadeOut();
-				current = null;
 				return;
 			}
-			if(!playingOutro)
+			if(playingOutro)
 			{
-				manager.stop(current.main);
-				manager.play(current.outro);
-				playingOutro = true;
-			}
-			else
-			{
-				current = null;
+				manager.stop(current.mainInstance);
+				manager.play(current.outroInstance);
 				playingOutro = false;
+				last = current;
+				current = null;
+				return;
 			}
 		}
-		else if(next != null)
+		if(next != null)
 		{
 			if(playingIntro)
 				playingIntro = false;
 			current = next;
 			next = null;
-			if(current.hasIntro())
+			if(current.hasIntro() && !(current.skipIntroIfLate && late))
 			{
-				current.main.setFullVolume();
-				manager.play(current.intro);
+				current.mainInstance.setFullVolume();
+				manager.play(current.introInstance);
 				playingIntro = true;
 			}
 			else
 			{
-				current.main.startFadeIn();
-				manager.play(current.main);
+				current.mainInstance.startFadeIn();
+				manager.play(current.mainInstance);
 			}
 		}
 	}

@@ -1,42 +1,36 @@
 package absolutelyaya.formidulus.sound;
 
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Pair;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class BossMusicEntry
 {
-	final SoundEvent mainSound;
-	final int mainLength;
-	final float fadeIn, fadeOut;
+	protected final SoundEvent mainSound;
+	protected final float fadeIn, fadeOut;
 	
 	SoundEvent introSound, outroSound;
-	int introLength, outroLength;
 	boolean intro, outro, skipIntroIfLate;
 	
-	public BossMusicEntry(SoundEvent mainSound, int mainLength, float fadeIn, float fadeOut)
+	public BossMusicEntry(SoundEvent mainSound, float fadeIn, float fadeOut)
 	{
 		this.mainSound = mainSound;
-		this.mainLength = mainLength;
 		this.fadeIn = fadeIn;
 		this.fadeOut = fadeOut;
 	}
 	
-	public @NotNull Pair<SoundEvent, Integer> getMainSound()
+	public @NotNull SoundEvent getMainSound()
 	{
-		return new Pair<>(mainSound, mainLength);
+		return mainSound;
 	}
 	
-	public BossMusicEntry withIntro(SoundEvent sound, int length)
+	public BossMusicEntry withIntro(SoundEvent sound)
 	{
-		return withIntro(sound, length, true);
+		return withIntro(sound, true);
 	}
 	
-	public BossMusicEntry withIntro(SoundEvent sound, int length, boolean skipIfLate)
+	public BossMusicEntry withIntro(SoundEvent sound, boolean skipIfLate)
 	{
 		introSound = sound;
-		introLength = length;
 		intro = true;
 		skipIntroIfLate = skipIfLate;
 		return this;
@@ -47,17 +41,9 @@ public class BossMusicEntry
 		return intro;
 	}
 	
-	public @Nullable Pair<SoundEvent, Integer> getIntro()
-	{
-		if(!intro)
-			return null;
-		return new Pair<>(introSound, introLength);
-	}
-	
-	public BossMusicEntry withOutro(SoundEvent sound, int length)
+	public BossMusicEntry withOutro(SoundEvent sound)
 	{
 		outroSound = sound;
-		outroLength = length;
 		outro = true;
 		return this;
 	}
@@ -65,13 +51,6 @@ public class BossMusicEntry
 	public boolean hasOutro()
 	{
 		return outro;
-	}
-	
-	public @Nullable Pair<SoundEvent, Integer> getOutro()
-	{
-		if(!outro)
-			return null;
-		return new Pair<>(outroSound, outroLength);
 	}
 	
 	public float getFadeIn()

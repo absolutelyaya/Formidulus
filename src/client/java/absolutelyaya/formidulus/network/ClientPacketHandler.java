@@ -74,7 +74,7 @@ public class ClientPacketHandler
 			if(key.equals("stop") || key.equals("null"))
 				FormidulusClient.bossMusicHandler.stopCurrentTrack();
 			else
-				FormidulusClient.bossMusicHandler.startTrack(payload.bossId(), key);
+				FormidulusClient.bossMusicHandler.startTrack(payload.bossId(), key, payload.late());
 		}));
 	}
 }

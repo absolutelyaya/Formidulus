@@ -3,9 +3,9 @@ package absolutelyaya.formidulus.entities.boss;
 import absolutelyaya.formidulus.entities.DeerGodEntity;
 import absolutelyaya.formidulus.registries.SoundRegistry;
 import absolutelyaya.formidulus.sound.BossMusicEntry;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 
 import java.util.UUID;
 
@@ -36,6 +36,6 @@ public class DeerBossFight extends BossFight
 	}
 	
 	static {
-		bossMusic.put("phase1", new BossMusicEntry(SoundRegistry.MUSIC_DEER_PHASE1, 133, 0.5f, 0f));
+		bossMusic.put("phase1", new BossMusicEntry(SoundRegistry.MUSIC_DEER_PHASE1, 0.5f, 0.5f).withIntro(SoundEvents.ENTITY_PLAYER_LEVELUP));
 	}
 }
