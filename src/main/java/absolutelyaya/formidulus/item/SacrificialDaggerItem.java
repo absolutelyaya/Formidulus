@@ -2,6 +2,7 @@ package absolutelyaya.formidulus.item;
 
 import absolutelyaya.formidulus.Formidulus;
 import net.fabricmc.fabric.api.item.v1.EnchantingContext;
+import net.fabricmc.fabric.api.item.v1.FabricItem;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
@@ -14,6 +15,7 @@ import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolItem;
 import net.minecraft.item.ToolMaterial;
@@ -23,9 +25,9 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class SacrificialDaggerItem extends ToolItem
+public class SacrificialDaggerItem extends ToolItem implements FabricItem
 {
-	public SacrificialDaggerItem(ToolMaterial toolMaterial, Settings settings)
+	public SacrificialDaggerItem(ToolMaterial toolMaterial, Item.Settings settings)
 	{
 		super(toolMaterial, settings);
 	}
@@ -88,8 +90,6 @@ public class SacrificialDaggerItem extends ToolItem
 	@Override
 	public boolean canBeEnchantedWith(ItemStack stack, RegistryEntry<Enchantment> enchantment, EnchantingContext context)
 	{
-		if(enchantment.getKey().isPresent() && enchantment.getKey().get().equals(Enchantments.SWEEPING_EDGE))
-			return false;
-		return super.canBeEnchantedWith(stack, enchantment, context);
+		return enchantment.getKey().isEmpty() || !enchantment.getKey().get().equals(Enchantments.SWEEPING_EDGE);
 	}
 }

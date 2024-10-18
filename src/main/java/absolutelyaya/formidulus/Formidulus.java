@@ -1,5 +1,6 @@
 package absolutelyaya.formidulus;
 
+import absolutelyaya.formidulus.config.ServerConfig;
 import absolutelyaya.formidulus.entities.boss.BossFightManager;
 import absolutelyaya.formidulus.registries.*;
 import net.fabricmc.api.ModInitializer;
@@ -13,8 +14,8 @@ public class Formidulus implements ModInitializer
 {
 	public static final Identifier FONT = Identifier.of("illageralt");
 	public static final String MOD_ID = "formidulus";
-
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+	public static ServerConfig config;
 
 	@Override
 	public void onInitialize()
@@ -31,6 +32,8 @@ public class Formidulus implements ModInitializer
 		ServerTickEvents.END_SERVER_TICK.register((server) -> {
 			BossFightManager.INSTANCE.tick();
 		});
+		
+		config = new ServerConfig();
 	}
 	
 	public static Identifier identifier(String path)

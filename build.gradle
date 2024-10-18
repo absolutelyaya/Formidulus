@@ -42,6 +42,9 @@ dependencies {
 
 	//Fabric-ASM
 	modImplementation(include "com.github.Chocohead:Fabric-ASM:${project.fabric_asm_version}")
+
+	//yayConfig
+	modImplementation(include 'com.github.absolutelyaya:YayConfig:-SNAPSHOT')
 }
 
 processResources {
