@@ -53,7 +53,7 @@ public abstract class BossFight
 					i -> !i.isSpectator() && i.isPartOfGame());
 			List<ServerPlayerEntity> remove = new ArrayList<>();
 			participants.forEach(p -> {
-				if(!newParticipantList.contains(p))
+				if(!newParticipantList.contains(p) || p.isDead())
 					remove.add(p);
 			});
 			remove.forEach(this::leaveFight);
@@ -115,7 +115,7 @@ public abstract class BossFight
 	public void leaveFight(ServerPlayerEntity player)
 	{
 		participants.remove(player);
-		ServerPlayNetworking.send(player, new BossMusicUpdatePayload(type.id(), "stop"));
+		ServerPlayNetworking.send(player, new BossMusicUpdatePayload(type.id(), "cancel"));
 	}
 	
 	public void interrupt(boolean removeRemainingBossEntities)
@@ -127,7 +127,7 @@ public abstract class BossFight
 	
 	void end()
 	{
+		onMusicChange("cancel");
 		BossFightManager.INSTANCE.endFight(this);
-		onMusicChange("stop");
 	}
 }

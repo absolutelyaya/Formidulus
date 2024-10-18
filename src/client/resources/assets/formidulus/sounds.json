@@ -20,9 +20,22 @@
     ]
   },
 
-  "music.deer.phase1": {
+  "music.deer.intro": {
+    "category": "music",
     "sounds": [
-      "formidulus:music/boss/deer_phase1"
+      {
+        "name": "formidulus:music/boss/deer_intro",
+        "preload": true
+      }
+    ]
+  },
+  "music.deer.phase1": {
+    "category": "music",
+    "sounds": [
+      {
+        "name": "formidulus:music/boss/deer_phase1",
+        "preload": true
+      }
     ]
   }
 }

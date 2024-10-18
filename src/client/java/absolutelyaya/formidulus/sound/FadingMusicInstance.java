@@ -11,9 +11,9 @@ public class FadingMusicInstance extends PositionedSoundInstance implements Tick
 	boolean active;
 	float fadeIn, fadeOut;
 	
-	public FadingMusicInstance(SoundEvent sound, float fadeIn, float fadeOut)
+	public FadingMusicInstance(SoundEvent sound, float fadeIn, float fadeOut, boolean loop)
 	{
-		super(sound.getId(), SoundCategory.MUSIC, 0.01f, 1, SoundInstance.createRandom(), true, 0,
+		super(sound.getId(), SoundCategory.MUSIC, 0.01f, 1, SoundInstance.createRandom(), loop, 0,
 				SoundInstance.AttenuationType.NONE, 0, 0, 0, true);
 		this.fadeIn = fadeIn;
 		this.fadeOut = fadeOut;
@@ -40,9 +40,9 @@ public class FadingMusicInstance extends PositionedSoundInstance implements Tick
 	public void tick()
 	{
 		if(active && volume < 1f)
-			volume = Math.min(fadeIn <= 0f ? 0f : volume + 1f / 20f * fadeIn, 1f);
+			volume = Math.min(fadeIn <= 0f ? 1f : volume + 1f / 20f / fadeIn, 1f);
 		if(!active && volume > 0f)
-			volume = Math.max(fadeOut <= 0f ? 0f : volume - 1f / 20f * fadeOut, 0f);
+			volume = Math.max(fadeOut <= 0f ? 0f : volume - 1f / 20f / fadeOut, 0f);
 	}
 	
 	@Override

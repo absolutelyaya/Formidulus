@@ -63,6 +63,7 @@ public class ItemRegistry
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register((entries) -> {
 			entries.add(DEER_SKULL);
 			entries.add(SACRIFICIAL_DAGGER);
+			entries.add(SOUL_DAGGER);
 		});
 	}
 }

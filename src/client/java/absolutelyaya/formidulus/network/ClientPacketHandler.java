@@ -71,7 +71,9 @@ public class ClientPacketHandler
 		});
 		ClientPlayNetworking.registerGlobalReceiver(BossMusicUpdatePayload.ID, ((payload, context) -> {
 			String key = payload.trackKey();
-			if(key.equals("stop") || key.equals("null"))
+			if(key.equals("cancel"))
+				FormidulusClient.bossMusicHandler.stopCurrentTrackNoOutro();
+			else if(key.equals("end"))
 				FormidulusClient.bossMusicHandler.stopCurrentTrack();
 			else
 				FormidulusClient.bossMusicHandler.startTrack(payload.bossId(), key, payload.late());

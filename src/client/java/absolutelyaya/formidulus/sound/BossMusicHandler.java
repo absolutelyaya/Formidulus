@@ -13,9 +13,11 @@ import java.util.List;
 public class BossMusicHandler
 {
 	static SoundManager manager;
-	ClientBossMusicEntry last, current, next;
-	boolean playingIntro, playingOutro, stopping, late;
+	BossMusicEntry last, current, next;
+	int introTicks, outroTicks;
+	boolean playingIntro, playingOutro, stopping, late, noOutro;
 	List<PositionedSoundInstance> soundInstances = new ArrayList<>();
+	FadingMusicInstance mainInstance, introInstance, outroInstance;
 	
 	public void startTrack(Identifier bossId, String musicKey, boolean late)
 	{
@@ -28,9 +30,8 @@ public class BossMusicHandler
 			Object music = type.fight().getMethod("getMusicEntry", String.class).invoke(null, musicKey);
 			if(music instanceof BossMusicEntry musicEntry)
 			{
-				ClientBossMusicEntry entry = new ClientBossMusicEntry(musicEntry);
-				if(!entry.equals(current))
-					next = entry;
+				if(!musicEntry.equals(current))
+					next = musicEntry;
 			}
 			else
 				Formidulus.LOGGER.warn("BossMusicHandler -> Received invalid musicKey; '{}' does not exist in '{}'s fight class!", musicKey, bossId);
@@ -52,6 +53,12 @@ public class BossMusicHandler
 		stopping = true;
 	}
 	
+	public void stopCurrentTrackNoOutro()
+	{
+		stopping = true;
+		noOutro = true;
+	}
+	
 	public void tick()
 	{
 		if(manager == null)
@@ -59,37 +66,44 @@ public class BossMusicHandler
 			manager = MinecraftClient.getInstance().getSoundManager();
 			return;
 		}
-		if((current != null && (manager.isPlaying(current.introInstance) || manager.isPlaying(current.outroInstance))) ||
-				   (last != null && manager.isPlaying(last.outroInstance)))
+		if(introTicks > 0)
+			introTicks--;
+		if(outroTicks > 0)
+			outroTicks--;
+		if(stopping)
+		{
+			if(!noOutro && current.hasOutro())
+				playingOutro = true;
+			else
+				current = null;
+			mainInstance.startFadeOut();
+			if(introTicks > 0)
+			{
+				introInstance.startFadeOut();
+				introTicks = 0;
+			}
+			stopping = false;
+			noOutro = false;
+			return;
+		}
+		if(introTicks > 0 || outroTicks > 0)
 			return;
 		if(current != null)
 		{
-			if(stopping)
-			{
-				if(current.hasOutro())
-					playingOutro = true;
-				else
-				{
-					current.mainInstance.startFadeOut();
-					current = null;
-				}
-				stopping = false;
-				return;
-			}
 			if(playingIntro)
 			{
 				if(next == null)
 				{
-					current.mainInstance.setFullVolume();
-					manager.play(current.mainInstance);
+					mainInstance.startFadeIn();
+					manager.play(mainInstance);
 				}
 				playingIntro = false;
 				return;
 			}
 			if(playingOutro)
 			{
-				manager.stop(current.mainInstance);
-				manager.play(current.outroInstance);
+				manager.play(outroInstance);
+				outroTicks = current.outroTicks;
 				playingOutro = false;
 				last = current;
 				current = null;
@@ -101,18 +115,23 @@ public class BossMusicHandler
 			if(playingIntro)
 				playingIntro = false;
 			current = next;
+			mainInstance = new FadingMusicInstance(current.mainSound, current.fadeIn, current.fadeOut, true);
 			next = null;
 			if(current.hasIntro() && !(current.skipIntroIfLate && late))
 			{
-				current.mainInstance.setFullVolume();
-				manager.play(current.introInstance);
+				introInstance = new FadingMusicInstance(current.introSound, 0f, current.fadeOut, false);
+				introInstance.setFullVolume();
+				manager.play(introInstance);
+				introTicks = current.introTicks;
 				playingIntro = true;
 			}
 			else
 			{
-				current.mainInstance.startFadeIn();
-				manager.play(current.mainInstance);
+				mainInstance.startFadeIn();
+				manager.play(mainInstance);
 			}
+			if(current.hasOutro())
+				outroInstance = new FadingMusicInstance(current.outroSound, current.fadeIn, 0f, false);
 		}
 	}
 	

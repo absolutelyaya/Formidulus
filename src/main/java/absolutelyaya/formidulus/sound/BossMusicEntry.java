@@ -10,6 +10,7 @@ public class BossMusicEntry
 	
 	SoundEvent introSound, outroSound;
 	boolean intro, outro, skipIntroIfLate;
+	int introTicks, outroTicks;
 	
 	public BossMusicEntry(SoundEvent mainSound, float fadeIn, float fadeOut)
 	{
@@ -23,16 +24,17 @@ public class BossMusicEntry
 		return mainSound;
 	}
 	
-	public BossMusicEntry withIntro(SoundEvent sound)
+	public BossMusicEntry withIntro(SoundEvent sound, int lengthMilliseconds)
 	{
-		return withIntro(sound, true);
+		return withIntro(sound, lengthMilliseconds, true);
 	}
 	
-	public BossMusicEntry withIntro(SoundEvent sound, boolean skipIfLate)
+	public BossMusicEntry withIntro(SoundEvent sound, int lengthMilliseconds, boolean skipIfLate)
 	{
 		introSound = sound;
 		intro = true;
 		skipIntroIfLate = skipIfLate;
+		introTicks = millisecondsToTicks(lengthMilliseconds);
 		return this;
 	}
 	
@@ -41,10 +43,11 @@ public class BossMusicEntry
 		return intro;
 	}
 	
-	public BossMusicEntry withOutro(SoundEvent sound)
+	public BossMusicEntry withOutro(SoundEvent sound, int lengthMilliseconds)
 	{
 		outroSound = sound;
 		outro = true;
+		outroTicks = millisecondsToTicks(lengthMilliseconds);
 		return this;
 	}
 	
@@ -61,5 +64,10 @@ public class BossMusicEntry
 	public float getFadeOut()
 	{
 		return fadeOut;
+	}
+	
+	int millisecondsToTicks(int milliseconds)
+	{
+		return Math.round(milliseconds / 50f);
 	}
 }

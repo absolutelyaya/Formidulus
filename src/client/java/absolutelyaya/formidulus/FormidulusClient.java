@@ -62,6 +62,9 @@ public class FormidulusClient implements ClientModInitializer
 				});
 		
 		bossMusicHandler = new BossMusicHandler();
-		ClientTickEvents.END_CLIENT_TICK.register(client -> bossMusicHandler.tick());
+		ClientTickEvents.END_CLIENT_TICK.register(client -> {
+			if(!client.isPaused())
+				bossMusicHandler.tick();
+		});
 	}
 }
