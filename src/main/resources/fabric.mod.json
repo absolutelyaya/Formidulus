@@ -3,15 +3,16 @@
 	"id": "formidulus",
 	"version": "${version}",
 	"name": "Formidulus",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "i like spooky month. here's a deer",
 	"authors": [
-		"Me!"
+		"Absolutelyaya",
+		"Composer: Efefski"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://absolutelyaya.neocities.org/",
+		"sources": "soon"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/formidulus/icon.png",
 	"environment": "*",
 	"entrypoints": {
@@ -36,12 +37,11 @@
 		}
 	],
 	"depends": {
-		"fabricloader": ">=0.16.5",
+		"fabricloader": ">=0.16.7",
 		"minecraft": "~1.21.1",
 		"java": ">=21",
 		"fabric-api": "*"
 	},
 	"suggests": {
-		"another-mod": "*"
 	}
 }

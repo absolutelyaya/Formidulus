@@ -87,5 +87,30 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		
 		builder.add(StatusEffectRegistry.REVERENCE.value(), "Erzwungende Ehrfurcht");
 		builder.add(StatusEffectRegistry.DARKNESS.value(), "Drückende Dunkelheit");
+		
+		
+		builder.add("dialogue.deer.intro1", "Wilderer.");
+		builder.add("dialogue.deer.intro2", "Du der kam nur um Blut zu vergießen,");
+		builder.add("dialogue.deer.intro3", "bist hier nicht Willkommen.");
+		builder.add("dialogue.deer.intro4", "Ich werde dir eine Lehre erteilen.");
+		
+		builder.add("dialogue.deer.projectile1", "Ah, du bevozugst Vernkampf ?");
+		builder.add("dialogue.deer.projectile2", "Dann lass es Feuer regnen!");
+		
+		builder.add("dialogue.deer.phase-transition1", "Du kleines...");
+		builder.add("dialogue.deer.phase-transition2", "Erde, Blute für mich!");
+		builder.add("dialogue.deer.phase-transition3", "Aus Blut mach Fleisch;");
+		builder.add("dialogue.deer.phase-transition4", "schärfe Knochen zu Messern-");
+		builder.add("dialogue.deer.phase-transition5", "Ich werde dich nicht länger dulden.");
+		
+		builder.add("dialogue.deer.player-death1", "Kehre niemals zurück.");
+		
+		builder.add("dialogue.deer.death1", "GENUG!");
+		builder.add("dialogue.deer.death2", "Dieser Körper ist zu gebrechlich.");
+		builder.add("dialogue.deer.death3", "Gut aussehend; aber nicht zum kämpfen gemacht.");
+		builder.add("dialogue.deer.death4", "Sobald ich einen ausreichenden Körper finde,");
+		builder.add("dialogue.deer.death5", "werde ich dich vernichten.");
+		
+		builder.add("dialogue.deer.what", "Have you no Maidens ?");
 	}
 }

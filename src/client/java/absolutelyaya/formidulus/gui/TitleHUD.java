@@ -36,7 +36,7 @@ public class TitleHUD
 		if(activeTextObject == null && !textQueue.isEmpty())
 		{
 			activeTextObject = textQueue.poll().complete(lastTextObject);
-			targetText = activeTextObject.text();
+			targetText = activeTextObject.text().getString();
 			delay = activeTextObject.delay();
 		}
 		
@@ -103,7 +103,7 @@ public class TitleHUD
 	
 	public static TextObject makeTextObject(String text)
 	{
-		return new TextObject(text);
+		return new TextObject(Text.translatable(text));
 	}
 	
 	public static void queueTitle(TextObject text)
@@ -120,7 +120,7 @@ public class TitleHUD
 	
 	public static final class TextObject
 	{
-		final String text;
+		final Text text;
 		float delay = 0;
 		float instability = 0;
 		float typeSpeed = -1;
@@ -131,12 +131,12 @@ public class TitleHUD
 		boolean jitter;
 		boolean clearPreceding;
 		
-		public TextObject(String text)
+		public TextObject(Text text)
 		{
 			this.text = text;
 		}
 		
-		public String text()
+		public Text text()
 		{
 			return text;
 		}

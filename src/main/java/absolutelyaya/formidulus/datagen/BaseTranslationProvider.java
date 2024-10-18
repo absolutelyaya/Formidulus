@@ -86,6 +86,31 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		
 		builder.add(StatusEffectRegistry.REVERENCE.value(), "Unwilling Reverence");
 		builder.add(StatusEffectRegistry.DARKNESS.value(), "Encroaching Darkness");
+		
+		
+		builder.add("dialogue.deer.intro1", "Poacher.");
+		builder.add("dialogue.deer.intro2", "You who came only to spill Blood,");
+		builder.add("dialogue.deer.intro3", "are not welcome here.");
+		builder.add("dialogue.deer.intro4", "I shall teach you manners.");
+		
+		builder.add("dialogue.deer.projectile1", "Ah, you prefer Ranged Combat ?");
+		builder.add("dialogue.deer.projectile2", "Then let it rain Fire!");
+		
+		builder.add("dialogue.deer.phase-transition1", "You little...");
+		builder.add("dialogue.deer.phase-transition2", "Earth, shed Blood for me!");
+		builder.add("dialogue.deer.phase-transition3", "Turn Blood to Flesh;");
+		builder.add("dialogue.deer.phase-transition4", "sharpen Bones to Knifes-");
+		builder.add("dialogue.deer.phase-transition5", "I am done playing nicely.");
+		
+		builder.add("dialogue.deer.player-death1", "Never return.");
+		
+		builder.add("dialogue.deer.death1", "ENOUGH!");
+		builder.add("dialogue.deer.death2", "This Vessel is too fragile.");
+		builder.add("dialogue.deer.death3", "Good looking; but not fit for battle.");
+		builder.add("dialogue.deer.death4", "Once I find a sufficient Vessel,");
+		builder.add("dialogue.deer.death5", "I shall destroy you.");
+		
+		builder.add("dialogue.deer.what", "Have you no Maidens ?");
 	}
 	
 	public static String modKey(String category, String path)
