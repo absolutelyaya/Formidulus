@@ -59,6 +59,8 @@ public class DeerGodEntity extends BossEntity
 	static final TrackedData<Boolean> LANTERN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Boolean> CLAW = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Boolean> RANGED = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	static final TrackedData<Boolean> RUNNING = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	static final TrackedData<Byte> RUN_ATTACK = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BYTE);
 	static final TrackedData<Integer> TELEPORT_TIMER = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	static final TrackedData<Integer> TELEPORT_COOLDOWN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	static final TrackedData<Integer> RANGED_COOLDOWN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -74,10 +76,12 @@ public class DeerGodEntity extends BossEntity
 	static final byte SLAM_ANIM = 5;
 	static final byte PHASE_TRANSITION_ANIM = 6;
 	static final byte DEATH_SEQUENCE_ANIM = 69;
+	public static final byte RUN_ATTACK_NONE = 0;
+	public static final byte RUN_ATTACK_CLAW = 1;
+	public static final byte RUN_ATTACK_LANTERN = 2;
 	public AnimationState unsummonedPoseAnimationState = new AnimationState();
 	public AnimationState spawnSequenceAnimationState = new AnimationState();
 	public AnimationState idleAnimationState = new AnimationState();
-	public AnimationState walkingAnimationState = new AnimationState();
 	public AnimationState swingAnimationState = new AnimationState();
 	public AnimationState slamAnimationState = new AnimationState();
 	public AnimationState summonLanternAnimationState = new AnimationState();
@@ -102,7 +106,6 @@ public class DeerGodEntity extends BossEntity
 		noLanternAnimationState.start(age);
 		noClawAnimationState.start(age);
 		showClawAnimationState.start(age);
-		walkingAnimationState.start(age);
 		showClawWithoutExtrasAnimationState.start(age);
 		dataTracker.set(ANIMATION_START, age);
 	}
@@ -115,6 +118,8 @@ public class DeerGodEntity extends BossEntity
 		builder.add(LANTERN, true);
 		builder.add(CLAW, false);
 		builder.add(RANGED, false);
+		builder.add(RUNNING, false);
+		builder.add(RUN_ATTACK, (byte)0);
 		builder.add(TELEPORT_TIMER, Integer.MIN_VALUE);
 		builder.add(TELEPORT_COOLDOWN, 200);
 		builder.add(RANGED_COOLDOWN, 100);
@@ -135,7 +140,7 @@ public class DeerGodEntity extends BossEntity
 		goalSelector.add(1, new LanternSlamGoal(this));
 		goalSelector.add(1, new ProjectileGoal(this));
 		goalSelector.add(2, new TeleportToTargetGoal(this));
-		goalSelector.add(2, new ApproachTargetGoal(this, 0.4f));
+		goalSelector.add(2, new ApproachTargetGoal(this, 0.45f));
 		
 		targetSelector.add(0, targetGoal = new BossTargetGoal(this, 16, 200, 0.4f));
 	}
@@ -566,6 +571,16 @@ public class DeerGodEntity extends BossEntity
 	public boolean shouldShowClawWithoutExtras()
 	{
 		return getCurrentAnimation() == SLAM_ANIM || getCurrentAnimation() == SWING_ANIM;
+	}
+	
+	public boolean isRunning()
+	{
+		return dataTracker.get(RUNNING);
+	}
+	
+	public byte getRunAttackState()
+	{
+		return dataTracker.get(RUN_ATTACK);
 	}
 	
 	@Override

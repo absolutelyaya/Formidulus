@@ -5,8 +5,15 @@
 	"name": "Formidulus",
 	"description": "i like spooky month. here's a deer",
 	"authors": [
-		"Absolutelyaya",
-		"Composer: Efefski"
+		"Absolutelyaya"
+	],
+	"contributors": [
+		{
+			"name": "Composer: Efefski",
+			"contact":{
+				"youtube": "https://www.youtube.com/@efefski"
+			}
+		}
 	],
 	"contact": {
 		"homepage": "https://absolutelyaya.neocities.org/",
