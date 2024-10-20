@@ -76,9 +76,10 @@ public class DeerGodEntity extends BossEntity
 	static final byte SLAM_ANIM = 5;
 	static final byte PHASE_TRANSITION_ANIM = 6;
 	static final byte PREPARE_RUN_ATTACK_ANIM = 7;
-	static final byte RUN_ATTACK_CLAW_ANIM = 8;
-	static final byte RUN_ATTACK_LANTERN_ANIM = 9;
-	static final byte RUN_ATTACK_WALL_IMPACT_ANIM = 10;
+	static final byte SIMPLE_CLAW_ATTACK_ANIM = 8;
+	static final byte RUN_ATTACK_CLAW_ANIM = 9;
+	static final byte RUN_ATTACK_LANTERN_ANIM = 10;
+	static final byte RUN_ATTACK_WALL_IMPACT_ANIM = 11;
 	static final byte DEATH_SEQUENCE_ANIM = 69;
 	public static final byte RUN_ATTACK_NONE = 0;
 	public static final byte RUN_ATTACK_CLAW = 1;
@@ -95,6 +96,7 @@ public class DeerGodEntity extends BossEntity
 	public AnimationState showClawAnimationState = new AnimationState();
 	public AnimationState showClawWithoutExtrasAnimationState = new AnimationState();
 	public AnimationState phaseTransitionAnimationState = new AnimationState();
+	public AnimationState simpleClawAttackAnimationState = new AnimationState();
 	public AnimationState prepareRunAttackAnimationState = new AnimationState();
 	public AnimationState runAttackClawAnimationState = new AnimationState();
 	public AnimationState runAttackLanternAnimationState = new AnimationState();
@@ -145,6 +147,7 @@ public class DeerGodEntity extends BossEntity
 		goalSelector.add(0, outOfCombatGoal = new BossOutOfCombatGoal(this, BossOutOfCombatGoal.BEHAVIOR_RESPAWN_AT_ORIGIN));
 		goalSelector.add(0, new TeleportRandomlyGoal(this));
 		goalSelector.add(1, new RunClawAttackGoal(this, 0.45f * 1.75f));
+		goalSelector.add(1, new SimpleClawAttack(this));
 		goalSelector.add(1, new SummonLanternGoal(this));
 		goalSelector.add(1, new LanternSwingGoal(this));
 		goalSelector.add(1, new LanternSlamGoal(this));
@@ -526,6 +529,7 @@ public class DeerGodEntity extends BossEntity
 			case SLAM_ANIM -> slamAnimationState;
 			case SUMMON_LANTERN_ANIM -> summonLanternAnimationState;
 			case PHASE_TRANSITION_ANIM -> phaseTransitionAnimationState;
+			case SIMPLE_CLAW_ATTACK_ANIM -> simpleClawAttackAnimationState;
 			case PREPARE_RUN_ATTACK_ANIM -> prepareRunAttackAnimationState;
 			case RUN_ATTACK_CLAW_ANIM -> runAttackClawAnimationState;
 			case RUN_ATTACK_LANTERN_ANIM -> runAttackLanternAnimationState;
@@ -549,7 +553,9 @@ public class DeerGodEntity extends BossEntity
 	public boolean isNotInAttackAnimation()
 	{
 		byte anim = getCurrentAnimation();
-		return anim != SWING_ANIM && anim != SLAM_ANIM && anim != SUMMON_LANTERN_ANIM;
+		return anim != SWING_ANIM && anim != SLAM_ANIM && anim != SUMMON_LANTERN_ANIM &&
+					   anim != SIMPLE_CLAW_ATTACK_ANIM && anim != PREPARE_RUN_ATTACK_ANIM && anim != RUN_ATTACK_CLAW_ANIM &&
+					   anim != RUN_ATTACK_LANTERN_ANIM;
 	}
 	
 	public boolean shouldEyesGlow()
@@ -589,12 +595,15 @@ public class DeerGodEntity extends BossEntity
 	
 	public boolean shouldApplyLampArmPose()
 	{
-		return getCurrentAnimation() == IDLE_ANIM || getCurrentAnimation() == RUN_ATTACK_CLAW_ANIM || getCurrentAnimation() == PREPARE_RUN_ATTACK_ANIM;
+		byte anim = getCurrentAnimation();
+		return anim == IDLE_ANIM || anim == RUN_ATTACK_CLAW_ANIM ||
+					   anim == PREPARE_RUN_ATTACK_ANIM || anim == SIMPLE_CLAW_ATTACK_ANIM;
 	}
 	
 	public boolean shouldApplyClawPose()
 	{
-		return getCurrentAnimation() != PHASE_TRANSITION_ANIM && getCurrentAnimation() != DEATH_SEQUENCE_ANIM && getCurrentAnimation() != RUN_ATTACK_CLAW_ANIM;
+		byte anim = getCurrentAnimation();
+		return anim != PHASE_TRANSITION_ANIM && anim != DEATH_SEQUENCE_ANIM && anim != RUN_ATTACK_CLAW_ANIM && anim != SIMPLE_CLAW_ATTACK_ANIM;
 	}
 	
 	public boolean shouldShowClawWithoutExtras()
@@ -769,7 +778,7 @@ public class DeerGodEntity extends BossEntity
 	
 	public boolean isReadyToAttack()
 	{
-		return super.isReadyToAttack() && dataTracker.get(SUMMONED) && !isInSequence() && getVanishingPercent() < 0.5f && !isAboutToTeleport() &&
+		return super.isReadyToAttack() && dataTracker.get(SUMMONED) && !isInSequence() && getVanishingPercent() < 0.33f && !isAboutToTeleport() &&
 					   dataTracker.get(SCHEDULED_SPAWNS) == 0 && getRunAttackState() == RUN_ATTACK_NONE;
 	}
 	
@@ -1426,6 +1435,55 @@ public class DeerGodEntity extends BossEntity
 		}
 	}
 	
+	static class SimpleClawAttack extends AnimatedAttackGoal<DeerGodEntity>
+	{
+		public SimpleClawAttack(DeerGodEntity mob)
+		{
+			super(mob, SIMPLE_CLAW_ATTACK_ANIM, 2.6f, IDLE_ANIM);
+		}
+		
+		@Override
+		public boolean canStart()
+		{
+			return mob.hasClaw() && super.canStart() && mob.distanceTo(mob.getTarget()) < 4f && mob.random.nextFloat() < 0.75f;
+		}
+		
+		@Override
+		public boolean shouldContinue()
+		{
+			return super.shouldContinue() && !mob.isInSequence();
+		}
+		
+		@Override
+		public void tick()
+		{
+			super.tick();
+			if(time < 10 && mob.getTarget() != null)
+				mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, mob.getTarget().getEyePos());
+			if(time > 27 && time < 32)
+			{
+				Vec3d offset = new Vec3d(0f, 0f, 1f).rotateY((float)Math.toRadians(-mob.getYaw()));
+				Vec3d expand = new Vec3d(3f, 0f, 2.5f).rotateY((float)Math.toRadians(-mob.getYaw()));
+				Vec3d expand2 = new Vec3d(-3f, 0f, 0f).rotateY((float)Math.toRadians(-mob.getYaw()));
+				List<LivingEntity> hits = mob.getWorld().getNonSpectatingEntities(LivingEntity.class,
+						mob.getBoundingBox().offset(offset).stretch(expand).stretch(expand2));
+				for (LivingEntity hit : hits)
+				{
+					if (hit instanceof IrrlichtEntity || hit instanceof DeerGodEntity)
+						continue;
+					if(hit.damage(DamageSources.get(mob.getWorld(), DamageSources.CLAW, mob), 20f))
+						hit.setVelocity(mob.getRotationVector().multiply(1f, 0f, 1f).normalize().multiply(2f));
+				}
+			}
+		}
+		
+		@Override
+		protected int getAttackCooldown()
+		{
+			return 0;
+		}
+	}
+	
 	static abstract class RunAttackGoal extends AnimatedAttackGoal<DeerGodEntity>
 	{
 		protected final byte type;
@@ -1433,6 +1491,7 @@ public class DeerGodEntity extends BossEntity
 		boolean arrived;
 		int preparationTime, impactTicks;
 		Vec3d start, dir;
+		LivingEntity newTarget;
 		
 		public RunAttackGoal(DeerGodEntity mob, byte attackAnimationId, float duration, byte postAnimationID, byte runAttackType, float speed)
 		{
@@ -1541,6 +1600,7 @@ public class DeerGodEntity extends BossEntity
 		public void stop()
 		{
 			super.stop();
+			newTarget = null;
 			mob.setRunAttackState(RUN_ATTACK_NONE);
 			if(mob.moveControl.isMoving())
 				mob.moveControl.moveTo(mob.getX(), mob.getY(), mob.getZ(), 0f);
