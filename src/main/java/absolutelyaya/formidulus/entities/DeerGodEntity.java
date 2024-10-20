@@ -59,13 +59,13 @@ public class DeerGodEntity extends BossEntity
 	static final TrackedData<Boolean> LANTERN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Boolean> CLAW = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Boolean> RANGED = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-	static final TrackedData<Boolean> RUNNING = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Byte> RUN_ATTACK = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BYTE);
 	static final TrackedData<Integer> TELEPORT_TIMER = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	static final TrackedData<Integer> TELEPORT_COOLDOWN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	static final TrackedData<Integer> RANGED_COOLDOWN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	static final TrackedData<Integer> SCHEDULED_SPAWNS = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	static final TrackedData<Integer> SWARM_TRANSITION_TICKS = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	static final TrackedData<Integer> STRONG_COOLDOWN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	static final TrackedData<Vector3f> NEXT_TELEPORT_DEST = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
 	
 	static final byte UNSUMMONED_POSE = 0;
@@ -75,6 +75,8 @@ public class DeerGodEntity extends BossEntity
 	static final byte SWING_ANIM = 4;
 	static final byte SLAM_ANIM = 5;
 	static final byte PHASE_TRANSITION_ANIM = 6;
+	static final byte RUN_ATTACK_CLAW_ANIM = 7;
+	static final byte RUN_ATTACK_LANTERN_ANIM = 8;
 	static final byte DEATH_SEQUENCE_ANIM = 69;
 	public static final byte RUN_ATTACK_NONE = 0;
 	public static final byte RUN_ATTACK_CLAW = 1;
@@ -91,6 +93,8 @@ public class DeerGodEntity extends BossEntity
 	public AnimationState showClawAnimationState = new AnimationState();
 	public AnimationState showClawWithoutExtrasAnimationState = new AnimationState();
 	public AnimationState phaseTransitionAnimationState = new AnimationState();
+	public AnimationState runAttackClawAnimationState = new AnimationState();
+	public AnimationState runAttackLanternAnimationState = new AnimationState();
 	public AnimationState deathAnimationState = new AnimationState();
 	int deathTime, swingChain, swarmAttack;
 	DamageSource killingBlow;
@@ -119,13 +123,13 @@ public class DeerGodEntity extends BossEntity
 		builder.add(LANTERN, true);
 		builder.add(CLAW, false);
 		builder.add(RANGED, false);
-		builder.add(RUNNING, false);
 		builder.add(RUN_ATTACK, (byte)0);
 		builder.add(TELEPORT_TIMER, Integer.MIN_VALUE);
 		builder.add(TELEPORT_COOLDOWN, 200);
 		builder.add(RANGED_COOLDOWN, 100);
 		builder.add(SCHEDULED_SPAWNS, 0);
 		builder.add(SWARM_TRANSITION_TICKS, 0);
+		builder.add(STRONG_COOLDOWN, 40);
 		builder.add(NEXT_TELEPORT_DEST, getPos().toVector3f());
 	}
 	
@@ -136,6 +140,7 @@ public class DeerGodEntity extends BossEntity
 		goalSelector.add(0, new SwarmGoal(this));
 		goalSelector.add(0, outOfCombatGoal = new BossOutOfCombatGoal(this, BossOutOfCombatGoal.BEHAVIOR_RESPAWN_AT_ORIGIN));
 		goalSelector.add(0, new TeleportRandomlyGoal(this));
+		goalSelector.add(1, new RunClawAttackGoal(this, 0.45f * 1.75f));
 		goalSelector.add(1, new SummonLanternGoal(this));
 		goalSelector.add(1, new LanternSwingGoal(this));
 		goalSelector.add(1, new LanternSlamGoal(this));
@@ -231,6 +236,11 @@ public class DeerGodEntity extends BossEntity
 			dataTracker.set(RANGED, true);
 			triggerMonologueSequence(SequenceTriggerPayload.PROJECTILE_SEQUENCE);
 		}
+		if(hasLivingTarget() && hasClaw())
+		{
+			if(dataTracker.get(STRONG_COOLDOWN) > 0)
+				dataTracker.set(STRONG_COOLDOWN, dataTracker.get(STRONG_COOLDOWN) - (int)(1 + getCooldownBonusSpeed()));
+		}
 	}
 	
 	float getCooldownBonusSpeed()
@@ -320,10 +330,7 @@ public class DeerGodEntity extends BossEntity
 		if(getCurrentAnimation() == PHASE_TRANSITION_ANIM)
 		{
 			if(!hasClaw())
-			{
 				setHasClaw(true);
-				setRunning(true);
-			}
 			if(hasLantern())
 				setHasLantern(false);
 			if(!getAnimationFlag(0) && getCurrentAnimationDuration() >= 0f)
@@ -505,6 +512,8 @@ public class DeerGodEntity extends BossEntity
 			case SLAM_ANIM -> slamAnimationState;
 			case SUMMON_LANTERN_ANIM -> summonLanternAnimationState;
 			case PHASE_TRANSITION_ANIM -> phaseTransitionAnimationState;
+			case RUN_ATTACK_CLAW_ANIM -> runAttackClawAnimationState;
+			case RUN_ATTACK_LANTERN_ANIM -> runAttackLanternAnimationState;
 			case DEATH_SEQUENCE_ANIM -> deathAnimationState;
 		};
 	}
@@ -565,12 +574,12 @@ public class DeerGodEntity extends BossEntity
 	
 	public boolean shouldApplyLampArmPose()
 	{
-		return getCurrentAnimation() == IDLE_ANIM;
+		return getCurrentAnimation() == IDLE_ANIM || getCurrentAnimation() == RUN_ATTACK_CLAW_ANIM;
 	}
 	
 	public boolean shouldApplyClawPose()
 	{
-		return getCurrentAnimation() != PHASE_TRANSITION_ANIM && getCurrentAnimation() != DEATH_SEQUENCE_ANIM;
+		return getCurrentAnimation() != PHASE_TRANSITION_ANIM && getCurrentAnimation() != DEATH_SEQUENCE_ANIM && getCurrentAnimation() != RUN_ATTACK_CLAW_ANIM;
 	}
 	
 	public boolean shouldShowClawWithoutExtras()
@@ -578,24 +587,34 @@ public class DeerGodEntity extends BossEntity
 		return getCurrentAnimation() == SLAM_ANIM || getCurrentAnimation() == SWING_ANIM;
 	}
 	
-	public void setRunning(boolean b)
+	public boolean shouldRun()
 	{
-		dataTracker.set(RUNNING, b);
-	}
-	
-	public boolean isRunning()
-	{
-		return dataTracker.get(RUNNING);
+		return hasClaw();
 	}
 	
 	public boolean shouldPlayRunAnimation()
 	{
-		return isRunning() && moveControl.isMoving();
+		return shouldRun() && getVelocity().length() > 0.1f;
 	}
 	
 	public byte getRunAttackState()
 	{
 		return dataTracker.get(RUN_ATTACK);
+	}
+	
+	public void setRunAttackState(byte attackType)
+	{
+		dataTracker.set(RUN_ATTACK, (byte)(attackType % 3));
+	}
+	
+	public int getStrongAttackCooldown()
+	{
+		return dataTracker.get(STRONG_COOLDOWN);
+	}
+	
+	public void setStrongCooldown(int ticks)
+	{
+		dataTracker.set(STRONG_COOLDOWN, ticks);
 	}
 	
 	@Override
@@ -718,7 +737,7 @@ public class DeerGodEntity extends BossEntity
 	public boolean isReadyToAttack()
 	{
 		return super.isReadyToAttack() && dataTracker.get(SUMMONED) && !isInSequence() && getVanishingPercent() < 0.5f && !isAboutToTeleport() &&
-					   dataTracker.get(SCHEDULED_SPAWNS) == 0;
+					   dataTracker.get(SCHEDULED_SPAWNS) == 0 && getRunAttackState() == RUN_ATTACK_NONE;
 	}
 	
 	public boolean isReadyToTeleport()
@@ -1043,7 +1062,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean canStart()
 		{
-			return !mob.hasLantern() && super.canStart();
+			return !mob.hasLantern() && super.canStart() && (mob.random.nextFloat() < 0.33f || !mob.hasClaw());
 		}
 		
 		@Override
@@ -1123,7 +1142,7 @@ public class DeerGodEntity extends BossEntity
 			failed = mob.getTarget().getPos().distanceTo(new Vec3d(mob.dataTracker.get(ORIGIN))) > 32f || ++time > 200;
 			if(mob.distanceTo(mob.getTarget()) <= 3f || failed)
 				return;
-			mob.navigation.startMovingTo(mob.getTarget(), speed * (mob.isRunning() ? 1.5f : 1f));
+			mob.navigation.startMovingTo(mob.getTarget(), speed * (mob.shouldRun() ? 1.5f : 1f));
 			//mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, mob.getTarget().getEyePos());
 		}
 		
@@ -1199,7 +1218,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean canStart()
 		{
-			return super.canStart() && ((!mob.hasLantern() && mob.getTarget() != null && mob.distanceTo(mob.getTarget()) < 5) ||
+			return super.canStart() && ((!mob.hasClaw() && !mob.hasLantern() && mob.getTarget() != null && mob.distanceTo(mob.getTarget()) < 5) ||
 												(mob.random.nextFloat() < (isCanReachTarget() ? 0.01f : 0.05f)));
 		}
 		
@@ -1371,6 +1390,165 @@ public class DeerGodEntity extends BossEntity
 		{
 			super.stop();
 			mob.swarmAttackPending = false;
+		}
+	}
+	
+	static abstract class RunAttackGoal extends AnimatedAttackGoal<DeerGodEntity>
+	{
+		protected final byte type;
+		protected final float speed;
+		boolean arrived;
+		int preparationTime;
+		Vec3d start, dir;
+		
+		public RunAttackGoal(DeerGodEntity mob, byte attackAnimationId, float duration, byte postAnimationID, byte runAttackType, float speed)
+		{
+			super(mob, attackAnimationId, duration, postAnimationID);
+			this.type = runAttackType;
+			this.speed = speed;
+			setControls(EnumSet.of(Control.MOVE, Control.TARGET, Control.LOOK));
+		}
+		
+		@Override
+		public boolean canStart()
+		{
+			return super.canStart() && mob.shouldRun() && mob.getStrongAttackCooldown() <= 0;
+		}
+		
+		@Override
+		protected boolean shouldImmediatelyStartAttackAnim()
+		{
+			return false;
+		}
+		
+		@Override
+		public void start()
+		{
+			super.start();
+			if(mob.targetGoal.getAllTargets().size() > 1)
+			{
+				for (int i = 0; i < 4; i++)
+				{
+					mob.targetGoal.randomizeTarget();
+					//check if target is obstructed
+					if(mob.getTarget() != null &&
+							   mob.getWorld().raycast(new RaycastContext(mob.getPos(), mob.getTarget().getPos(),
+									   RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, mob)).getType().equals(HitResult.Type.MISS))
+						break;
+				}
+			}
+			if(mob.getTarget() == null)
+			{
+				interrupt();
+				return;
+			}
+			dir = mob.getTarget().getPos().subtract(mob.getPos()).normalize();
+			mob.setRunAttackState(type);
+			arrived = false;
+			preparationTime = 20;
+			start = mob.getPos();
+		}
+		
+		@Override
+		public void tick()
+		{
+			if(mob.getTarget() == null)
+			{
+				interrupt();
+				return;
+			}
+			if(preparationTime-- > 0)
+			{
+				mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, mob.getTarget().getPos());
+				return;
+			}
+			if(arrived)
+			{
+				super.tick();
+				tickAttackAnim();
+				return;
+			}
+			Vec3d dest = mob.getPos().add(dir);
+			mob.getMoveControl().moveTo(dest.x, dest.y, dest.z, speed);
+			if(mob.getWorld().raycast(new RaycastContext(mob.getPos().add(0f, 1.5f, 0f), dest.add(0f, 1.5f, 0f),
+					RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, mob)).getType().equals(HitResult.Type.BLOCK))
+			{
+				interrupt(); //TODO: wall impact animation and short stun
+				return;
+			}
+			if(mob.distanceTo(target) < 4f || mob.getPos().distanceTo(start) > 15f)
+			{
+				arrived = true;
+				mob.setAnimation(attackAnimationId);
+				onArrive();
+			}
+		}
+		
+		protected void onArrive()
+		{
+			mob.getMoveControl().moveTo(mob.getX(), mob.getY(), mob.getZ(), 0f);
+		}
+		
+		@Override
+		public void stop()
+		{
+			super.stop();
+			mob.setRunAttackState(RUN_ATTACK_NONE);
+			if(mob.moveControl.isMoving())
+				mob.moveControl.moveTo(mob.getX(), mob.getY(), mob.getZ(), 0f);
+		}
+		
+		protected abstract void tickAttackAnim();
+	}
+	
+	static class RunClawAttackGoal extends RunAttackGoal
+	{
+		public RunClawAttackGoal(DeerGodEntity mob, float speed)
+		{
+			super(mob, RUN_ATTACK_CLAW_ANIM, 1.9f, IDLE_ANIM, RUN_ATTACK_CLAW, speed);
+		}
+		
+		@Override
+		public boolean canStart()
+		{
+			return super.canStart() && mob.hasClaw();
+		}
+		
+		@Override
+		protected void tickAttackAnim()
+		{
+			if(time > 11 && time < 14)
+			{
+				List<LivingEntity> hits = mob.getWorld().getNonSpectatingEntities(LivingEntity.class,
+						mob.getBoundingBox().stretch(mob.getRotationVector().x * 4f, 0f, mob.getRotationVector().z * 4f));
+				for (LivingEntity hit : hits)
+				{
+					if (hit instanceof IrrlichtEntity || hit instanceof DeerGodEntity)
+						continue;
+					if(hit.damage(DamageSources.get(mob.getWorld(), DamageSources.CLAW, mob), 15f))
+						hit.setVelocity(mob.getRotationVector().multiply(1f, 0f, 1f).normalize().multiply(2f).add(0f, 1.5f, 0f));
+				}
+			}
+		}
+		
+		@Override
+		protected void onArrive()
+		{
+			Vec3d dest = mob.getPos().add(dir);
+			mob.moveControl.moveTo(dest.x, dest.y, dest.z, 0f);
+		}
+		
+		@Override
+		public void stop()
+		{
+			super.stop();
+			mob.setStrongCooldown(200 - mob.getWorld().getDifficulty().getId() * 15);
+		}
+		
+		@Override
+		protected int getAttackCooldown()
+		{
+			return 0;
 		}
 	}
 }

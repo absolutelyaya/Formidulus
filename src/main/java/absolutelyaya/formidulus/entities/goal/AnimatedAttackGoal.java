@@ -7,7 +7,7 @@ public abstract class AnimatedAttackGoal<T extends AnimatedHostileEntity> extend
 {
 	protected final T mob;
 	final float duration;
-	final byte attackAnimationId, postAnimationID;
+	protected final byte attackAnimationId, postAnimationID;
 	protected int time;
 	protected LivingEntity target;
 	
@@ -30,7 +30,8 @@ public abstract class AnimatedAttackGoal<T extends AnimatedHostileEntity> extend
 	{
 		super.start();
 		time = 0;
-		mob.setAnimation(attackAnimationId);
+		if(shouldImmediatelyStartAttackAnim())
+			mob.setAnimation(attackAnimationId);
 		target = mob.getTarget();
 	}
 	
@@ -60,17 +61,20 @@ public abstract class AnimatedAttackGoal<T extends AnimatedHostileEntity> extend
 		return time <= duration * 20 && !(target == null || target.isDead() || target.isRemoved());
 	}
 	
+	protected boolean shouldImmediatelyStartAttackAnim()
+	{
+		return true;
+	}
+	
 	protected abstract int getAttackCooldown();
 	
 	@Override
 	public void stop()
 	{
 		super.stop();
+		if(mob.getCurrentAnimation() == attackAnimationId)
+			mob.setAnimation(postAnimationID);
 		if(!wasInterrupted())
-		{
-			if(mob.getCurrentAnimation() == attackAnimationId)
-				mob.setAnimation(postAnimationID);
 			mob.setAttackCooldown(getAttackCooldown());
-		}
 	}
 }

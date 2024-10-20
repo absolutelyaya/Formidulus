@@ -17,6 +17,7 @@ public class BossTargetGoal extends Goal
 	final float range, switchChance;
 	final Map<LivingEntity, Float> knownTargets = new HashMap<>();
 	int lastAttackedTime, lastTargetDamagedTime, targetSwitchTimer;
+	LivingEntity lastTarget;
 	
 	@SafeVarargs
 	public BossTargetGoal(BossEntity mob, float range, int switchInterval, float switchChance, Class<LivingEntity>... untargettableTypes)
@@ -62,8 +63,8 @@ public class BossTargetGoal extends Goal
 		if(curTarget != null)
 		{
 			if(!isTargetValid(curTarget))
-				mob.setTarget(null);
-			else
+				mob.setTarget(curTarget = null);
+			else if(!knownTargets.containsKey(curTarget))
 				knownTargets.put(curTarget, getStartPriority(curTarget));
 		}
 		if(knownTargets.isEmpty())
@@ -77,7 +78,13 @@ public class BossTargetGoal extends Goal
 		else if((targetSwitchTimer <= 0))
 		{
 			if(mob.getRandom().nextFloat() <= switchChance)
-				mob.setTarget(getBestTarget());
+			{
+				LivingEntity bestTarget = getBestTarget();
+				if(bestTarget != null && knownTargets.size() > 1 && bestTarget.equals(lastTarget))
+					randomizeTarget();
+				else
+					mob.setTarget(bestTarget);
+			}
 			targetSwitchTimer = switchInterval;
 		}
 	}
@@ -95,6 +102,8 @@ public class BossTargetGoal extends Goal
 	
 	boolean isTargetValid(LivingEntity living)
 	{
+		if(living instanceof PlayerEntity player && player.isCreative())
+			return false;
 		return !(living == null || living.isDead() || living.isRemoved() || living.isSpectator()) && living.canTakeDamage() && mob.distanceTo(living) < range * 2;
 	}
 	
@@ -124,11 +133,17 @@ public class BossTargetGoal extends Goal
 		return bestTarget;
 	}
 	
+	public void randomizeTarget()
+	{
+		LivingEntity target = getRandomTarget();
+		mob.setTarget(target);
+	}
+	
 	public LivingEntity getRandomTarget()
 	{
 		if(knownTargets.isEmpty())
 			return null;
-		return knownTargets.keySet().toArray(new LivingEntity[0])[mob.getRandom().nextInt(knownTargets.size())];
+		return getAllTargets().get(mob.getRandom().nextInt(knownTargets.size()));
 	}
 	
 	public List<LivingEntity> getAllTargets()
