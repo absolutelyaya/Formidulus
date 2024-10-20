@@ -75,8 +75,10 @@ public class DeerGodEntity extends BossEntity
 	static final byte SWING_ANIM = 4;
 	static final byte SLAM_ANIM = 5;
 	static final byte PHASE_TRANSITION_ANIM = 6;
-	static final byte RUN_ATTACK_CLAW_ANIM = 7;
-	static final byte RUN_ATTACK_LANTERN_ANIM = 8;
+	static final byte PREPARE_RUN_ATTACK_ANIM = 7;
+	static final byte RUN_ATTACK_CLAW_ANIM = 8;
+	static final byte RUN_ATTACK_LANTERN_ANIM = 9;
+	static final byte RUN_ATTACK_WALL_IMPACT_ANIM = 10;
 	static final byte DEATH_SEQUENCE_ANIM = 69;
 	public static final byte RUN_ATTACK_NONE = 0;
 	public static final byte RUN_ATTACK_CLAW = 1;
@@ -93,8 +95,10 @@ public class DeerGodEntity extends BossEntity
 	public AnimationState showClawAnimationState = new AnimationState();
 	public AnimationState showClawWithoutExtrasAnimationState = new AnimationState();
 	public AnimationState phaseTransitionAnimationState = new AnimationState();
+	public AnimationState prepareRunAttackAnimationState = new AnimationState();
 	public AnimationState runAttackClawAnimationState = new AnimationState();
 	public AnimationState runAttackLanternAnimationState = new AnimationState();
+	public AnimationState runAttackWallImpactAnimationState = new AnimationState();
 	public AnimationState deathAnimationState = new AnimationState();
 	int deathTime, swingChain, swarmAttack;
 	DamageSource killingBlow;
@@ -299,19 +303,7 @@ public class DeerGodEntity extends BossEntity
 			{
 				setAnimationFlag(2, true);
 				Vec3d impactOffset = new Vec3d(0.5, 0, 3).rotateY((float)Math.toRadians(-getYaw()));
-				for (int i = 0; i < 32; i++)
-				{
-					Vec3d pos = getPos().add(impactOffset).addRandom(random, 0.5f);
-					Vec3d vel = Vec3d.ZERO.addRandom(random, 0.75f);
-					vel = new Vec3d(vel.x, Math.abs(vel.y), vel.z);
-					getWorld().addParticle(ParticleTypes.FLAME, pos.x, pos.y, pos.z, vel.x, vel.y, vel.z);
-				}
-				for (int i = 0; i < 64; i++)
-				{
-					Vec3d pos = getPos().add(0f, 0.75f, 0f).add(impactOffset).addRandom(random, 1.5f);
-					getWorld().addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.LANTERN.getDefaultState()),
-							pos.x, pos.y, pos.z, 0, 0, 0);
-				}
+				breakLanternEffect(impactOffset);
 				for (int i = 0; i < (hasClaw() ? 6 : 3); i++) //increase in second phase
 				{
 					Vec3d vel = Vec3d.ZERO.addRandom(random, 1.5f);
@@ -323,8 +315,6 @@ public class DeerGodEntity extends BossEntity
 					funke.setLifetime(300 + (int)(random.nextFloat() * 50));
 					getWorld().spawnEntity(funke);
 				}
-				playSound(SoundEvents.BLOCK_VAULT_OPEN_SHUTTER, 0.8f, 0.6f);
-				playSound(SoundEvents.BLOCK_VAULT_BREAK, 5f, 0.5f);
 			}
 		}
 		if(getCurrentAnimation() == PHASE_TRANSITION_ANIM)
@@ -388,6 +378,11 @@ public class DeerGodEntity extends BossEntity
 			if(!getWorld().isClient && getCurrentAnimationDuration() >= 18.05f)
 				setAnimation(IDLE_ANIM);
 		}
+		if(getCurrentAnimation() == RUN_ATTACK_WALL_IMPACT_ANIM && hasLantern())
+		{
+			setHasLantern(false);
+			breakLanternEffect(new Vec3d(1, 0, 0).rotateY((float)Math.toRadians(-getYaw())));
+		}
 		//if(getCurrentAnimation() == DEATH_SEQUENCE_ANIM)
 		//	applyReverence(20f - getCurrentAnimationDuration());
 		//TODO: figure out reverence focusing for death sequence
@@ -417,6 +412,25 @@ public class DeerGodEntity extends BossEntity
 				}
 			}
 		}
+	}
+	
+	void breakLanternEffect(Vec3d offset)
+	{
+		for (int i = 0; i < 32; i++)
+		{
+			Vec3d pos = getPos().add(offset).addRandom(random, 0.5f);
+			Vec3d vel = Vec3d.ZERO.addRandom(random, 0.75f);
+			vel = new Vec3d(vel.x, Math.abs(vel.y), vel.z);
+			getWorld().addParticle(ParticleTypes.FLAME, pos.x, pos.y, pos.z, vel.x, vel.y, vel.z);
+		}
+		for (int i = 0; i < 64; i++)
+		{
+			Vec3d pos = getPos().add(0f, 0.75f, 0f).add(offset).addRandom(random, 1.5f);
+			getWorld().addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.LANTERN.getDefaultState()),
+					pos.x, pos.y, pos.z, 0, 0, 0);
+		}
+		playSound(SoundEvents.BLOCK_VAULT_OPEN_SHUTTER, 0.8f, 0.6f);
+		playSound(SoundEvents.BLOCK_VAULT_BREAK, 5f, 0.5f);
 	}
 	
 	void spawnVanishingParticles(int count, Vec3d origin)
@@ -512,6 +526,7 @@ public class DeerGodEntity extends BossEntity
 			case SLAM_ANIM -> slamAnimationState;
 			case SUMMON_LANTERN_ANIM -> summonLanternAnimationState;
 			case PHASE_TRANSITION_ANIM -> phaseTransitionAnimationState;
+			case PREPARE_RUN_ATTACK_ANIM -> prepareRunAttackAnimationState;
 			case RUN_ATTACK_CLAW_ANIM -> runAttackClawAnimationState;
 			case RUN_ATTACK_LANTERN_ANIM -> runAttackLanternAnimationState;
 			case DEATH_SEQUENCE_ANIM -> deathAnimationState;
@@ -574,7 +589,7 @@ public class DeerGodEntity extends BossEntity
 	
 	public boolean shouldApplyLampArmPose()
 	{
-		return getCurrentAnimation() == IDLE_ANIM || getCurrentAnimation() == RUN_ATTACK_CLAW_ANIM;
+		return getCurrentAnimation() == IDLE_ANIM || getCurrentAnimation() == RUN_ATTACK_CLAW_ANIM || getCurrentAnimation() == PREPARE_RUN_ATTACK_ANIM;
 	}
 	
 	public boolean shouldApplyClawPose()
@@ -615,6 +630,24 @@ public class DeerGodEntity extends BossEntity
 	public void setStrongCooldown(int ticks)
 	{
 		dataTracker.set(STRONG_COOLDOWN, ticks);
+	}
+	
+	@Override
+	public boolean shouldSpawnSprintingParticles()
+	{
+		return shouldPlayRunAnimation();
+	}
+	
+	@Override
+	protected void spawnSprintingParticles()
+	{
+		super.spawnSprintingParticles();
+		if(getRunAttackState() == RUN_ATTACK_CLAW)
+		{
+			Vec3d pos = getPos().subtract(new Vec3d(1, 0, 1.5).rotateY((float)Math.toRadians(-getYaw())))
+								.add(Vec3d.ZERO.addRandom(random, 1f).multiply(1f, 0, 1f));
+			getWorld().addParticle(ParticleTypes.CRIT, pos.x, pos.y, pos.z, 0f, 1f + random.nextFloat() * 0.15f, 0f);
+		}
 	}
 	
 	@Override
@@ -1398,7 +1431,7 @@ public class DeerGodEntity extends BossEntity
 		protected final byte type;
 		protected final float speed;
 		boolean arrived;
-		int preparationTime;
+		int preparationTime, impactTicks;
 		Vec3d start, dir;
 		
 		public RunAttackGoal(DeerGodEntity mob, byte attackAnimationId, float duration, byte postAnimationID, byte runAttackType, float speed)
@@ -1447,11 +1480,22 @@ public class DeerGodEntity extends BossEntity
 			arrived = false;
 			preparationTime = 20;
 			start = mob.getPos();
+			mob.setAnimation(PREPARE_RUN_ATTACK_ANIM);
 		}
 		
 		@Override
 		public void tick()
 		{
+			if(impactTicks > 0)
+			{
+				if(--impactTicks == 0)
+				{
+					if(mob.getCurrentAnimation() == RUN_ATTACK_WALL_IMPACT_ANIM)
+						mob.setAnimation(IDLE_ANIM);
+					interrupt();
+				}
+				return;
+			}
 			if(mob.getTarget() == null)
 			{
 				interrupt();
@@ -1460,6 +1504,8 @@ public class DeerGodEntity extends BossEntity
 			if(preparationTime-- > 0)
 			{
 				mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, mob.getTarget().getPos());
+				if(preparationTime == 0 && mob.getCurrentAnimation() == PREPARE_RUN_ATTACK_ANIM)
+					mob.setAnimation(IDLE_ANIM);
 				return;
 			}
 			if(arrived)
@@ -1473,7 +1519,9 @@ public class DeerGodEntity extends BossEntity
 			if(mob.getWorld().raycast(new RaycastContext(mob.getPos().add(0f, 1.5f, 0f), dest.add(0f, 1.5f, 0f),
 					RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, mob)).getType().equals(HitResult.Type.BLOCK))
 			{
-				interrupt(); //TODO: wall impact animation and short stun
+				impactTicks = 40;
+				mob.setAnimation(RUN_ATTACK_WALL_IMPACT_ANIM);
+				mob.getMoveControl().moveTo(mob.getX(), mob.getY(), mob.getZ(), 0f);
 				return;
 			}
 			if(mob.distanceTo(target) < 4f || mob.getPos().distanceTo(start) > 15f)
