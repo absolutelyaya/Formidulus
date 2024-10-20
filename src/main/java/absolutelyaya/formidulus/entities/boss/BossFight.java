@@ -22,22 +22,25 @@ public abstract class BossFight
 	protected final List<BossEntity> bossEntities = new ArrayList<>();
 	
 	protected int phase;
-	protected List<ServerPlayerEntity> participants;
+	protected List<ServerPlayerEntity> participants = new ArrayList<>();
 	protected int playerCheckIntervall = 20;
 	protected int playerCheckRange = 48;
 	
 	int playerCheckTimer;
 	String lastMusicKey;
+	boolean playerWin;
 	
-	protected BossFight(World world, BossType type, BlockPos origin, UUID id)
+	protected BossFight(World world, BossType type, BlockPos origin, UUID id, boolean continuation)
 	{
 		this.world = world;
 		this.type = type;
 		this.origin = origin;
 		this.fightID = id;
 		
-		participants = world.getEntitiesByType(TypeFilter.instanceOf(ServerPlayerEntity.class), new Box(origin).expand(playerCheckRange),
-				i -> !i.isSpectator() && i.isPartOfGame());
+		if(!continuation) //if continuation, all players should be counted as late so music intros don't repeat
+			participants = world.getEntitiesByType(TypeFilter.instanceOf(ServerPlayerEntity.class), new Box(origin).expand(playerCheckRange),
+					i -> !i.isSpectator() && i.isPartOfGame());
+		playerCheckTimer = playerCheckIntervall;
 	}
 	
 	public void registerBossEntity(BossEntity boss)
@@ -108,14 +111,21 @@ public abstract class BossFight
 	
 	public void joinFight(ServerPlayerEntity player)
 	{
+		if(participants.contains(player))
+			return;
 		participants.add(player);
 		ServerPlayNetworking.send(player, new BossMusicUpdatePayload(type.id(), getCurMusicKey(), true));
 	}
 	
 	public void leaveFight(ServerPlayerEntity player)
 	{
-		participants.remove(player);
-		ServerPlayNetworking.send(player, new BossMusicUpdatePayload(type.id(), "cancel"));
+		if(participants.remove(player))
+			ServerPlayNetworking.send(player, new BossMusicUpdatePayload(type.id(), "cancel"));
+	}
+	
+	public List<ServerPlayerEntity> getAllParticipants()
+	{
+		return participants;
 	}
 	
 	public void interrupt(boolean removeRemainingBossEntities)
@@ -123,6 +133,11 @@ public abstract class BossFight
 		if(removeRemainingBossEntities)
 			bossEntities.forEach(BossEntity::discard);
 		end();
+	}
+	
+	public void markWon()
+	{
+		playerWin = true;
 	}
 	
 	void end()

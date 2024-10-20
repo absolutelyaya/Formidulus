@@ -80,7 +80,7 @@ public class PumpkinProjectile extends ThrownItemEntity
 			for (int i = 0; i < 16; i++)
 			{
 				Vec3d vel = Vec3d.ZERO.addRandom(random, 0.2f);
-				getWorld().addParticle(ParticleTypes.FLAME, getX(), getY(), getZ(), vel.x, vel.y, vel.z);
+				getWorld().addParticle(ParticleTypes.LAVA, getX(), getY(), getZ(), vel.x, vel.y, vel.z);
 			}
 			getWorld().playSound(null, getBlockPos(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.HOSTILE, 1f, 1f);
 		}

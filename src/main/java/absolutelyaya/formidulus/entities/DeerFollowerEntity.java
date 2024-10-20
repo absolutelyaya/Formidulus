@@ -84,7 +84,7 @@ public class DeerFollowerEntity extends HostileEntity
 		goalSelector.add(0, new MeleeAttackGoal(this, 0.4f, false));
 		goalSelector.add(1, new SearchForAltarGoal(this, 0.3f));
 		goalSelector.add(1, new PatrolAltarGoal(this, 0.25f));
-		goalSelector.add(1, new WorshipGoal(this, 0.4f));
+		goalSelector.add(1, new WorshipGoal(this, 0.3f));
 		goalSelector.add(3, new ReadBookGoal(this, 0.01f));
 		goalSelector.add(3, new HumGoal(this, 0.001f));
 		goalSelector.add(4, new LookAroundGoal(this));
@@ -534,7 +534,7 @@ public class DeerFollowerEntity extends HostileEntity
 				if(!mob.navigation.isIdle())
 					return;
 				Vec3d dest = altar.add(mob.getPos().subtract(altar).multiply(1f, 0f, 1f).normalize().multiply(2f + mob.random.nextFloat()));
-				if(!mob.navigation.startMovingTo(dest.x, dest.y, dest.z, speed))
+				if(!mob.navigation.startMovingTo(dest.x, dest.y, dest.z, speed + (mob.isHasMask() ? 0f : 0.15f)))
 					stop();
 				return;
 			}

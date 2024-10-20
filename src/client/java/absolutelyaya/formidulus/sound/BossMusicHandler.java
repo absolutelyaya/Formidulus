@@ -22,6 +22,8 @@ public class BossMusicHandler
 	public void startTrack(Identifier bossId, String musicKey, boolean late)
 	{
 		this.late = late;
+		if(late)
+			introTicks = 0;
 		try
 		{
 			BossType type = BossType.fromId(bossId);
@@ -129,6 +131,8 @@ public class BossMusicHandler
 			{
 				mainInstance.startFadeIn();
 				manager.play(mainInstance);
+				if(late)
+					late = false;
 			}
 			if(current.hasOutro())
 				outroInstance = new FadingMusicInstance(current.outroSound, current.fadeIn, 0f, false);
@@ -139,6 +143,8 @@ public class BossMusicHandler
 	{
 		soundInstances.forEach(manager::stop);
 		soundInstances.clear();
+		last = current = next = null;
+		introTicks = outroTicks = 0;
 	}
 	
 	public boolean isPlayingMusic()

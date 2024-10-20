@@ -1,6 +1,7 @@
 package absolutelyaya.formidulus.mixin;
 
 import absolutelyaya.formidulus.Formidulus;
+import absolutelyaya.formidulus.entities.boss.BossFightManager;
 import absolutelyaya.formidulus.item.components.DamageTypeComponent;
 import absolutelyaya.formidulus.registries.DataComponentRegistry;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -11,11 +12,14 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity
@@ -38,5 +42,12 @@ public abstract class PlayerEntityMixin extends LivingEntity
 				Formidulus.LOGGER.warn("DamageTypeComponent -> Tried to use non-existent damage type '{}' (Item: {})", component.getTypeId(), getWeaponStack());
 		}
 		return original.call(instance, attacker);
+	}
+	
+	@Inject(method = "onDeath", at = @At("HEAD"))
+	void onDeath(DamageSource damageSource, CallbackInfo ci)
+	{
+		if((Object)this instanceof ServerPlayerEntity player)
+			BossFightManager.INSTANCE.leaveAllFights(player);
 	}
 }

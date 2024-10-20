@@ -139,6 +139,6 @@ public class BossTargetGoal extends Goal
 	
 	public boolean isHasNoTargets()
 	{
-		return knownTargets.isEmpty();
+		return getAllTargets().isEmpty();
 	}
 }

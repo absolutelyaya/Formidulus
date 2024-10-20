@@ -10,7 +10,9 @@ import absolutelyaya.formidulus.rendering.block.DeerSkullBlockEntityRenderer;
 import absolutelyaya.formidulus.rendering.entity.*;
 import absolutelyaya.formidulus.sound.BossMusicHandler;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
@@ -66,5 +68,7 @@ public class FormidulusClient implements ClientModInitializer
 			if(!client.isPaused())
 				bossMusicHandler.tick();
 		});
+		
+		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> bossMusicHandler.stopAll());
 	}
 }

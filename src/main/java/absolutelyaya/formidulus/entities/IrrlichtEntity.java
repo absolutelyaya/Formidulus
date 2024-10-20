@@ -106,7 +106,7 @@ public class IrrlichtEntity extends MobEntity
 	
 	void tickProjectile()
 	{
-		setVelocity(0f, 0.15 * getMovementSpeed() * (lifetime / 100f), 0f);
+		setVelocity(0f, 0.4 * (lifetime / 100f), 0f);
 		if(lifetime == 1)
 		{
 			Vec3d checkPos = getPos();

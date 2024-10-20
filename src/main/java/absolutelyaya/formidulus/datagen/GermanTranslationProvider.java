@@ -108,7 +108,7 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add("dialogue.deer.death1", "GENUG!");
 		builder.add("dialogue.deer.death2", "Dieser Körper ist zu gebrechlich.");
 		builder.add("dialogue.deer.death3", "Gut aussehend; aber nicht zum kämpfen gemacht.");
-		builder.add("dialogue.deer.death4", "Sobald ich einen ausreichenden Körper finde,");
+		builder.add("dialogue.deer.death4", "Sobald ich etwas geeigneteres finde,");
 		builder.add("dialogue.deer.death5", "werde ich dich vernichten.");
 		
 		builder.add("dialogue.deer.what", "Have you no Maidens ?");

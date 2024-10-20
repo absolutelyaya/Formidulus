@@ -261,13 +261,13 @@ public class DeerGodModel extends SinglePartEntityModel<DeerGodEntity>
 	public void setAngles(DeerGodEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
 	{
 		getPart().traverse().forEach(ModelPart::resetTransform);
-		boolean running = entity.isRunning();
+		boolean running = entity.shouldPlayRunAnimation();
 		if(entity.idleAnimationState.isRunning())
 		{
 			if(running)
 				blendMovement(DeerGodAnimations.idle, DeerGodAnimations.run, limbSwing, ageInTicks, limbSwingAmount, 1f, 3f, 5f);
 			else
-				blendMovement(DeerGodAnimations.idle, DeerGodAnimations.walk, limbSwing, ageInTicks, limbSwingAmount, 1f, 4f, 5f);
+				blendMovement(DeerGodAnimations.idle, DeerGodAnimations.walk, limbSwing, ageInTicks, limbSwingAmount, 1f, 3f, 5f);
 		}
 		updateAnimation(entity.unsummonedPoseAnimationState, DeerGodAnimations.unsummonedPose, ageInTicks);
 		updateAnimation(entity.spawnSequenceAnimationState, DeerGodAnimations.spawnSequence, ageInTicks);

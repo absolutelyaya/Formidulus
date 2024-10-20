@@ -1,6 +1,7 @@
 package absolutelyaya.formidulus.entities.boss;
 
 import absolutelyaya.formidulus.Formidulus;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.*;
@@ -46,9 +47,10 @@ public class BossFightManager
 		knownPersistentBossPositions.get(ref.type()).put(ref.pos(), ref);
 	}
 	
-	public void beginFight(BossFight sender)
+	public <T extends BossFight> T beginFight(T sender)
 	{
 		newFights.add(sender);
+		return sender;
 	}
 	
 	public void endFight(BossFight sender)
@@ -62,5 +64,10 @@ public class BossFightManager
 			if(type.getValue().containsKey(pos))
 				return Optional.of(type.getKey());
 		return Optional.empty();
+	}
+	
+	public void leaveAllFights(ServerPlayerEntity player)
+	{
+		activeFights.values().forEach(f -> f.leaveFight(player));
 	}
 }

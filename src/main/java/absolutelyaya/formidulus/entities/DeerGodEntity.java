@@ -97,6 +97,7 @@ public class DeerGodEntity extends BossEntity
 	PlayerEntity killer;
 	float rangedDamageTaken;
 	boolean swarmAttackPending;
+	DeerBossFight bossFight;
 	
 	public DeerGodEntity(EntityType<? extends BossEntity> entityType, World world)
 	{
@@ -195,7 +196,7 @@ public class DeerGodEntity extends BossEntity
 				setAnimation(SPAWN_SEQUENCE_ANIM);
 				triggerMonologueSequence(SequenceTriggerPayload.SPAWN_SEQUENCE);
 				dataTracker.set(SUMMONED, true);
-				BossFightManager.INSTANCE.beginFight(new DeerBossFight(this));
+				bossFight = BossFightManager.INSTANCE.beginFight(new DeerBossFight(this, false));
 			}
 			else if(age % 300 == 0 && getAllNearbyCultists().size() < getMaxCultists())
 				spawnCultist(new Vec2f(3f, 8f), true);
@@ -319,7 +320,10 @@ public class DeerGodEntity extends BossEntity
 		if(getCurrentAnimation() == PHASE_TRANSITION_ANIM)
 		{
 			if(!hasClaw())
+			{
 				setHasClaw(true);
+				setRunning(true);
+			}
 			if(hasLantern())
 				setHasLantern(false);
 			if(!getAnimationFlag(0) && getCurrentAnimationDuration() >= 0f)
@@ -454,8 +458,9 @@ public class DeerGodEntity extends BossEntity
 	{
 		if(getWorld().isClient)
 			return;
-		getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), getBoundingBox().expand(16), i -> true)
-				.forEach(p -> p.addStatusEffect(new StatusEffectInstance(StatusEffectRegistry.DARKNESS, duration, 0, false, false, true)));
+		bossFight.getAllParticipants()
+				.forEach(p -> p.addStatusEffect(new StatusEffectInstance(StatusEffectRegistry.DARKNESS, duration, 0,
+						false, false, true)));
 	}
 	
 	@Override
@@ -573,9 +578,19 @@ public class DeerGodEntity extends BossEntity
 		return getCurrentAnimation() == SLAM_ANIM || getCurrentAnimation() == SWING_ANIM;
 	}
 	
+	public void setRunning(boolean b)
+	{
+		dataTracker.set(RUNNING, b);
+	}
+	
 	public boolean isRunning()
 	{
 		return dataTracker.get(RUNNING);
+	}
+	
+	public boolean shouldPlayRunAnimation()
+	{
+		return isRunning() && moveControl.isMoving();
 	}
 	
 	public byte getRunAttackState()
@@ -593,7 +608,8 @@ public class DeerGodEntity extends BossEntity
 		boolean b = super.damage(source, amount);
 		if(getWorld().isClient)
 			return b;
-		if(b && (source.getAttacker() != null && distanceTo(source.getAttacker()) > 10) || (source.getSource() != null && source.getSource() instanceof ProjectileEntity))
+		if(b && (source.getAttacker() != null && distanceTo(source.getAttacker()) > 10) ||
+				   (source.getSource() != null && source.getSource() instanceof ProjectileEntity))
 			rangedDamageTaken += amount; //let's keep it raw
 		if(getHealth() <= 0)
 		{
@@ -607,6 +623,8 @@ public class DeerGodEntity extends BossEntity
 				killer = player;
 			if(killer == null && source.getSource() instanceof PlayerEntity player)
 				killer = player;
+			bossFight.markWon();
+			BossFightManager.INSTANCE.endFight(bossFight);
 			return b;
 		}
 		if(!dataTracker.get(CLAW) && b && getHealth() <= getMaxHealth() / 2f && getHealth() > 0f)
@@ -631,7 +649,8 @@ public class DeerGodEntity extends BossEntity
 		super.cancelActiveGoals();
 		dataTracker.set(TELEPORT_TIMER, Integer.MIN_VALUE);
 		setAnimation(IDLE_ANIM);
-		getWorld().getEntitiesByType(TypeFilter.instanceOf(IrrlichtEntity.class), Box.from(getPos()).expand(32), i -> i.owner == this).forEach(LivingEntity::kill);
+		getWorld().getEntitiesByType(TypeFilter.instanceOf(IrrlichtEntity.class), Box.from(getPos()).expand(32), i -> i.owner == this)
+				.forEach(LivingEntity::kill);
 	}
 	
 	@Override
@@ -820,8 +839,6 @@ public class DeerGodEntity extends BossEntity
 	@Override
 	public boolean onKilledOther(ServerWorld world, LivingEntity other)
 	{
-		if(other instanceof ServerPlayerEntity serverPlayer)
-			ServerPlayNetworking.send(serverPlayer, new SequenceTriggerPayload(SequenceTriggerPayload.PLAYER_DEATH_SEQUENCE));
 		if(targetGoal.isHasNoTargets())
 			combatTimer = 0;
 		return super.onKilledOther(world, other);
@@ -840,6 +857,8 @@ public class DeerGodEntity extends BossEntity
 		{
 			dataTracker.set(SUMMONED, nbt.getBoolean("Summoned"));
 			setAnimation(IDLE_ANIM);
+			if(bossFight == null)
+				bossFight = BossFightManager.INSTANCE.beginFight(new DeerBossFight(this, true));
 		}
 		if(nbt.contains("Claw", NbtElement.BYTE_TYPE))
 			dataTracker.set(CLAW, nbt.getBoolean("Claw"));
@@ -1104,7 +1123,7 @@ public class DeerGodEntity extends BossEntity
 			failed = mob.getTarget().getPos().distanceTo(new Vec3d(mob.dataTracker.get(ORIGIN))) > 32f || ++time > 200;
 			if(mob.distanceTo(mob.getTarget()) <= 3f || failed)
 				return;
-			mob.navigation.startMovingTo(mob.getTarget(), speed);
+			mob.navigation.startMovingTo(mob.getTarget(), speed * (mob.isRunning() ? 1.5f : 1f));
 			//mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, mob.getTarget().getEyePos());
 		}
 		
