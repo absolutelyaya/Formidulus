@@ -22,6 +22,8 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
+import java.util.List;
+
 public abstract class BossEntity extends AnimatedHostileEntity
 {
 	public static final TrackedData<Vector3f> ORIGIN = DataTracker.registerData(BossEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
@@ -141,6 +143,13 @@ public abstract class BossEntity extends AnimatedHostileEntity
 		return null;
 	}
 	
+	public List<LivingEntity> getAllTargets()
+	{
+		if(targetGoal != null)
+			return targetGoal.getAllTargets();
+		return List.of();
+	}
+	
 	@Override
 	public boolean damage(DamageSource source, float amount)
 	{
@@ -171,6 +180,8 @@ public abstract class BossEntity extends AnimatedHostileEntity
 	public abstract void afterBossReset();
 	
 	public abstract BossType getBossType();
+	
+	public abstract boolean isActive();
 	
 	@Override
 	public void readCustomDataFromNbt(NbtCompound nbt)

@@ -411,6 +411,7 @@ public class DeerGodEntity extends BossEntity
 					{
 						Vec3d dir = Vec3d.ZERO.addRandom(random, 1f).multiply(1, 0, 1).normalize().multiply(0.05f + random.nextFloat() * 0.1f);
 						getWorld().addParticle(ParticleRegistry.DARKNESS, true, getX(), getY() + 0.2f, getZ(), dir.x, dir.y, dir.z);
+						//TODO: add rising darkness particles
 					}
 				}
 			}
@@ -664,7 +665,7 @@ public class DeerGodEntity extends BossEntity
 	{
 		if(source.isOf(DamageTypes.OUT_OF_WORLD) || source.isOf(DamageTypes.GENERIC_KILL))
 			return super.damage(source, amount);
-		if(isInSequence() || getVanishingPercent() > 0.5f)
+		if(isInSequence() || getVanishingPercent() > 0.5f || !isActive())
 			return false;
 		boolean b = super.damage(source, amount);
 		if(getWorld().isClient)
@@ -841,6 +842,12 @@ public class DeerGodEntity extends BossEntity
 		return BossType.DEER;
 	}
 	
+	@Override
+	public boolean isActive()
+	{
+		return dataTracker.get(SUMMONED);
+	}
+	
 	int getMaxCultists()
 	{
 		return 5 + (Math.max(getWorld().getDifficulty().getId() - 2, 0) * 2);
@@ -887,7 +894,9 @@ public class DeerGodEntity extends BossEntity
 			Formidulus.LOGGER.warn("Couldn't find valid spot to spawn Cultist around Deer at [{} {} {}]", getX(), getY(), getZ());
 			return;
 		}
+		cultist.setMaster(this);
 		cultist.setPosition(pos);
+		cultist.setTarget(getRandomTarget());
 		if(persistent)
 			cultist.setPersistent();
 		if(getWorld().spawnEntity(cultist))
@@ -1415,9 +1424,10 @@ public class DeerGodEntity extends BossEntity
 				return;
 			if(mob.getPos().distanceTo(new Vec3d(mob.getOrigin())) > 1f)
 				mob.setPosition(new Vec3d(mob.getOrigin()));
-			mob.spawnCultist(new Vec2f(13, 16), false);
+			mob.spawnCultist(new Vec2f(10, 15), false);
 			mob.setTarget(mob.getRandomTarget());
-			spawnCooldown = 100 * cultists;
+			mob.playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 1f, 1f);
+			spawnCooldown = 80 * cultists - 10 * mob.getWorld().getDifficulty().getId();
 			mob.dataTracker.set(SCHEDULED_SPAWNS, mob.dataTracker.get(SCHEDULED_SPAWNS) - 1);
 		}
 		

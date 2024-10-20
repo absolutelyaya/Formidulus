@@ -1,5 +1,6 @@
 package absolutelyaya.formidulus.entities;
 
+import absolutelyaya.formidulus.entities.goal.ServantTargetGoal;
 import absolutelyaya.formidulus.registries.ItemRegistry;
 import absolutelyaya.formidulus.registries.ParticleRegistry;
 import net.minecraft.block.Blocks;
@@ -51,7 +52,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class DeerFollowerEntity extends HostileEntity
+public class DeerFollowerEntity extends ServantEntity
 {
 	static final TrackedData<Boolean> MASK = DataTracker.registerData(DeerFollowerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Byte> ACTIVITY = DataTracker.registerData(DeerFollowerEntity.class, TrackedDataHandlerRegistry.BYTE);
@@ -82,6 +83,7 @@ public class DeerFollowerEntity extends HostileEntity
 	{
 		super.initGoals();
 		goalSelector.add(0, new MeleeAttackGoal(this, 0.4f, false));
+		goalSelector.add(0, new ProtectTheAltarGoal(this, 0.5f));
 		goalSelector.add(1, new SearchForAltarGoal(this, 0.3f));
 		goalSelector.add(1, new PatrolAltarGoal(this, 0.25f));
 		goalSelector.add(1, new WorshipGoal(this, 0.3f));
@@ -91,7 +93,8 @@ public class DeerFollowerEntity extends HostileEntity
 		goalSelector.add(4, new LookAtEntityGoal(this, DeerFollowerEntity.class, 6));
 		
 		targetSelector.add(0, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
-		targetSelector.add(0, new RevengeGoal(this, DeerGodEntity.class));
+		targetSelector.add(0, new ServantTargetGoal(this));
+		targetSelector.add(1, new RevengeGoal(this, DeerGodEntity.class));
 	}
 	
 	@Override
@@ -575,6 +578,37 @@ public class DeerFollowerEntity extends HostileEntity
 			if(mob.isWorshipping())
 				mob.setActivity(ACTIVITY_IDLE);
 			mob.setPitch(0f);
+		}
+	}
+	
+	static class ProtectTheAltarGoal extends Goal
+	{
+		final DeerFollowerEntity mob;
+		final float speed;
+		
+		public ProtectTheAltarGoal(DeerFollowerEntity mob, float speed)
+		{
+			this.mob = mob;
+			this.speed = speed;
+			setControls(EnumSet.of(Control.MOVE, Control.LOOK));
+		}
+		
+		@Override
+		public boolean canStart()
+		{
+			if(!mob.hasAltar || mob.getTarget() != null)
+				return false;
+			return !mob.getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class),
+					Box.from(new Vec3d(mob.getAltar())).expand(4f), i -> i.isAlive() && !i.isCreative() && !i.isSpectator()).isEmpty();
+		}
+		
+		@Override
+		public void start()
+		{
+			super.start();
+			Vec3d dest = new Vec3d(mob.getAltar());
+			if(!mob.navigation.startMovingTo(dest.x, dest.y, dest.z, 3, speed))
+				stop();
 		}
 	}
 }
