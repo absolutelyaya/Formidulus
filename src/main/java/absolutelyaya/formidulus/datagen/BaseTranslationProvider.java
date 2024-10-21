@@ -98,8 +98,8 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		
 		builder.add("dialogue.deer.phase-transition1", "You little...");
 		builder.add("dialogue.deer.phase-transition2", "Earth, shed Blood for me!");
-		builder.add("dialogue.deer.phase-transition3", "Turn Blood to Flesh;");
-		builder.add("dialogue.deer.phase-transition4", "sharpen Bones to Knifes-");
+		builder.add("dialogue.deer.phase-transition3", "Turn Blood to Flesh..");
+		builder.add("dialogue.deer.phase-transition4", "Sharpen Bones to Knifes-");
 		builder.add("dialogue.deer.phase-transition5", "I am done playing nicely.");
 		
 		builder.add("dialogue.deer.player-death1", "Never return.");

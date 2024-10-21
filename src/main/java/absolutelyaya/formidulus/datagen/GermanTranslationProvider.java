@@ -99,8 +99,8 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		
 		builder.add("dialogue.deer.phase-transition1", "Du kleines...");
 		builder.add("dialogue.deer.phase-transition2", "Erde, Blute für mich!");
-		builder.add("dialogue.deer.phase-transition3", "Aus Blut mach Fleisch;");
-		builder.add("dialogue.deer.phase-transition4", "schärfe Knochen zu Messern-");
+		builder.add("dialogue.deer.phase-transition3", "Aus Blut mach Fleisch..");
+		builder.add("dialogue.deer.phase-transition4", "Schärfe Knochen zu Messern-");
 		builder.add("dialogue.deer.phase-transition5", "Ich werde dich nicht länger dulden.");
 		
 		builder.add("dialogue.deer.player-death1", "Kehre niemals zurück.");
