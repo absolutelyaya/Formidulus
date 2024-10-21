@@ -116,6 +116,10 @@ public abstract class BossEntity extends AnimatedHostileEntity
 	
 	abstract boolean isInSequence();
 	
+	/**
+	 * Used to get the Position Players with the {@link absolutelyaya.formidulus.effects.ReverenceStatusEffect} should look at.<br>
+	 * Used for Scripted Sequences.
+	 */
 	public Vec3d getFocusPos()
 	{
 		return getEyePos().subtract(0f, 0.5f, 0f);

@@ -5,12 +5,13 @@ import absolutelyaya.formidulus.item.components.AccessoryComponent;
 import absolutelyaya.formidulus.network.ClientPacketHandler;
 import absolutelyaya.formidulus.particle.BloodDropParticle;
 import absolutelyaya.formidulus.particle.DarknessParticle;
+import absolutelyaya.formidulus.particle.GatheringDarknessParticle;
+import absolutelyaya.formidulus.particle.RisingDarknessParticle;
 import absolutelyaya.formidulus.registries.*;
 import absolutelyaya.formidulus.rendering.block.DeerSkullBlockEntityRenderer;
 import absolutelyaya.formidulus.rendering.entity.*;
 import absolutelyaya.formidulus.sound.BossMusicHandler;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
@@ -48,6 +49,8 @@ public class FormidulusClient implements ClientModInitializer
 		ParticleFactoryRegistry particles = ParticleFactoryRegistry.getInstance();
 		particles.register(ParticleRegistry.BLOOD_DROP_PARTICLE, BloodDropParticle.Factory::new);
 		particles.register(ParticleRegistry.DARKNESS, DarknessParticle.Factory::new);
+		particles.register(ParticleRegistry.RISING_DARKNESS, RisingDarknessParticle.Factory::new);
+		particles.register(ParticleRegistry.GATHERING_DARKNESS, GatheringDarknessParticle.Factory::new);
 		
 		//Block Entities
 		BlockEntityRendererFactories.register(BlockEntityRegistry.DEER_SKULL, DeerSkullBlockEntityRenderer::new);

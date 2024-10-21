@@ -35,7 +35,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -205,10 +204,10 @@ public class DeerGodEntity extends BossEntity
 			if(!isAnyCultistNearby() && !getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class),
 					getBoundingBox().expand(12), p -> !p.isSpectator() && !p.isCreative()).isEmpty())
 			{
+				bossFight = BossFightManager.INSTANCE.beginFight(new DeerBossFight(this, false));
 				setAnimation(SPAWN_SEQUENCE_ANIM);
 				triggerMonologueSequence(SequenceTriggerPayload.SPAWN_SEQUENCE);
 				dataTracker.set(SUMMONED, true);
-				bossFight = BossFightManager.INSTANCE.beginFight(new DeerBossFight(this, false));
 			}
 			else if(age % 300 == 0 && getAllNearbyCultists().size() < getMaxCultists())
 				spawnCultist(new Vec2f(3f, 8f), true);
@@ -259,137 +258,9 @@ public class DeerGodEntity extends BossEntity
 	public void tickMovement()
 	{
 		super.tickMovement();
+		tickTimedAnimationEffects();
 		
-		if(getCurrentAnimation() == SPAWN_SEQUENCE_ANIM)
-		{
-			float darkness = getCurrentAnimationDuration() - 6.5f;
-			if(!getAnimationFlag(0))
-			{
-				setAnimationFlag(0, true);
-				setAttackCooldown(20);
-				if(!getWorld().isClient)
-					dataTracker.set(ORIGIN, getPos().toVector3f());
-			}
-			if(getCurrentAnimationDuration() < 8.7f)
-			{
-				for (int i = 0; i < darkness * 3; i++)
-				{
-					Vec3d pos = new Vec3d(getX(), getY(), getZ()).add((random.nextFloat() - 0.5f) * 2.2f, random.nextFloat() * 4.5f * darkness / (8.7 - 6.5), (random.nextFloat() - 0.5f) * 2.2f);
-					getWorld().addParticle(ParticleRegistry.DARKNESS, pos.x, pos.y, pos.z, 0f, 0f, 0f);
-				}
-			}
-			applyReverence(18f - getCurrentAnimationDuration());
-			if(!getWorld().isClient && getCurrentAnimationDuration() >= 18f)
-				setAnimation(IDLE_ANIM);
-		}
-		if(getCurrentAnimation() == SWING_ANIM)
-		{
-			if(!getAnimationFlag(0) && getCurrentAnimationDuration() >= 1.1f)
-			{
-				setAnimationFlag(0, true);
-				getWorld().playSound(null, getBlockPos(), SoundEvents.ENTITY_WITCH_THROW, SoundCategory.HOSTILE, 0.8f, 0.1f);
-			}
-		}
-		if(getCurrentAnimation() == SLAM_ANIM)
-		{
-			if(!getAnimationFlag(0) && getCurrentAnimationDuration() >= 1.25f)
-			{
-				setAnimationFlag(0, true);
-				playSound(SoundEvents.ENTITY_WITCH_THROW, 0.8f, 0.6f);
-			}
-			if(!getAnimationFlag(1) && getCurrentAnimationDuration() >= 2.65f)
-			{
-				setAnimationFlag(1, true);
-				playSound(SoundEvents.ENTITY_WITCH_THROW, 1f, 0.5f);
-			}
-			if(!getAnimationFlag(2) && getCurrentAnimationDuration() >= 2.9f)
-			{
-				setAnimationFlag(2, true);
-				Vec3d impactOffset = new Vec3d(0.5, 0, 3).rotateY((float)Math.toRadians(-getYaw()));
-				breakLanternEffect(impactOffset);
-				for (int i = 0; i < (hasClaw() ? 6 : 3); i++) //increase in second phase
-				{
-					Vec3d vel = Vec3d.ZERO.addRandom(random, 1.5f);
-					vel = new Vec3d(vel.x, Math.abs(vel.y * 0.2f), vel.z);
-					IrrlichtEntity funke = new IrrlichtEntity(EntityRegistry.IRRLICHT, getWorld());
-					funke.setOwner(this);
-					funke.setPosition(getPos().add(impactOffset));
-					funke.setVelocity(vel);
-					funke.setLifetime(300 + (int)(random.nextFloat() * 50));
-					getWorld().spawnEntity(funke);
-				}
-			}
-		}
-		if(getCurrentAnimation() == PHASE_TRANSITION_ANIM)
-		{
-			if(!hasClaw())
-				setHasClaw(true);
-			if(hasLantern())
-				setHasLantern(false);
-			if(!getAnimationFlag(0) && getCurrentAnimationDuration() >= 0f)
-			{
-				setAnimationFlag(0, true);
-				triggerMonologueSequence(SequenceTriggerPayload.PHASE_TRANSITION_SEQUENCE);
-				setAttackCooldown(20);
-			}
-			if(getCurrentAnimationDuration() >= 3.5f && getCurrentAnimationDuration() <= 4f)
-			{
-				if(!getAnimationFlag(1))
-				{
-					setAnimationFlag(1, true);
-					playSound(SoundEvents.ENTITY_EVOKER_PREPARE_ATTACK, 0.6f, 1f);
-				}
-				spawnVanishingParticles(12, getPos());
-				spawnVanishingParticles(12, new Vec3d(dataTracker.get(ORIGIN)));
-			}
-			if(!getAnimationFlag(2) && getCurrentAnimationDuration() >= 4.05f)
-			{
-				setAnimationFlag(2, true);
-				Vector3f pos = dataTracker.get(ORIGIN);
-				playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 0.6f, 1f);
-				setPosition(pos.x, pos.y, pos.z);
-				playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 0.6f, 1f);
-				if(getTarget() != null)
-					lookAt(EntityAnchorArgumentType.EntityAnchor.FEET, getTarget().getPos());
-				else
-					setYaw(0);
-			}
-			if(getWorld().isClient && !getAnimationFlag(3) && getCurrentAnimationDuration() >= 5.5f)
-			{
-				setAnimationFlag(3, true);
-				playSound(SoundEvents.ENTITY_EVOKER_PREPARE_SUMMON, 5f, 1f);
-				Vec3d dest = getPos().add((float)getRotationVector().x, getHeight() / 2f, (float)getRotationVector().z);
-				for (int i = 0; i < 111; i++)
-				{
-					Vec3d dir = Vec3d.ZERO.addRandom(random, 1f).multiply(1f, 0f, 1f);
-					Vec3d pos = getPos().add(dir.normalize().multiply((getRandom().nextFloat() - 0.5f) * 2f * 16f));
-					BlockHitResult bHit = getWorld().raycast(new RaycastContext(pos.add(0f, 2f, 0f), pos.subtract(0f, 2f, 0f),
-							RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this));
-					if(bHit.getType().equals(HitResult.Type.MISS))
-						continue;
-					getWorld().addParticle(new BloodDropParticleEffect(dest.toVector3f()),
-							(float)pos.x, (float)bHit.getPos().y, (float)pos.z, 0f, 0f, 0f);
-				}
-			}
-			if(!getAnimationFlag(4) && getCurrentAnimationDuration() >= 13f)
-			{
-				setAnimationFlag(4, true);
-				playSound(SoundEvents.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, 5f, 0.6f);
-			}
-			if(getCurrentAnimationDuration() > 4.05f)
-				applyReverence(18f - getCurrentAnimationDuration());
-			if(!getWorld().isClient && getCurrentAnimationDuration() >= 18.05f)
-				setAnimation(IDLE_ANIM);
-		}
-		if(getCurrentAnimation() == RUN_ATTACK_WALL_IMPACT_ANIM && hasLantern())
-		{
-			setHasLantern(false);
-			breakLanternEffect(new Vec3d(1, 0, 0).rotateY((float)Math.toRadians(-getYaw())));
-		}
-		//if(getCurrentAnimation() == DEATH_SEQUENCE_ANIM)
-		//	applyReverence(20f - getCurrentAnimationDuration());
-		//TODO: figure out reverence focusing for death sequence
-		
+		//Vanishing Particle Effects; includes Swarm Attack Vanishing
 		float vanishing = getVanishingPercent();
 		if(vanishing > 0f)
 		{
@@ -401,23 +272,170 @@ public class DeerGodEntity extends BossEntity
 				return;
 			}
 			int swarmTicks = dataTracker.get(SWARM_TRANSITION_TICKS);
-			if(swarmTicks > 0)
+			if(swarmTicks > 0 && swarmTicks < 50)
 			{
-				if(swarmTicks < 50)
-					spawnVanishingParticles(particles, new Vec3d(getX(), getY(), getZ()), dataTracker.get(SCHEDULED_SPAWNS) == 0 ? 1f : 1f - vanishing);
-				if(swarmTicks < 50 && dataTracker.get(SCHEDULED_SPAWNS) > 0)
+				if(dataTracker.get(SCHEDULED_SPAWNS) > 0)
 				{
+					spawnVanishingParticles(particles, new Vec3d(getX(), getY(), getZ()), dataTracker.get(SCHEDULED_SPAWNS) == 0 ? 1f : 1f - vanishing);
 					for (int i = 0; i < (1f - (Math.abs(swarmTicks - 25) / 25f)) * 32; i++)
 					{
 						Vec3d dir = Vec3d.ZERO.addRandom(random, 1f).multiply(1, 0, 1).normalize().multiply(0.05f + random.nextFloat() * 0.1f);
-						getWorld().addParticle(ParticleRegistry.DARKNESS, true, getX(), getY() + 0.2f, getZ(), dir.x, dir.y, dir.z);
-						//TODO: add rising darkness particles
+						getWorld().addParticle(ParticleRegistry.RISING_DARKNESS, true, getX(), getY() + 0.2f, getZ(), dir.x, dir.y, dir.z);
 					}
 				}
+				else
+					spawnVanishingParticles(particles, new Vec3d(getX(), getY(), getZ()), dataTracker.get(SCHEDULED_SPAWNS) == 0 ? 1f : 1f - vanishing);
 			}
 		}
 	}
 	
+	/**
+	 * Mainly for timed Visual and Sound Effects. Some animation based state changes are handled here as well, like enabling the claw.<br>
+	 * Ticks on both Client and Server.<br>
+	 * <b>Timed Damage//Hit logic should be handled in {@link AnimatedAttackGoal}s</b>
+	 */
+	void tickTimedAnimationEffects()
+	{
+		switch(getCurrentAnimation())
+		{
+			case SPAWN_SEQUENCE_ANIM -> {
+				float darkness = getCurrentAnimationDuration() - 6.5f;
+				if(!getAnimationFlag(0))
+				{
+					setAnimationFlag(0, true);
+					setAttackCooldown(20);
+					if(!getWorld().isClient)
+						dataTracker.set(ORIGIN, getPos().toVector3f());
+				}
+				if(getCurrentAnimationDuration() < 8.7f)
+				{
+					for (int i = 0; i < darkness * 3; i++)
+					{
+						Vec3d pos = new Vec3d(getX(), getY(), getZ()).add((random.nextFloat() - 0.5f) * 2.2f, random.nextFloat() * 4.5f * darkness / (8.7 - 6.5), (random.nextFloat() - 0.5f) * 2.2f);
+						getWorld().addParticle(ParticleRegistry.DARKNESS, pos.x, pos.y, pos.z, 0f, 0f, 0f);
+					}
+				}
+				applyReverence(18f - getCurrentAnimationDuration());
+				if(!getWorld().isClient && getCurrentAnimationDuration() >= 18f)
+					setAnimation(IDLE_ANIM);
+			}
+			case SWING_ANIM -> {
+				if(!getAnimationFlag(0) && getCurrentAnimationDuration() >= 1.1f)
+				{
+					setAnimationFlag(0, true);
+					getWorld().playSound(null, getBlockPos(), SoundEvents.ENTITY_WITCH_THROW, SoundCategory.HOSTILE, 0.8f, 0.1f);
+				}
+			}
+			case SLAM_ANIM -> {
+				if(!getAnimationFlag(0) && getCurrentAnimationDuration() >= 1.25f)
+				{
+					setAnimationFlag(0, true);
+					playSound(SoundEvents.ENTITY_WITCH_THROW, 0.8f, 0.6f);
+				}
+				if(!getAnimationFlag(1) && getCurrentAnimationDuration() >= 2.65f)
+				{
+					setAnimationFlag(1, true);
+					playSound(SoundEvents.ENTITY_WITCH_THROW, 1f, 0.5f);
+				}
+				if(!getAnimationFlag(2) && getCurrentAnimationDuration() >= 2.9f)
+				{
+					setAnimationFlag(2, true);
+					Vec3d impactOffset = new Vec3d(0.5, 0, 3).rotateY((float)Math.toRadians(-getYaw()));
+					breakLanternEffect(impactOffset);
+					for (int i = 0; i < (hasClaw() ? 6 : 3); i++) //increase in second phase
+					{
+						Vec3d vel = Vec3d.ZERO.addRandom(random, 1.5f);
+						vel = new Vec3d(vel.x, Math.abs(vel.y * 0.2f), vel.z);
+						IrrlichtEntity funke = new IrrlichtEntity(EntityRegistry.IRRLICHT, getWorld());
+						funke.setOwner(this);
+						funke.setPosition(getPos().add(impactOffset));
+						funke.setVelocity(vel);
+						funke.setLifetime(300 + (int)(random.nextFloat() * 50));
+						getWorld().spawnEntity(funke);
+					}
+				}
+			}
+			case PHASE_TRANSITION_ANIM -> {
+				if(!hasClaw())
+					setHasClaw(true);
+				if(hasLantern())
+					setHasLantern(false);
+				if(!getAnimationFlag(0) && getCurrentAnimationDuration() >= 0f)
+				{
+					setAnimationFlag(0, true);
+					triggerMonologueSequence(SequenceTriggerPayload.PHASE_TRANSITION_SEQUENCE);
+					setAttackCooldown(20);
+				}
+				if(getCurrentAnimationDuration() >= 3.5f && getCurrentAnimationDuration() <= 4f)
+				{
+					if(!getAnimationFlag(1))
+					{
+						setAnimationFlag(1, true);
+						playSound(SoundEvents.ENTITY_EVOKER_PREPARE_ATTACK, 0.6f, 1f);
+					}
+					spawnVanishingParticles(12, getPos());
+					spawnVanishingParticles(12, new Vec3d(dataTracker.get(ORIGIN)));
+				}
+				if(!getAnimationFlag(2) && getCurrentAnimationDuration() >= 4.05f)
+				{
+					setAnimationFlag(2, true);
+					Vector3f pos = dataTracker.get(ORIGIN);
+					playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 0.6f, 1f);
+					setPosition(pos.x, pos.y, pos.z);
+					playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 0.6f, 1f);
+					if(getTarget() != null)
+						lookAt(EntityAnchorArgumentType.EntityAnchor.FEET, getTarget().getPos());
+					else
+						setYaw(0);
+				}
+				if(getWorld().isClient && !getAnimationFlag(3) && getCurrentAnimationDuration() >= 5.5f)
+				{
+					setAnimationFlag(3, true);
+					playSound(SoundEvents.ENTITY_EVOKER_PREPARE_SUMMON, 5f, 1f);
+					Vec3d dest = getPos().add((float)getRotationVector().x, getHeight() / 2f, (float)getRotationVector().z);
+					for (int i = 0; i < 111; i++)
+					{
+						Vec3d dir = Vec3d.ZERO.addRandom(random, 1f).multiply(1f, 0f, 1f);
+						Vec3d pos = getPos().add(dir.normalize().multiply((getRandom().nextFloat() - 0.5f) * 2f * 16f));
+						BlockHitResult bHit = getWorld().raycast(new RaycastContext(pos.add(0f, 2f, 0f), pos.subtract(0f, 2f, 0f),
+								RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this));
+						if(bHit.getType().equals(HitResult.Type.MISS))
+							continue;
+						getWorld().addParticle(new BloodDropParticleEffect(dest.toVector3f()),
+								(float)pos.x, (float)bHit.getPos().y, (float)pos.z, 0f, 0f, 0f);
+					}
+				}
+				if(!getAnimationFlag(4) && getCurrentAnimationDuration() >= 13f)
+				{
+					setAnimationFlag(4, true);
+					playSound(SoundEvents.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, 5f, 0.6f);
+				}
+				if(getCurrentAnimationDuration() > 4.05f)
+					applyReverence(18f - getCurrentAnimationDuration());
+				if(!getWorld().isClient && getCurrentAnimationDuration() >= 18.05f)
+					setAnimation(IDLE_ANIM);
+			}
+			case RUN_ATTACK_WALL_IMPACT_ANIM -> {
+				if(!getAnimationFlag(0))
+				{
+					setAnimationFlag(0, true);
+					breakLanternEffect(new Vec3d(1, 0, 0).rotateY((float)Math.toRadians(-getYaw())));
+				}
+				setHasLantern(false);
+			}
+			case DEATH_SEQUENCE_ANIM -> {
+				//if(getCurrentAnimation() == DEATH_SEQUENCE_ANIM)
+				//	applyReverence(20f - getCurrentAnimationDuration());
+				//TODO: figure out reverence focusing for death sequence
+			}
+		}
+		
+	}
+	
+	/**
+	 * Visual and Sound Effects for the Lantern Breaking.
+	 * @param offset offset for the particles to be spawned; not aligned with yaw.
+	 */
 	void breakLanternEffect(Vec3d offset)
 	{
 		for (int i = 0; i < 32; i++)
@@ -460,13 +478,20 @@ public class DeerGodEntity extends BossEntity
 			playSound(SoundEvents.BLOCK_CHAIN_BREAK, 0.1f, 0.6f);
 	}
 	
+	/**
+	 * Apply {@link absolutelyaya.formidulus.effects.ReverenceStatusEffect} to all Participants of the Fight, and all other entities within 32 Blocks.<br>
+	 * Needs to be run every tick while it should be active.<br>
+	 * Used for Scripted Sequences.
+	 * @param remainingTime How long the Effect should still go on for; Players don't receive it anymore 2 seconds before other entities, so that they don't get ambushed.<br>
+	 *                      <b>Does not affect length of the applied effect.</b>
+	 */
 	void applyReverence(float remainingTime)
 	{
 		if(getWorld().isClient)
 			return;
 		if(remainingTime > 2f) //players
 		{
-			getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), getBoundingBox().expand(16), i -> true)
+			bossFight.getAllParticipants()
 					.forEach(p -> p.addStatusEffect(new StatusEffectInstance(StatusEffectRegistry.REVERENCE, 20, 0, false, false)));
 		}
 		if(remainingTime > 0f) //other entities
@@ -479,6 +504,11 @@ public class DeerGodEntity extends BossEntity
 		}
 	}
 	
+	/**
+	 * Apply {@link absolutelyaya.formidulus.effects.DarknessStatusEffect} to all participants of the Battle.<br>
+	 * Used for Swarm Attack.
+	 * @param duration duration of the effect.
+	 */
 	void applyDarkness(int duration)
 	{
 		if(getWorld().isClient)
@@ -509,16 +539,23 @@ public class DeerGodEntity extends BossEntity
 		return super.getFocusPos().subtract(0f, 0.5f, 0f);
 	}
 	
+	/**
+	 * Sends a {@link SequenceTriggerPayload} Packet to all participants of the Fight.<br>
+	 * The Payload Class contains Constants for Sequence IDs.
+	 * @param id ID of the Sequence.
+	 */
 	void triggerMonologueSequence(byte id)
 	{
 		if(getWorld().isClient)
 			return;
-		List<ServerPlayerEntity> nearby = getWorld().getEntitiesByType(TypeFilter.instanceOf(ServerPlayerEntity.class), getBoundingBox().expand(64),
-				LivingEntity::isAlive);
-		nearby.forEach(i -> ServerPlayNetworking.send(i, new SequenceTriggerPayload(id)));
+		bossFight.getAllParticipants().forEach(i -> ServerPlayNetworking.send(i, new SequenceTriggerPayload(id)));
 	}
 	
-	protected AnimationState getAnimationState(byte id)
+	/**
+	 * @param id The given Animation ID.
+	 * @return The {@link AnimationState} belonging to the given Animation ID Constant, OR Null if none matches.
+	 */
+	protected @Nullable AnimationState getAnimationState(byte id)
 	{
 		return switch(id)
 		{
@@ -534,6 +571,7 @@ public class DeerGodEntity extends BossEntity
 			case PREPARE_RUN_ATTACK_ANIM -> prepareRunAttackAnimationState;
 			case RUN_ATTACK_CLAW_ANIM -> runAttackClawAnimationState;
 			case RUN_ATTACK_LANTERN_ANIM -> runAttackLanternAnimationState;
+			case RUN_ATTACK_WALL_IMPACT_ANIM -> runAttackWallImpactAnimationState;
 			case DEATH_SEQUENCE_ANIM -> deathAnimationState;
 		};
 	}
@@ -604,7 +642,8 @@ public class DeerGodEntity extends BossEntity
 	public boolean shouldApplyClawPose()
 	{
 		byte anim = getCurrentAnimation();
-		return anim != PHASE_TRANSITION_ANIM && anim != DEATH_SEQUENCE_ANIM && anim != RUN_ATTACK_CLAW_ANIM && anim != SIMPLE_CLAW_ATTACK_ANIM;
+		return anim != PHASE_TRANSITION_ANIM && anim != DEATH_SEQUENCE_ANIM && anim != RUN_ATTACK_CLAW_ANIM &&
+					   anim != SIMPLE_CLAW_ATTACK_ANIM && anim != RUN_ATTACK_WALL_IMPACT_ANIM;
 	}
 	
 	public boolean shouldShowClawWithoutExtras()
@@ -718,7 +757,7 @@ public class DeerGodEntity extends BossEntity
 	@Override
 	protected boolean shouldDropLoot()
 	{
-		return false;
+		return false; //handled in UpdatePostDeath instead
 	}
 	
 	@Override
@@ -746,8 +785,8 @@ public class DeerGodEntity extends BossEntity
 			{
 				Vec3d pos = new Vec3d(getX(), getY(), getZ()).add(new Vec3d((random.nextFloat() - 0.5f) * 2f, random.nextFloat() * 0.75f,
 						(random.nextFloat() - 0.5f) * 4f).rotateY((float)Math.toRadians(-bodyYaw)));
-				Vec3d vel = Vec3d.ZERO.addRandom(random, 0.02f);
-				getWorld().addParticle(ParticleRegistry.DARKNESS, pos.x, pos.y, pos.z, vel.x, vel.y, vel.z);
+				Vec3d vel = Vec3d.ZERO.addRandom(random, 0.01f).multiply(1, 0, 1);
+				getWorld().addParticle(ParticleRegistry.RISING_DARKNESS, pos.x, pos.y, pos.z, vel.x, vel.y, vel.z);
 			}
 			return;
 		}
@@ -960,6 +999,10 @@ public class DeerGodEntity extends BossEntity
 			nbt.putInt("SwarmAttack", swarmAttack);
 	}
 	
+	/**
+	 * Swing the Lantern Horizontally. Throws hit entities away and deals moderate damage.<br>
+	 * <b>Lantern Required</b>
+	 */
 	static class LanternSwingGoal extends AnimatedAttackGoal<DeerGodEntity>
 	{
 		public LanternSwingGoal(DeerGodEntity mob)
@@ -1020,6 +1063,12 @@ public class DeerGodEntity extends BossEntity
 		}
 	}
 	
+	/**
+	 * Throw the Lantern up and then slam it onto the Ground.<br>
+	 * Entities can be hit by the upwards swing, which deals low damage, but sends them flying upwards.<br>
+	 * Entities can also be hit by the slam, which does large AOE damage. The Closer to the impact, the higher the damage and knockback.<br>
+	 * <b>Lantern Required</b>
+	 */
 	static class LanternSlamGoal extends AnimatedAttackGoal<DeerGodEntity>
 	{
 		public LanternSlamGoal(DeerGodEntity mob)
@@ -1103,6 +1152,9 @@ public class DeerGodEntity extends BossEntity
 		}
 	}
 	
+	/**
+	 * Re-Summon the Lantern if none is held currently.
+	 */
 	static class SummonLanternGoal extends AnimatedAttackGoal<DeerGodEntity>
 	{
 		public SummonLanternGoal(DeerGodEntity mob)
@@ -1144,6 +1196,10 @@ public class DeerGodEntity extends BossEntity
 		}
 	}
 	
+	/**
+	 * Move towards Target. Significantly faster in second Phase.<br>
+	 * If the target can't be navigated to, or has been pursued without reaching it for a certain amount of time, set teleport cooldown to 0.
+	 */
 	static class ApproachTargetGoal extends InterruptableGoal
 	{
 		final DeerGodEntity mob;
@@ -1207,6 +1263,10 @@ public class DeerGodEntity extends BossEntity
 		}
 	}
 	
+	/**
+	 * Base Teleport Goal. If the chosen teleport destination isn't valid, don't teleport; but still apply cooldown.<br>
+	 * <b>Becomes available <=75% Health</b>
+	 */
 	static abstract class DeerTeleportGoal extends InterruptableGoal
 	{
 		final DeerGodEntity mob;
@@ -1257,6 +1317,10 @@ public class DeerGodEntity extends BossEntity
 		}
 	}
 	
+	/**
+	 * Teleport to a random position within a certain range of the origin.<br>
+	 * <b>Becomes available <=75% Health</b>
+	 */
 	static class TeleportRandomlyGoal extends DeerTeleportGoal
 	{
 		Vec3d origin;
@@ -1295,6 +1359,11 @@ public class DeerGodEntity extends BossEntity
 		}
 	}
 	
+	/**
+	 * Teleport to within a few Blocks of the current target.<br>
+	 * It's sort of like teleporting towards the target, meaning if the deer is north to it's target, it'll still be north of it after teleporting.<br>
+	 * <b>Becomes available <=75% Health</b>
+	 */
 	static class TeleportToTargetGoal extends DeerTeleportGoal
 	{
 		public TeleportToTargetGoal(DeerGodEntity mob)
@@ -1336,6 +1405,13 @@ public class DeerGodEntity extends BossEntity
 		}
 	}
 	
+	/**
+	 * Spawn Irrlichter that rise upwards and then turn into Volatile Pumpkins.<br>
+	 * The Number and rate is based on difficulty and how much Ranged Damage has been dealt to the deer.<br>
+	 * They aim at a random target; their speed is based on difficulty<br>
+	 * <b>Becomes available once a certain amount of Ranged Damage has been dealt to the deer.<br>
+	 * This Amount wears off over time and with every summon; Once it goes below a certain threshold, this attack becomes unavailable again</b>
+	 */
 	static class ProjectileGoal extends InterruptableGoal
 	{
 		final DeerGodEntity mob;
@@ -1373,6 +1449,11 @@ public class DeerGodEntity extends BossEntity
 		}
 	}
 	
+	/**
+	 * Vanish and spawn Cultists; the amount is based on difficulty and how often the attack has been performed.<br>
+	 * Re-Appear after all Cultists have been slain, or no valid targets are left.<br>
+	 * <b>Only performed once at 75% and 25% Health</b>
+	 */
 	static class SwarmGoal extends Goal
 	{
 		final DeerGodEntity mob;
@@ -1445,6 +1526,10 @@ public class DeerGodEntity extends BossEntity
 		}
 	}
 	
+	/**
+	 * Slash at the current target with its Claw.<br>
+	 * <b>Claw Required</b>
+	 */
 	static class SimpleClawAttack extends AnimatedAttackGoal<DeerGodEntity>
 	{
 		public SimpleClawAttack(DeerGodEntity mob)
@@ -1494,6 +1579,12 @@ public class DeerGodEntity extends BossEntity
 		}
 	}
 	
+	/**
+	 * Select a random target and charge at it.<br>
+	 * "Arrives" when being within 4 Blocks of the Target, or further than 15 Blocks from the starting point.<br>
+	 * If a Wall is hit instead, Break lantern and stun for 2 seconds.<br>
+	 * <b>Becomes available in Second Phase; or in other words: Claw Required</b>
+	 */
 	static abstract class RunAttackGoal extends AnimatedAttackGoal<DeerGodEntity>
 	{
 		protected final byte type;
@@ -1550,6 +1641,7 @@ public class DeerGodEntity extends BossEntity
 			preparationTime = 20;
 			start = mob.getPos();
 			mob.setAnimation(PREPARE_RUN_ATTACK_ANIM);
+			impactTicks = -1;
 		}
 		
 		@Override
@@ -1601,6 +1693,18 @@ public class DeerGodEntity extends BossEntity
 			}
 		}
 		
+		@Override
+		public boolean canStop()
+		{
+			return super.canStop() || impactTicks == 0;
+		}
+		
+		@Override
+		public boolean shouldContinue()
+		{
+			return super.shouldContinue() && impactTicks != 0;
+		}
+		
 		protected void onArrive()
 		{
 			mob.getMoveControl().moveTo(mob.getX(), mob.getY(), mob.getZ(), 0f);
@@ -1619,6 +1723,10 @@ public class DeerGodEntity extends BossEntity
 		protected abstract void tickAttackAnim();
 	}
 	
+	/**
+	 * Once arrived, perform an uppercut with the claw; sends hit entities flying upwards and into the direction the deer is looking.<br>
+	 * <b>Claw Required</b>
+	 */
 	static class RunClawAttackGoal extends RunAttackGoal
 	{
 		public RunClawAttackGoal(DeerGodEntity mob, float speed)
