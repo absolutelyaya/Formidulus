@@ -262,6 +262,8 @@ public class DeerGodEntity extends BossEntity
 			if(dataTracker.get(STRONG_COOLDOWN) > 0)
 				dataTracker.set(STRONG_COOLDOWN, dataTracker.get(STRONG_COOLDOWN) - (int)(1 + getCooldownBonusSpeed()));
 		}
+		
+		bodyYaw = headYaw;
 	}
 	
 	float getCooldownBonusSpeed()
@@ -439,6 +441,15 @@ public class DeerGodEntity extends BossEntity
 					applyReverence(18f - duration);
 				if(!getWorld().isClient && duration >= 18.05f)
 					setAnimation(IDLE_ANIM);
+			}
+			case PREPARE_RUN_ATTACK_ANIM -> {
+				for (int i = 0; i < 4; i++)
+				{
+					Vec3d pos = /*getBoundingBox().getCenter().addRandom(random, 2f)*/
+							getPos().add(Vec3d.ZERO.addRandom(random, 2f).multiply(1f, 0f, 1f)).add(0, 0.1, 0);
+					Vec3d vel = Vec3d.ZERO.addRandom(random, 0.5f);
+					getWorld().addParticle(ParticleTypes.TRIAL_SPAWNER_DETECTION, true, pos.x, pos.y, pos.z, 0f, vel.y, 0f);
+				}
 			}
 			case RUN_ATTACK_WALL_IMPACT_ANIM -> {
 				if(!getAnimationFlag(0))
@@ -1598,6 +1609,8 @@ public class DeerGodEntity extends BossEntity
 				mob.dataTracker.set(SWARM_TRANSITION_TICKS, --fade);
 			if(fade > 20)
 				mob.applyDarkness((fade - 10));
+			if(cultists <= 1)
+				spawnCooldown -= 2;
 			if(fade < 50 || mob.dataTracker.get(SCHEDULED_SPAWNS) <= 0 || spawnCooldown-- > 0 || cultists >= mob.getMaxCultists())
 				return;
 			if(mob.getPos().distanceTo(new Vec3d(mob.getOrigin())) > 1f)
@@ -1748,6 +1761,7 @@ public class DeerGodEntity extends BossEntity
 		int preparationTime, impactTicks;
 		Vec3d start, dir;
 		LivingEntity newTarget;
+		int chain;
 		
 		public RunAttackGoal(DeerGodEntity mob, byte attackAnimationId, float duration, byte postAnimationID, byte runAttackType, float speed)
 		{
@@ -1790,13 +1804,14 @@ public class DeerGodEntity extends BossEntity
 				interrupt();
 				return;
 			}
-			dir = mob.getTarget().getPos().subtract(mob.getPos()).normalize();
 			mob.setRunAttackState(type);
 			arrived = false;
 			preparationTime = 20;
 			start = mob.getPos();
 			mob.setAnimation(PREPARE_RUN_ATTACK_ANIM);
 			impactTicks = -1;
+			if(chain <= 0)
+				chain = (int)Math.max(mob.getWorld().getDifficulty().getId() - 1f - (mob.getHealthPercent() / 20f), 0f) + 1;
 		}
 		
 		@Override
@@ -1822,6 +1837,8 @@ public class DeerGodEntity extends BossEntity
 				mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, mob.getTarget().getPos());
 				if(preparationTime == 0 && mob.getCurrentAnimation() == PREPARE_RUN_ATTACK_ANIM)
 					mob.setAnimation(IDLE_ANIM);
+				if(preparationTime > 2)
+					dir = mob.getTarget().getPos().subtract(mob.getPos()).normalize();
 				return;
 			}
 			if(arrived)
@@ -1831,7 +1848,7 @@ public class DeerGodEntity extends BossEntity
 				return;
 			}
 			Vec3d dest = mob.getPos().add(dir);
-			mob.getMoveControl().moveTo(dest.x, dest.y, dest.z, speed);
+			mob.getMoveControl().moveTo(dest.x, dest.y, dest.z, speed + mob.getWorld().getDifficulty().getId() * 0.05f);
 			if(mob.getWorld().raycast(new RaycastContext(mob.getPos().add(0f, 1.5f, 0f), dest.add(0f, 1.5f, 0f),
 					RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, mob)).getType().equals(HitResult.Type.BLOCK))
 			{
@@ -1840,7 +1857,7 @@ public class DeerGodEntity extends BossEntity
 				mob.getMoveControl().moveTo(mob.getX(), mob.getY(), mob.getZ(), 0f);
 				return;
 			}
-			if(mob.distanceTo(target) < 4f || mob.getPos().distanceTo(start) > 20f)
+			if(mob.distanceTo(target) < 4f || mob.getPos().distanceTo(start) > 16f)
 			{
 				arrived = true;
 				mob.setAnimation(attackAnimationId);
@@ -1871,6 +1888,8 @@ public class DeerGodEntity extends BossEntity
 			super.stop();
 			newTarget = null;
 			mob.setRunAttackState(RUN_ATTACK_NONE);
+			if(mob.getCurrentAnimation() == PREPARE_RUN_ATTACK_ANIM || mob.getCurrentAnimation() == attackAnimationId)
+				mob.setAnimation(postAnimationID);
 			if(mob.moveControl.isMoving())
 				mob.moveControl.moveTo(mob.getX(), mob.getY(), mob.getZ(), 0f);
 		}
@@ -1917,15 +1936,18 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		protected void onArrive()
 		{
-			Vec3d dest = mob.getPos().add(dir);
-			mob.moveControl.moveTo(dest.x, dest.y, dest.z, 0f);
+			Vec3d dest = mob.getPos().add(dir.multiply(2f));
+			mob.moveControl.moveTo(dest.x, dest.y, dest.z, 1f);
 		}
 		
 		@Override
 		public void stop()
 		{
 			super.stop();
-			mob.setStrongCooldown(200 - mob.getWorld().getDifficulty().getId() * 15);
+			if(chain <= 0)
+				mob.setStrongCooldown(200 - mob.getWorld().getDifficulty().getId() * 15);
+			else
+				chain--;
 		}
 		
 		@Override
