@@ -147,7 +147,7 @@ public class DeerGodEntity extends BossEntity
 		goalSelector.add(0, new SwarmGoal(this));
 		goalSelector.add(0, outOfCombatGoal = new BossOutOfCombatGoal(this, BossOutOfCombatGoal.BEHAVIOR_RESPAWN_AT_ORIGIN));
 		goalSelector.add(0, new TeleportRandomlyGoal(this));
-		goalSelector.add(1, new RunClawAttackGoal(this, 0.45f * 1.75f));
+		goalSelector.add(1, new RunClawAttackGoal(this, 0.9f));
 		goalSelector.add(1, new SimpleClawAttackGoal(this));
 		goalSelector.add(1, new SummonLanternGoal(this));
 		goalSelector.add(1, new LanternSwingGoal(this));
@@ -194,6 +194,18 @@ public class DeerGodEntity extends BossEntity
 	protected void pushAway(Entity entity)
 	{
 	
+	}
+	
+	@Override
+	public boolean isPushedByFluids()
+	{
+		return false;
+	}
+	
+	@Override
+	public boolean isFireImmune()
+	{
+		return true;
 	}
 	
 	@Override
@@ -358,7 +370,14 @@ public class DeerGodEntity extends BossEntity
 						funke.setLifetime(300 + (int)(random.nextFloat() * 50));
 						getWorld().spawnEntity(funke);
 					}
-					//TODO: debris particles
+					BlockState state = getWorld().getBlockState(BlockPos.ofFloored(getPos().add(impactOffset).subtract(0f, 0.5f, 0f)));
+					for (int i = 0; i < 32; i++)
+					{
+						Vec3d rand = Vec3d.ZERO.addRandom(random, 2f);
+						Vec3d pos = getPos().add(impactOffset).add(0f, 0.1f, 0f).add(rand.multiply(1f, 0f, 1f));
+						getWorld().addParticle(new BlockStateParticleEffect(ParticleTypes.DUST_PILLAR, state),
+								pos.x, pos.y, pos.z, 0f, 0f, 0f);
+					}
 				}
 			}
 			case PHASE_TRANSITION_ANIM -> {
@@ -453,7 +472,14 @@ public class DeerGodEntity extends BossEntity
 						setAnimationFlag(4, true);
 						breakLanternEffect(impactOffset, false);
 						playSound(SoundEvents.ENTITY_DRAGON_FIREBALL_EXPLODE, 1f, 0.75f);
-						//TODO: debris particles
+						BlockState state = getWorld().getBlockState(BlockPos.ofFloored(getPos().add(impactOffset).subtract(0f, 0.5f, 0f)));
+						for (int i = 0; i < 32; i++)
+						{
+							Vec3d rand = Vec3d.ZERO.addRandom(random, 3f);
+							Vec3d pos = getPos().add(impactOffset).add(0f, 0.1f, 0f).add(rand.multiply(1f, 0f, 1f));
+							getWorld().addParticle(new BlockStateParticleEffect(ParticleTypes.DUST_PILLAR, state),
+									pos.x, pos.y, pos.z, 0f, 0f, 0f);
+						}
 					}
 					float intensity = 1f - (duration - 4.3f);
 					Vec3d pos = getPos().add(impactOffset).add(0f, 0.1f, 0f);
@@ -462,6 +488,10 @@ public class DeerGodEntity extends BossEntity
 						Vec3d dir = Vec3d.ZERO.addRandom(random, 1f).multiply(1f, 0f, 1f).normalize()
 											.multiply((random.nextFloat() + 0.5f * (intensity + 0.1f)));
 						getWorld().addParticle(ParticleTypes.FLAME, true, pos.x, pos.y, pos.z, dir.x, dir.y, dir.z);
+					}
+					for (int i = 0; i < Math.round(6 * intensity); i++)
+					{
+						getWorld().addParticle(ParticleTypes.LAVA, true, pos.x, pos.y, pos.z, 0f, 0f, 0f);
 					}
 					if(age % 3 == 0)
 						playSound(SoundEvents.ITEM_FIRECHARGE_USE, 1.5f, 0.9f + random.nextFloat() * 0.2f);
@@ -530,7 +560,8 @@ public class DeerGodEntity extends BossEntity
 	 * Apply {@link absolutelyaya.formidulus.effects.ReverenceStatusEffect} to all Participants of the Fight, and all other entities within 32 Blocks.<br>
 	 * Needs to be run every tick while it should be active.<br>
 	 * Used for Scripted Sequences.
-	 * @param remainingTime How long the Effect should still go on for; Players don't receive it anymore 2 seconds before other entities, so that they don't get ambushed.<br>
+	 * @param remainingTime How much time is left in the current Sequence; Players don't receive it anymore 2 seconds before other entities,
+	 * 						so that they don't get ambushed.<br>
 	 *                      <b>Does not affect length of the applied effect.</b>
 	 */
 	void applyReverence(float remainingTime)
@@ -1167,7 +1198,8 @@ public class DeerGodEntity extends BossEntity
 						mob.getBoundingBox().offset(offset).stretch(mob.getRotationVector().x * 4f, 0f, mob.getRotationVector().z * 4f));
 				for (LivingEntity hit : hits)
 				{
-					if (hit instanceof IrrlichtEntity || hit instanceof DeerGodEntity)
+					if (hit instanceof IrrlichtEntity || hit instanceof DeerGodEntity ||
+								hit.getPos().multiply(1f, 0f, 1f).distanceTo(mob.getPos().multiply(1f, 0f, 1f)) > 4f)
 						continue;
 					if(hit.damage(DamageSources.get(mob.getWorld(), DamageSources.LANTERN, mob), 12f))
 					{
@@ -1300,6 +1332,7 @@ public class DeerGodEntity extends BossEntity
 			if(mob.getTarget() == null || mob.getTarget().isRemoved())
 			{
 				mob.navigation.stop();
+				mob.moveControl.moveTo(mob.getX(), mob.getY(), mob.getZ(), 0f);
 				failed = true;
 				stop();
 				return;
@@ -1307,7 +1340,12 @@ public class DeerGodEntity extends BossEntity
 			failed = mob.getTarget().getPos().distanceTo(new Vec3d(mob.dataTracker.get(ORIGIN))) > 32f || ++time > 200;
 			if(mob.distanceTo(mob.getTarget()) <= 3f || failed)
 				return;
-			mob.navigation.startMovingTo(mob.getTarget(), speed * (mob.shouldRun() ? 1.5f : 1f));
+			Vec3d target = mob.getTarget().getPos();
+			if(mob.getWorld().raycast(new RaycastContext(mob.getPos().add(0f, 1.5f, 0f), mob.getTarget().getPos().add(0f, 1.5f, 0f),
+					RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, mob)).getType().equals(HitResult.Type.BLOCK))
+				mob.navigation.startMovingTo(mob.getTarget(), speed * (mob.shouldRun() ? 1.5f : 1f));
+			else
+				mob.moveControl.moveTo(target.x, target.y, target.z, speed * (mob.shouldRun() ? 1.75f : 1.25f));
 			//mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, mob.getTarget().getEyePos());
 		}
 		
@@ -1315,6 +1353,7 @@ public class DeerGodEntity extends BossEntity
 		public void stop()
 		{
 			mob.navigation.stop();
+			mob.moveControl.moveTo(mob.getX(), mob.getY(), mob.getZ(), 0f);
 			super.stop();
 			if(failed)
 				mob.setTeleportCooldown(0);
@@ -1615,14 +1654,13 @@ public class DeerGodEntity extends BossEntity
 				mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, mob.getTarget().getEyePos());
 			if(time > 16 && time < 20)
 			{
-				Vec3d offset = new Vec3d(0f, 0f, 1f).rotateY((float)Math.toRadians(-mob.getYaw()));
-				Vec3d expand = new Vec3d(3f, 0f, 2.5f).rotateY((float)Math.toRadians(-mob.getYaw()));
-				Vec3d expand2 = new Vec3d(-3f, 0f, 0f).rotateY((float)Math.toRadians(-mob.getYaw()));
+				Vec3d offset = new Vec3d(0f, 2f, 3.5f).rotateY((float)Math.toRadians(-mob.getYaw()));
 				List<LivingEntity> hits = mob.getWorld().getNonSpectatingEntities(LivingEntity.class,
-						mob.getBoundingBox().offset(offset).stretch(expand).stretch(expand2));
+						mob.getBoundingBox().offset(offset).expand(4f));
 				for (LivingEntity hit : hits)
 				{
-					if (hit instanceof IrrlichtEntity || hit instanceof DeerGodEntity)
+					if (hit instanceof IrrlichtEntity || hit instanceof DeerGodEntity ||
+								hit.getPos().multiply(1f, 0f, 1f).distanceTo(mob.getPos().multiply(1f, 0f, 1f)) > 5f)
 						continue;
 					if(hit.damage(DamageSources.get(mob.getWorld(), DamageSources.CLAW, mob), 20f))
 						hit.setVelocity(mob.getRotationVector().multiply(1f, 0f, 1f).normalize().multiply(2f));
@@ -1637,6 +1675,10 @@ public class DeerGodEntity extends BossEntity
 		}
 	}
 	
+	/**
+	 * Slams the Lantern like in {@link LanternSlamGoal}; but it doesn't break.<br>
+	 * Instead, it bounces and is then shattered by a flat hand slam using the claw; which causes a wave of fire damaging and burning anything in a large radius.
+	 */
 	static class LanternSlamClawGoal extends LanternSlamGoal
 	{
 		public LanternSlamClawGoal(DeerGodEntity mob)
@@ -1694,7 +1736,7 @@ public class DeerGodEntity extends BossEntity
 	
 	/**
 	 * Select a random target and charge at it.<br>
-	 * "Arrives" when being within 4 Blocks of the Target, or further than 15 Blocks from the starting point.<br>
+	 * "Arrives" when being within 4 Blocks of the Target, or further than 20 Blocks from the starting point.<br>
 	 * If a Wall is hit instead, Break lantern and stun for 2 seconds.<br>
 	 * <b>Becomes available in Second Phase; or in other words: Claw Required</b>
 	 */
@@ -1798,7 +1840,7 @@ public class DeerGodEntity extends BossEntity
 				mob.getMoveControl().moveTo(mob.getX(), mob.getY(), mob.getZ(), 0f);
 				return;
 			}
-			if(mob.distanceTo(target) < 4f || mob.getPos().distanceTo(start) > 15f)
+			if(mob.distanceTo(target) < 4f || mob.getPos().distanceTo(start) > 20f)
 			{
 				arrived = true;
 				mob.setAnimation(attackAnimationId);
@@ -1858,11 +1900,13 @@ public class DeerGodEntity extends BossEntity
 		{
 			if(time > 11 && time < 14)
 			{
+				Vec3d offset = new Vec3d(0f, 2f, 4f).rotateY((float)Math.toRadians(-mob.getYaw()));
 				List<LivingEntity> hits = mob.getWorld().getNonSpectatingEntities(LivingEntity.class,
-						mob.getBoundingBox().stretch(mob.getRotationVector().x * 4f, 0f, mob.getRotationVector().z * 4f));
+						mob.getBoundingBox().offset(offset).expand(3f));
 				for (LivingEntity hit : hits)
 				{
-					if (hit instanceof IrrlichtEntity || hit instanceof DeerGodEntity)
+					if (hit instanceof IrrlichtEntity || hit instanceof DeerGodEntity ||
+								hit.getPos().multiply(1f, 0f, 1f).distanceTo(mob.getPos().multiply(1f, 0f, 1f)) > 4.5f)
 						continue;
 					if(hit.damage(DamageSources.get(mob.getWorld(), DamageSources.CLAW, mob), 15f))
 						hit.setVelocity(mob.getRotationVector().multiply(1f, 0f, 1f).normalize().multiply(2f).add(0f, 1.5f, 0f));
