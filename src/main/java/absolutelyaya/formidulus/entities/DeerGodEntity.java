@@ -146,7 +146,7 @@ public class DeerGodEntity extends BossEntity
 		goalSelector.add(0, outOfCombatGoal = new BossOutOfCombatGoal(this, BossOutOfCombatGoal.BEHAVIOR_RESPAWN_AT_ORIGIN));
 		goalSelector.add(0, new TeleportRandomlyGoal(this));
 		goalSelector.add(1, new RunClawAttackGoal(this, 0.45f * 1.75f));
-		goalSelector.add(1, new SimpleClawAttack(this));
+		goalSelector.add(1, new SimpleClawAttackGoal(this));
 		goalSelector.add(1, new SummonLanternGoal(this));
 		goalSelector.add(1, new LanternSwingGoal(this));
 		goalSelector.add(1, new LanternSlamGoal(this));
@@ -1530,17 +1530,17 @@ public class DeerGodEntity extends BossEntity
 	 * Slash at the current target with its Claw.<br>
 	 * <b>Claw Required</b>
 	 */
-	static class SimpleClawAttack extends AnimatedAttackGoal<DeerGodEntity>
+	static class SimpleClawAttackGoal extends AnimatedAttackGoal<DeerGodEntity>
 	{
-		public SimpleClawAttack(DeerGodEntity mob)
+		public SimpleClawAttackGoal(DeerGodEntity mob)
 		{
-			super(mob, SIMPLE_CLAW_ATTACK_ANIM, 2.6f, IDLE_ANIM);
+			super(mob, SIMPLE_CLAW_ATTACK_ANIM, 1.8f, IDLE_ANIM);
 		}
 		
 		@Override
 		public boolean canStart()
 		{
-			return mob.hasClaw() && super.canStart() && mob.distanceTo(mob.getTarget()) < 4f && mob.random.nextFloat() < 0.75f;
+			return mob.hasClaw() && super.canStart() && mob.distanceTo(mob.getTarget()) < 4f && mob.random.nextFloat() < 0.5f;
 		}
 		
 		@Override
@@ -1555,7 +1555,7 @@ public class DeerGodEntity extends BossEntity
 			super.tick();
 			if(time < 10 && mob.getTarget() != null)
 				mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, mob.getTarget().getEyePos());
-			if(time > 27 && time < 32)
+			if(time > 16 && time < 20)
 			{
 				Vec3d offset = new Vec3d(0f, 0f, 1f).rotateY((float)Math.toRadians(-mob.getYaw()));
 				Vec3d expand = new Vec3d(3f, 0f, 2.5f).rotateY((float)Math.toRadians(-mob.getYaw()));
