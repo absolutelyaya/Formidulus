@@ -48,6 +48,8 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(ItemRegistry.SOUL_DAGGER, "Seelendolch");
 		builder.add(ItemRegistry.SOUL_DAGGER.getTranslationKey() + ".lore0", "Eine bessere Version der Dolche die diese Kultisten mit sich tragen.");
 		builder.add(ItemRegistry.SOUL_DAGGER.getTranslationKey() + ".lore1", "Anstelle von dem Körper, blutet dieser Dolch direkt die Seele aus.");
+		builder.add(ItemRegistry.EYES_BANNER_PATTERN, "Bannervorlage");
+		builder.add(ItemRegistry.EYES_BANNER_PATTERN.getTranslationKey() + ".desc", "Augen");
 		
 		builder.add(ItemAbilities.NONE.getTranslationKey(), "mangelhaft");
 		builder.add(ItemAbilities.VAMPIRISM.getTranslationKey(), "- VAMPIRISMUS -");
@@ -59,6 +61,22 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		
 		builder.add(BlockRegistry.WEEN, "Ween");
 		builder.add(BlockRegistry.WEEN.getTranslationKey() + ".lore", "es ist ween");
+		builder.add("block.formidulus.banner.eyes.black", "Schwarze Augen");
+		builder.add("block.formidulus.banner.eyes.blue", "Blaue Augen");
+		builder.add("block.formidulus.banner.eyes.brown", "Braune Augen");
+		builder.add("block.formidulus.banner.eyes.cyan", "Türkise Augen");
+		builder.add("block.formidulus.banner.eyes.gray", "Graue Augen");
+		builder.add("block.formidulus.banner.eyes.green", "Grüne Augen");
+		builder.add("block.formidulus.banner.eyes.light_blue", "Hellblaue Augen");
+		builder.add("block.formidulus.banner.eyes.light_gray", "Hellgraue Augen");
+		builder.add("block.formidulus.banner.eyes.lime", "Hellgrüne Augen");
+		builder.add("block.formidulus.banner.eyes.magenta", "Magenta Augen");
+		builder.add("block.formidulus.banner.eyes.orange", "Orange Augen");
+		builder.add("block.formidulus.banner.eyes.pink", "Pinke Augen");
+		builder.add("block.formidulus.banner.eyes.purple", "Lilane Augen");
+		builder.add("block.formidulus.banner.eyes.red", "Rote Augen");
+		builder.add("block.formidulus.banner.eyes.white", "Weiße Augen");
+		builder.add("block.formidulus.banner.eyes.yellow", "Gelbe Augen");
 		
 		builder.add(ADVANCEMENT_ROOT_TITLE, "Absolute Spooky Month 24");
 		builder.add(ADVANCEMENT_ROOT_DESCRIPTION, "es ist ween");
@@ -87,7 +105,6 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		
 		builder.add(StatusEffectRegistry.REVERENCE.value(), "Erzwungende Ehrfurcht");
 		builder.add(StatusEffectRegistry.DARKNESS.value(), "Zermürbendes Dunkel");
-		
 		
 		builder.add("dialogue.deer.intro1", "Wilderer.");
 		builder.add("dialogue.deer.intro2", "Du der kam nur um Blut zu vergießen,");

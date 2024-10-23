@@ -47,6 +47,8 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(ItemRegistry.SOUL_DAGGER, "Soul Dagger");
 		builder.add(ItemRegistry.SOUL_DAGGER.getTranslationKey() + ".lore0", "A superior version of those Daggers the Cultists carry.");
 		builder.add(ItemRegistry.SOUL_DAGGER.getTranslationKey() + ".lore1", "Instead of the Body, it leeches directly off of the soul.");
+		builder.add(ItemRegistry.EYES_BANNER_PATTERN, "Banner Pattern");
+		builder.add(ItemRegistry.EYES_BANNER_PATTERN.getTranslationKey() + ".desc", "Eyes");
 		
 		builder.add(ItemAbilities.NONE.getTranslationKey(), "faulty");
 		builder.add(ItemAbilities.VAMPIRISM.getTranslationKey(), "- VAMPIRISM -");
@@ -58,6 +60,22 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		
 		builder.add(BlockRegistry.WEEN, "Ween");
 		builder.add(BlockRegistry.WEEN.getTranslationKey() + ".lore", "it's ween");
+		builder.add("block.formidulus.banner.eyes.black", "Black Eyes");
+		builder.add("block.formidulus.banner.eyes.blue", "Blue Eyes");
+		builder.add("block.formidulus.banner.eyes.brown", "Brown Eyes");
+		builder.add("block.formidulus.banner.eyes.cyan", "Cyan Eyes");
+		builder.add("block.formidulus.banner.eyes.gray", "Gray Eyes");
+		builder.add("block.formidulus.banner.eyes.green", "Green Eyes");
+		builder.add("block.formidulus.banner.eyes.light_blue", "Light Blue Eyes");
+		builder.add("block.formidulus.banner.eyes.light_gray", "Light Gray Eyes");
+		builder.add("block.formidulus.banner.eyes.lime", "Lime Eyes");
+		builder.add("block.formidulus.banner.eyes.magenta", "Magenta Eyes");
+		builder.add("block.formidulus.banner.eyes.orange", "Orange Eyes");
+		builder.add("block.formidulus.banner.eyes.pink", "Pink Eyes");
+		builder.add("block.formidulus.banner.eyes.purple", "Purple Eyes");
+		builder.add("block.formidulus.banner.eyes.red", "Red Eyes");
+		builder.add("block.formidulus.banner.eyes.white", "White Eyes");
+		builder.add("block.formidulus.banner.eyes.yellow", "Yellow Eyes");
 		
 		builder.add(ADVANCEMENT_ROOT_TITLE, "Absolute Spooky Month 24");
 		builder.add(ADVANCEMENT_ROOT_DESCRIPTION, "it's ween");
@@ -86,6 +104,7 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		
 		builder.add(StatusEffectRegistry.REVERENCE.value(), "Unwilling Reverence");
 		builder.add(StatusEffectRegistry.DARKNESS.value(), "Encroaching Darkness");
+		
 		
 		builder.add("dialogue.deer.intro1", "Poacher.");
 		builder.add("dialogue.deer.intro2", "You who came only to spill Blood,");

@@ -33,6 +33,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypeFilter;
@@ -195,6 +196,22 @@ public class DeerFollowerEntity extends ServantEntity
 			playSound(SoundEvents.ENTITY_ITEM_BREAK);
 		}
 		return b;
+	}
+	
+	@Override
+	protected SoundEvent getHurtSound(DamageSource source)
+	{
+		return SoundEvents.INTENTIONALLY_EMPTY;
+	}
+	
+	@Override
+	protected void playHurtSound(DamageSource damageSource)
+	{
+		if(getVariant() <= 2)
+			playSound(SoundEvents.ENTITY_WITCH_HURT, 1f, 0.95f + random.nextFloat() * 0.1f);
+		else
+			playSound(SoundEvents.ENTITY_VINDICATOR_HURT, 1f, 0.8f + random.nextFloat() * 0.1f);
+		super.playHurtSound(damageSource);
 	}
 	
 	@Override

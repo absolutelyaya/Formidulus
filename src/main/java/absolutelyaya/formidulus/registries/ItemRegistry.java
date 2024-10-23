@@ -49,6 +49,8 @@ public class ItemRegistry
 							.component(DataComponentTypes.ATTRIBUTE_MODIFIERS, SacrificialDaggerItem.createAttributeModifiers())
 							.component(DataComponentRegistry.ABILITY, new AbilityComponent(ItemAbilities.SOULSTEAL))
 							.component(DataComponentRegistry.EXPANDABLE_LORE, ExpandableLoreComponent.makeGeneric(id, 2))));
+	public static final BannerPatternItem EYES_BANNER_PATTERN = register(Formidulus.identifier("eyes_pattern"),
+			id -> new BannerPatternItem(FormidableBannerPatterns.EYES_TAG, new Item.Settings().rarity(Rarity.RARE).maxCount(1)));
 	
 	public static <T extends Item> T register(Identifier id, Function<Identifier, T> factory)
 	{
@@ -64,6 +66,9 @@ public class ItemRegistry
 			entries.add(DEER_SKULL);
 			entries.add(SACRIFICIAL_DAGGER);
 			entries.add(SOUL_DAGGER);
+		});
+		ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register((entries) -> {
+			entries.add(EYES_BANNER_PATTERN);
 		});
 	}
 }

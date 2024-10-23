@@ -4,7 +4,9 @@ import absolutelyaya.formidulus.registries.BlockRegistry;
 import absolutelyaya.formidulus.registries.ItemRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.data.client.*;
+import net.minecraft.item.Items;
 
 public class ModelProvider extends FabricModelProvider
 {
@@ -27,5 +29,6 @@ public class ModelProvider extends FabricModelProvider
 	{
 		builder.register(ItemRegistry.SACRIFICIAL_DAGGER, Models.HANDHELD);
 		builder.register(ItemRegistry.SOUL_DAGGER, Models.HANDHELD);
+		builder.register(ItemRegistry.EYES_BANNER_PATTERN, Items.SKULL_BANNER_PATTERN, Models.GENERATED);
 	}
 }

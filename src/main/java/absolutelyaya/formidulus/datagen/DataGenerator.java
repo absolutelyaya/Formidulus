@@ -19,5 +19,6 @@ public class DataGenerator implements DataGeneratorEntrypoint
 		pack.addProvider(ItemTagProvider::new);
 		pack.addProvider(EffectTagProvider::new);
 		pack.addProvider(RecipeProvider::new);
+		pack.addProvider(BannerTagProvider::new);
 	}
 }
