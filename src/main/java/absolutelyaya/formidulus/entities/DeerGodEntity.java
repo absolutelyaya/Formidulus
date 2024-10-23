@@ -20,7 +20,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.entity.*;
-import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.damage.DamageSource;
@@ -58,6 +57,7 @@ public class DeerGodEntity extends BossEntity
 	static final TrackedData<Boolean> LANTERN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Boolean> CLAW = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Boolean> RANGED = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	static final TrackedData<Boolean> DYING = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Byte> RUN_ATTACK = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.BYTE);
 	static final TrackedData<Integer> TELEPORT_TIMER = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	static final TrackedData<Integer> TELEPORT_COOLDOWN = DataTracker.registerData(DeerGodEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -103,10 +103,10 @@ public class DeerGodEntity extends BossEntity
 	public AnimationState runAttackLanternAnimationState = new AnimationState();
 	public AnimationState runAttackWallImpactAnimationState = new AnimationState();
 	public AnimationState deathAnimationState = new AnimationState();
-	int deathTime, swingChain, swarmAttack;
+	int swingChain, swarmAttack;
 	DamageSource killingBlow;
 	PlayerEntity killer;
-	float rangedDamageTaken;
+	float rangedDamageTaken, eyeGlow;
 	boolean swarmAttackPending;
 	DeerBossFight bossFight;
 	
@@ -130,6 +130,7 @@ public class DeerGodEntity extends BossEntity
 		builder.add(LANTERN, true);
 		builder.add(CLAW, false);
 		builder.add(RANGED, false);
+		builder.add(DYING, false);
 		builder.add(RUN_ATTACK, (byte)0);
 		builder.add(TELEPORT_TIMER, Integer.MIN_VALUE);
 		builder.add(TELEPORT_COOLDOWN, 200);
@@ -194,6 +195,12 @@ public class DeerGodEntity extends BossEntity
 	protected void pushAway(Entity entity)
 	{
 	
+	}
+	
+	@Override
+	public boolean canHit()
+	{
+		return getVanishingPercent() < 0.5f;
 	}
 	
 	@Override
@@ -277,8 +284,15 @@ public class DeerGodEntity extends BossEntity
 		super.tickMovement();
 		tickTimedAnimationEffects(getCurrentAnimation());
 		
-		//Vanishing Particle Effects; includes Swarm Attack Vanishing
+		if(shouldEyesGlow())
+			eyeGlow = Math.min(eyeGlow + 0.05f, 1f);
+		else
+			eyeGlow = Math.max(eyeGlow - 0.05f, 0f);
 		float vanishing = getVanishingPercent();
+		if(vanishing > 0f)
+			eyeGlow = Math.max(MathHelper.clamp(vanishing * 2f - Math.max(vanishing * 10f - 6f, 0f), 0f, 1f), eyeGlow);
+		
+		//Vanishing Particle Effects; includes Swarm Attack Vanishing
 		if(vanishing > 0f)
 		{
 			int particles = (int)Math.ceil(vanishing * 6);
@@ -509,9 +523,14 @@ public class DeerGodEntity extends BossEntity
 				}
 			}
 			case DEATH_SEQUENCE_ANIM -> {
-				//if(getCurrentAnimation() == DEATH_SEQUENCE_ANIM)
-				//	applyReverence(20f - duration);
-				//TODO: figure out reverence focusing for death sequence
+				if(getCurrentAnimation() == DEATH_SEQUENCE_ANIM)
+					applyReverence(20f - duration);
+				if(duration >= 28 && !isRemoved() && !getWorld().isClient)
+				{
+					getWorld().sendEntityStatus(this, EntityStatuses.ADD_DEATH_PARTICLES);
+					remove(RemovalReason.KILLED);
+					dropLoot(killingBlow, killer != null);
+				}
 			}
 		}
 		//TODO: add sounds and particles to run attacks
@@ -618,13 +637,8 @@ public class DeerGodEntity extends BossEntity
 		}
 		if(getCurrentAnimation() == DEATH_SEQUENCE_ANIM)
 		{
-			if(getCurrentAnimationDuration() > 15f && getCurrentAnimationDuration() < 20f)
-			{
-				float height = (getCurrentAnimationDuration() - 15f);
-				return getEyePos().subtract(0, MathHelper.clamp(height / 3f, 0, 1f) * 0.5f - 0.5f, 0);
-			}
-			else if(getCurrentAnimationDuration() >= 20f)
-				return getPos();
+			if(getCurrentAnimationDuration() > 15f)
+				return super.getFocusPos().subtract(0f, 0.5f + Math.min((getCurrentAnimationDuration() - 15f) / 2f, 1f), 0f);
 		}
 		return super.getFocusPos().subtract(0f, 0.5f, 0f);
 	}
@@ -694,6 +708,11 @@ public class DeerGodEntity extends BossEntity
 		if(getCurrentAnimation() == SPAWN_SEQUENCE_ANIM)
 			return animDuration > 2f && animDuration < 8.5f;
 		return hasClaw() && !(getCurrentAnimation() == PHASE_TRANSITION_ANIM && animDuration < 2f) && getCurrentAnimation() != DEATH_SEQUENCE_ANIM;
+	}
+	
+	public float getEyeGlow()
+	{
+		return eyeGlow;
 	}
 	
 	public boolean isSpineVisible()
@@ -805,16 +824,21 @@ public class DeerGodEntity extends BossEntity
 			rangedDamageTaken += amount; //let's keep it raw
 		if(getHealth() <= 0)
 		{
+			dataTracker.set(DYING, true);
 			cancelActiveGoals();
 			setAnimation(DEATH_SEQUENCE_ANIM);
 			triggerMonologueSequence(SequenceTriggerPayload.DEATH_SEQUENCE);
+			shouldUpdateBossbar = false;
 			if(bossBar != null)
 				bossBar.setPercent(0f);
+			setHealth(1f);
 			killingBlow = source;
 			if(source.getAttacker() instanceof PlayerEntity player)
 				killer = player;
 			if(killer == null && source.getSource() instanceof PlayerEntity player)
 				killer = player;
+			if(killer != null)
+				lookAt(EntityAnchorArgumentType.EntityAnchor.EYES, killer.getEyePos());
 			bossFight.markWon();
 			BossFightManager.INSTANCE.endFight(bossFight);
 			return b;
@@ -858,12 +882,6 @@ public class DeerGodEntity extends BossEntity
 		{
 			getWorld().sendEntityStatus(this, EntityStatuses.ADD_DEATH_PARTICLES);
 			remove(RemovalReason.KILLED);
-		}
-		if(++deathTime >= 28f * 20 && !getWorld().isClient && !isRemoved()) //death animation is 23.25 seconds long, the sequence takes a bit longer tho
-		{
-			getWorld().sendEntityStatus(this, EntityStatuses.ADD_DEATH_PARTICLES);
-			remove(RemovalReason.KILLED);
-			dropLoot(killingBlow, killer != null);
 		}
 	}
 	
@@ -910,7 +928,7 @@ public class DeerGodEntity extends BossEntity
 	public boolean isReadyToAttack()
 	{
 		return super.isReadyToAttack() && dataTracker.get(SUMMONED) && !isInSequence() && getVanishingPercent() < 0.33f && !isAboutToTeleport() &&
-					   dataTracker.get(SCHEDULED_SPAWNS) == 0 && getRunAttackState() == RUN_ATTACK_NONE;
+					   dataTracker.get(SCHEDULED_SPAWNS) == 0 && getRunAttackState() == RUN_ATTACK_NONE && !dataTracker.get(DYING);
 	}
 	
 	public boolean isReadyToTeleport()
@@ -1057,7 +1075,7 @@ public class DeerGodEntity extends BossEntity
 		{
 			dataTracker.set(SUMMONED, nbt.getBoolean("Summoned"));
 			setAnimation(IDLE_ANIM);
-			if(bossFight == null)
+			if(bossFight == null || !BossFightManager.INSTANCE.isActive(bossFight))
 				bossFight = BossFightManager.INSTANCE.beginFight(new DeerBossFight(this, true));
 		}
 		if(nbt.contains("Claw", NbtElement.BYTE_TYPE))
@@ -1562,7 +1580,7 @@ public class DeerGodEntity extends BossEntity
 	 * Re-Appear after all Cultists have been slain, or no valid targets are left.<br>
 	 * <b>Only performed once at 75% and 25% Health</b>
 	 */
-	static class SwarmGoal extends Goal
+	static class SwarmGoal extends InterruptableGoal
 	{
 		final DeerGodEntity mob;
 		int fade, spawnCooldown;
@@ -1584,7 +1602,7 @@ public class DeerGodEntity extends BossEntity
 			super.start();
 			mob.dataTracker.set(SCHEDULED_SPAWNS, 4 + mob.getWorld().getDifficulty().getId() * mob.swarmAttack);
 			mob.navigation.stop();
-			mob.cancelActiveGoals();
+			mob.moveControl.moveTo(mob.getX(), mob.getY(), mob.getZ(), 0f);
 		}
 		
 		@Override
@@ -1596,7 +1614,8 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean shouldContinue()
 		{
-			return fade > 0 || mob.dataTracker.get(SCHEDULED_SPAWNS) > 0 || mob.dataTracker.get(SWARM_TRANSITION_TICKS) > 0 || mob.isAnyCultistNearby();
+			return (fade > 0 || mob.dataTracker.get(SCHEDULED_SPAWNS) > 0 || mob.dataTracker.get(SWARM_TRANSITION_TICKS) > 0 || mob.isAnyCultistNearby()) &&
+						   !mob.isInSequence();
 		}
 		
 		@Override
@@ -1633,6 +1652,14 @@ public class DeerGodEntity extends BossEntity
 		{
 			super.stop();
 			mob.swarmAttackPending = false;
+		}
+		
+		@Override
+		public void interrupt()
+		{
+			super.interrupt();
+			mob.dataTracker.set(SWARM_TRANSITION_TICKS, 0);
+			mob.dataTracker.set(SCHEDULED_SPAWNS, 0);
 		}
 	}
 	
@@ -1810,13 +1837,15 @@ public class DeerGodEntity extends BossEntity
 			start = mob.getPos();
 			mob.setAnimation(PREPARE_RUN_ATTACK_ANIM);
 			impactTicks = -1;
-			if(chain <= 0)
+			if(chain == 0)
 				chain = (int)Math.max(mob.getWorld().getDifficulty().getId() - 1f - (mob.getHealthPercent() / 20f), 0f) + 1;
 		}
 		
 		@Override
 		public void tick()
 		{
+			if(wasInterrupted())
+				return;
 			if(impactTicks > 0)
 			{
 				if(--impactTicks == 0)
@@ -1847,6 +1876,14 @@ public class DeerGodEntity extends BossEntity
 				tickAttackAnim();
 				return;
 			}
+			
+			//slowly rotate towards target
+			Vec3d diff = mob.getTarget().getPos().subtract(mob.getPos());
+			float curYaw = mob.getYaw(), targetYaw = (float)Math.toDegrees(MathHelper.atan2(diff.z, diff.x)) - 90f;
+			float yaw = MathHelper.lerpAngleDegrees(0.1f, curYaw, targetYaw);
+			dir = dir.rotateY((float)-Math.toRadians(yaw - curYaw));
+			mob.setYaw(yaw);
+			
 			Vec3d dest = mob.getPos().add(dir);
 			mob.getMoveControl().moveTo(dest.x, dest.y, dest.z, speed + mob.getWorld().getDifficulty().getId() * 0.05f);
 			if(mob.getWorld().raycast(new RaycastContext(mob.getPos().add(0f, 1.5f, 0f), dest.add(0f, 1.5f, 0f),
@@ -1868,7 +1905,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean canStop()
 		{
-			return super.canStop() || impactTicks == 0;
+			return (super.canStop() || impactTicks == 0) && chain <= 0;
 		}
 		
 		@Override
@@ -1895,6 +1932,14 @@ public class DeerGodEntity extends BossEntity
 		}
 		
 		protected abstract void tickAttackAnim();
+		
+		@Override
+		public void interrupt()
+		{
+			super.interrupt();
+			arrived = false;
+			impactTicks = 0;
+		}
 	}
 	
 	/**
@@ -1931,6 +1976,13 @@ public class DeerGodEntity extends BossEntity
 						hit.setVelocity(mob.getRotationVector().multiply(1f, 0f, 1f).normalize().multiply(2f).add(0f, 1.5f, 0f));
 				}
 			}
+			if(time >= duration * 20 && chain > 0)
+			{
+				chain--;
+				if(chain == 0)
+					chain = -1;
+				start();
+			}
 		}
 		
 		@Override
@@ -1943,17 +1995,22 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public void stop()
 		{
+			mob.setStrongCooldown(200 - mob.getWorld().getDifficulty().getId() * 15);
 			super.stop();
-			if(chain <= 0)
-				mob.setStrongCooldown(200 - mob.getWorld().getDifficulty().getId() * 15);
-			else
-				chain--;
+			chain = 0;
 		}
 		
 		@Override
 		protected int getAttackCooldown()
 		{
 			return 0;
+		}
+		
+		@Override
+		public void interrupt()
+		{
+			super.interrupt();
+			chain = 0;
 		}
 	}
 }

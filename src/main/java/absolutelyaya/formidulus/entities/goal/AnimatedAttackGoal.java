@@ -6,7 +6,7 @@ import net.minecraft.entity.LivingEntity;
 public abstract class AnimatedAttackGoal<T extends AnimatedHostileEntity> extends InterruptableGoal
 {
 	protected final T mob;
-	final float duration;
+	protected final float duration;
 	protected final byte attackAnimationId, postAnimationID;
 	protected int time;
 	protected LivingEntity target;
@@ -39,8 +39,8 @@ public abstract class AnimatedAttackGoal<T extends AnimatedHostileEntity> extend
 	public void tick()
 	{
 		super.tick();
-		if(time++ > duration * 20)
-			stop();
+		if(time <= duration * 20)
+			time++;
 	}
 	
 	@Override

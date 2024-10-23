@@ -82,7 +82,7 @@ public class DeerFollowerEntity extends ServantEntity
 	protected void initGoals()
 	{
 		super.initGoals();
-		goalSelector.add(0, new MeleeAttackGoal(this, 0.4f, false));
+		goalSelector.add(0, new MeleeAttackGoal(this, 0.41f, false));
 		goalSelector.add(0, new ProtectTheAltarGoal(this, 0.5f));
 		goalSelector.add(1, new SearchForAltarGoal(this, 0.3f));
 		goalSelector.add(1, new PatrolAltarGoal(this, 0.25f));

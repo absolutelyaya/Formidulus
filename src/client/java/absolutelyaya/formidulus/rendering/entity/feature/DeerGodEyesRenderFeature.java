@@ -16,7 +16,6 @@ import net.minecraft.util.math.MathHelper;
 public class DeerGodEyesRenderFeature extends FeatureRenderer<DeerGodEntity, DeerGodModel>
 {
 	static final Identifier TEX = Formidulus.identifier("textures/entity/deer_god_eyes.png");
-	float opacity;
 	
 	public DeerGodEyesRenderFeature(FeatureRendererContext<DeerGodEntity, DeerGodModel> context)
 	{
@@ -28,20 +27,10 @@ public class DeerGodEyesRenderFeature extends FeatureRenderer<DeerGodEntity, Dee
 	{
 		if(entity.isInvisible())
 			return;
-		if(!MinecraftClient.getInstance().isPaused())
-		{
-			if(entity.shouldEyesGlow())
-				opacity = Math.min(opacity + tickDelta / 20f, 1f);
-			else
-				opacity = Math.max(opacity - tickDelta / 20f, 0f);
-		}
-		float vanishing = entity.getVanishingPercent();
-		if(vanishing > 0f)
-			opacity = Math.max(MathHelper.clamp(vanishing * 2f - Math.max(vanishing * 10f - 6f, 0f), 0f, 1f), opacity);
 		
 		DeerGodModel model = getContextModel();
 		model.animateModel(entity, limbAngle, limbDistance, tickDelta);
-		int c = ColorHelper.Argb.getArgb((int)(255 * opacity), 255, 255, 255);
+		int c = ColorHelper.Argb.getArgb((int)(255 * entity.getEyeGlow()), 255, 255, 255);
 		model.getPart().render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityTranslucentEmissive(TEX)), LightmapTextureManager.MAX_BLOCK_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, c);
 	}
 }

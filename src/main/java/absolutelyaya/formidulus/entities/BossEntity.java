@@ -28,7 +28,7 @@ public abstract class BossEntity extends AnimatedHostileEntity
 {
 	public static final TrackedData<Vector3f> ORIGIN = DataTracker.registerData(BossEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
 	protected ServerBossBar bossBar;
-	boolean wasBossbarVisible;
+	boolean wasBossbarVisible, shouldUpdateBossbar = true;
 	float lastDamageTakenRaw, lastDamageTaken;
 	int lastTargetDamagedTime, combatTimer;
 	BossTargetGoal targetGoal;
@@ -88,7 +88,7 @@ public abstract class BossEntity extends AnimatedHostileEntity
 	protected void mobTick()
 	{
 		super.mobTick();
-		if(isBossBarVisible())
+		if(isBossBarVisible() && shouldUpdateBossbar)
 			bossBar.setPercent(getHealth() / getMaxHealth());
 		if(getWorld().isClient)
 			return;
