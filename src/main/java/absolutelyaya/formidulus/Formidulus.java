@@ -1,5 +1,6 @@
 package absolutelyaya.formidulus;
 
+import absolutelyaya.formidulus.advancement.CriteriaRegistry;
 import absolutelyaya.formidulus.config.ServerConfig;
 import absolutelyaya.formidulus.entities.boss.BossFightManager;
 import absolutelyaya.formidulus.registries.*;
@@ -28,6 +29,7 @@ public class Formidulus implements ModInitializer
 		PacketRegistry.register();
 		StatusEffectRegistry.register();
 		SoundRegistry.register();
+		CriteriaRegistry.regiser();
 		
 		ServerTickEvents.END_SERVER_TICK.register((server) -> {
 			BossFightManager.INSTANCE.tick();

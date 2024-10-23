@@ -25,7 +25,9 @@ public class BossFightManager
 		});
 		newFights.clear();
 		endedFights.forEach(fight -> {
-			activeFights.remove(fight.fightID);
+			BossFight removed = activeFights.remove(fight.fightID);
+			if(removed != null)
+				removed.onFightEnded();
 			if(activeFightIdsByType.containsKey(fight.type))
 				activeFightIdsByType.get(fight.type).remove(fight.fightID);
 		});
@@ -49,13 +51,15 @@ public class BossFightManager
 	
 	public <T extends BossFight> T beginFight(T sender)
 	{
-		newFights.add(sender);
+		if(!newFights.contains(sender))
+			newFights.add(sender);
 		return sender;
 	}
 	
 	public void endFight(BossFight sender)
 	{
-		endedFights.add(sender);
+		if(!endedFights.contains(sender))
+			endedFights.add(sender);
 	}
 	
 	Optional<BossType> getPersistenBossPosTypeIfKnown(BlockPos pos)
@@ -69,5 +73,10 @@ public class BossFightManager
 	public void leaveAllFights(ServerPlayerEntity player)
 	{
 		activeFights.values().forEach(f -> f.leaveFight(player));
+	}
+	
+	public boolean isActive(DeerBossFight bossFight)
+	{
+		return activeFights.containsKey(bossFight.fightID);
 	}
 }

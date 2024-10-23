@@ -34,7 +34,7 @@ public class DeerBossFight extends BossFight
 			else
 				i.discard();
 		});
-		end();
+		onFightEnded();
 	}
 	
 	@Override

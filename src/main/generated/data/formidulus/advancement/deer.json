@@ -1,19 +1,11 @@
 {
   "parent": "formidulus:cultists",
   "criteria": {
-    "kill": {
+    "win": {
       "conditions": {
-        "entity": [
-          {
-            "condition": "minecraft:entity_properties",
-            "entity": "this",
-            "predicate": {
-              "type": "formidulus:deer_god"
-            }
-          }
-        ]
+        "bossId": "formidulus:deer"
       },
-      "trigger": "minecraft:player_killed_entity"
+      "trigger": "formidulus:bossfight_win"
     }
   },
   "display": {
@@ -32,7 +24,7 @@
   },
   "requirements": [
     [
-      "kill"
+      "win"
     ]
   ],
   "sends_telemetry_event": true

@@ -1,5 +1,6 @@
 package absolutelyaya.formidulus.entities.boss;
 
+import absolutelyaya.formidulus.advancement.CriteriaRegistry;
 import absolutelyaya.formidulus.entities.BossEntity;
 import absolutelyaya.formidulus.network.BossMusicUpdatePayload;
 import absolutelyaya.formidulus.sound.BossMusicEntry;
@@ -74,7 +75,7 @@ public abstract class BossFight
 			lastMusicKey = music;
 		}
 		if(shouldEnd())
-			end();
+			BossFightManager.INSTANCE.endFight(this);
 	}
 	
 	protected boolean shouldEnd()
@@ -132,7 +133,7 @@ public abstract class BossFight
 	{
 		if(removeRemainingBossEntities)
 			bossEntities.forEach(BossEntity::discard);
-		end();
+		onFightEnded();
 	}
 	
 	public void markWon()
@@ -140,9 +141,10 @@ public abstract class BossFight
 		playerWin = true;
 	}
 	
-	void end()
+	void onFightEnded()
 	{
+		if(playerWin)
+			participants.forEach(p -> CriteriaRegistry.BOSSFIGHT_WIN.trigger(p, type.id()));
 		onMusicChange("cancel");
-		BossFightManager.INSTANCE.endFight(this);
 	}
 }

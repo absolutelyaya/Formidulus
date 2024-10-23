@@ -1,6 +1,8 @@
 package absolutelyaya.formidulus.datagen;
 
 import absolutelyaya.formidulus.Formidulus;
+import absolutelyaya.formidulus.advancement.BossFightWonCriterion;
+import absolutelyaya.formidulus.entities.boss.BossType;
 import absolutelyaya.formidulus.registries.EntityRegistry;
 import absolutelyaya.formidulus.registries.ItemRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -80,8 +82,7 @@ public class AdvancementProvider extends FabricAdvancementProvider
 												true,
 												true,
 												true))
-										.criterion("kill", OnKilledCriterion.Conditions
-																   .createPlayerKilledEntity(EntityPredicate.Builder.create().type(EntityRegistry.DEER_GOD)))
+										.criterion("win", BossFightWonCriterion.Conditions.createBossfigthWon(BossType.DEER.id()))
 										.build(Formidulus.identifier("deer"));
 		
 		WEEN = Advancement.Builder.create()
