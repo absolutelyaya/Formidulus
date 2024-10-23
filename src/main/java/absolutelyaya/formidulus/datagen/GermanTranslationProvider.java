@@ -25,11 +25,11 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 	public void generateTranslations(RegistryWrapper.WrapperLookup registryLookup, TranslationBuilder builder)
 	{
 		builder.add(EntityRegistry.DEER_GOD, "Cervus Cruoris");
-		builder.add(EntityRegistry.DEER_FOLLOWER, "Cruoris Servus");
-		builder.add(EntityRegistry.IRRLICHT, "Scintilla Vitae");
+		builder.add(EntityRegistry.DEER_FOLLOWER, "Cruors Diener");
+		builder.add(EntityRegistry.IRRLICHT, "Irrlicht");
 		builder.add(EntityRegistry.PUMPKIN, "Explosiver Kürbis");
 		
-		builder.add(EXPANDABLE_LORE_HINT, "[Drück Shift für mehr Infos]");
+		builder.add(EXPANDABLE_LORE_HINT, "[Drücke Shift für mehr Infos]");
 		builder.add(ItemRegistry.DEER_SKULL, "Hirsch Schädel");
 		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore0", "Der Schädel eines schrecklichen Skelettbiests,");
 		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore1", "in dessen Stirn ein drittes Auge geschnitzt wurde.");
@@ -49,7 +49,7 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(ItemRegistry.SOUL_DAGGER.getTranslationKey() + ".lore0", "Eine bessere Version der Dolche die diese Kultisten mit sich tragen.");
 		builder.add(ItemRegistry.SOUL_DAGGER.getTranslationKey() + ".lore1", "Anstelle von dem Körper, blutet dieser Dolch direkt die Seele aus.");
 		
-		builder.add(ItemAbilities.NONE.getTranslationKey(), "langweilig");
+		builder.add(ItemAbilities.NONE.getTranslationKey(), "mangelhaft");
 		builder.add(ItemAbilities.VAMPIRISM.getTranslationKey(), "- VAMPIRISMUS -");
 		builder.add(ItemAbilities.VAMPIRISM.getTranslationKey() + ".desc0", "Das Verletzen anderer heilt den Nutzer.");
 		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey(), "- SEELEN BRECHER -");
@@ -86,7 +86,7 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add("death.attack.soulsteal.player", "%1ss Seele wurde verschlungen bei dem Versuch %2$s zu entkommen");
 		
 		builder.add(StatusEffectRegistry.REVERENCE.value(), "Erzwungende Ehrfurcht");
-		builder.add(StatusEffectRegistry.DARKNESS.value(), "Drückende Dunkelheit");
+		builder.add(StatusEffectRegistry.DARKNESS.value(), "Zermürbendes Dunkel");
 		
 		
 		builder.add("dialogue.deer.intro1", "Wilderer.");
@@ -94,14 +94,14 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add("dialogue.deer.intro3", "bist hier nicht Willkommen.");
 		builder.add("dialogue.deer.intro4", "Ich werde dir eine Lehre erteilen.");
 		
-		builder.add("dialogue.deer.projectile1", "Ah, du bevozugst Vernkampf ?");
+		builder.add("dialogue.deer.projectile1", "Ah, du bevozugst Fernkampf ?");
 		builder.add("dialogue.deer.projectile2", "Dann lass es Feuer regnen!");
 		
 		builder.add("dialogue.deer.phase-transition1", "Du kleines...");
 		builder.add("dialogue.deer.phase-transition2", "Erde, Blute für mich!");
 		builder.add("dialogue.deer.phase-transition3", "Aus Blut mach Fleisch..");
 		builder.add("dialogue.deer.phase-transition4", "Schärfe Knochen zu Messern-");
-		builder.add("dialogue.deer.phase-transition5", "Ich werde dich nicht länger dulden.");
+		builder.add("dialogue.deer.phase-transition5", "Ich kann dich nicht länger dulden.");
 		
 		builder.add("dialogue.deer.player-death1", "Kehre niemals zurück.");
 		
@@ -111,6 +111,6 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add("dialogue.deer.death4", "Sobald ich etwas geeigneteres finde,");
 		builder.add("dialogue.deer.death5", "werde ich dich vernichten.");
 		
-		builder.add("dialogue.deer.what", "Have you no Maidens ?");
+		builder.add("dialogue.deer.what", "Have you no Maidens ?"); //not gonna translate a meme
 	}
 }

@@ -24,8 +24,8 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 	public void generateTranslations(RegistryWrapper.WrapperLookup registry, TranslationBuilder builder)
 	{
 		builder.add(EntityRegistry.DEER_GOD, "Cervus Cruoris");
-		builder.add(EntityRegistry.DEER_FOLLOWER, "Cruoris Servus");
-		builder.add(EntityRegistry.IRRLICHT, "Scintilla Vitae");
+		builder.add(EntityRegistry.DEER_FOLLOWER, "Servant of Cruor");
+		builder.add(EntityRegistry.IRRLICHT, "Irrlicht");
 		builder.add(EntityRegistry.PUMPKIN, "Volatile Pumpkin");
 		
 		builder.add(EXPANDABLE_LORE_HINT, "[Press Shift for more Info]");
@@ -48,7 +48,7 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(ItemRegistry.SOUL_DAGGER.getTranslationKey() + ".lore0", "A superior version of those Daggers the Cultists carry.");
 		builder.add(ItemRegistry.SOUL_DAGGER.getTranslationKey() + ".lore1", "Instead of the Body, it leeches directly off of the soul.");
 		
-		builder.add(ItemAbilities.NONE.getTranslationKey(), "unremarkable");
+		builder.add(ItemAbilities.NONE.getTranslationKey(), "faulty");
 		builder.add(ItemAbilities.VAMPIRISM.getTranslationKey(), "- VAMPIRISM -");
 		builder.add(ItemAbilities.VAMPIRISM.getTranslationKey() + ".desc0", "Harming others replenishes Health.");
 		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey(), "- SOUL STEAL -");
@@ -86,7 +86,6 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		
 		builder.add(StatusEffectRegistry.REVERENCE.value(), "Unwilling Reverence");
 		builder.add(StatusEffectRegistry.DARKNESS.value(), "Encroaching Darkness");
-		
 		
 		builder.add("dialogue.deer.intro1", "Poacher.");
 		builder.add("dialogue.deer.intro2", "You who came only to spill Blood,");
