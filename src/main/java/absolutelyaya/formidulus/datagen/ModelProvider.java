@@ -1,12 +1,13 @@
 package absolutelyaya.formidulus.datagen;
 
+import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.registries.BlockRegistry;
 import absolutelyaya.formidulus.registries.ItemRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.data.client.*;
 import net.minecraft.item.Items;
+import net.minecraft.util.Identifier;
 
 public class ModelProvider extends FabricModelProvider
 {
@@ -22,6 +23,7 @@ public class ModelProvider extends FabricModelProvider
 		builder.registerParentedItemModel(BlockRegistry.WEEN, ModelIds.getBlockModelId(BlockRegistry.WEEN));
 		
 		builder.registerNorthDefaultHorizontalRotation(BlockRegistry.DEER_SKULL);
+		builder.registerParentedItemModel(BlockRegistry.DEER_SKULL, Formidulus.identifier("item/deer_skull_cap"));
 	}
 	
 	@Override

@@ -129,6 +129,13 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add("dialogue.deer.death5", "I shall destroy you.");
 		
 		builder.add("dialogue.deer.what", "Have you no Maidens ?");
+		
+		
+		builder.add("screen.formidulus.config-screen.title", "Formidulus Config Screen");
+		builder.add("config.formidulus.cultist_mending_chance", "Cultist Mending Chance");
+		builder.add("config.formidulus.cultist_mending_chance.description",
+				"How likely an enchanted book held by Cultists is to have Mending on it; " +
+						"NOTE: the chance that they hold an enchanted book at all is pretty low already.");
 	}
 	
 	public static String modKey(String category, String path)

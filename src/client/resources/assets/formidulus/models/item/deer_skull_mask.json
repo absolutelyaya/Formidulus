@@ -1,5 +1,5 @@
 {
-  "parent": "formidulus:item/deer_skull",
+  "parent": "formidulus:item/deer_skull_cap",
   "gui_light": "front",
   "display": {
     "head": {

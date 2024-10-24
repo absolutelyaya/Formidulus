@@ -128,6 +128,13 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add("dialogue.deer.death4", "Sobald ich etwas geeigneteres finde,");
 		builder.add("dialogue.deer.death5", "werde ich dich vernichten.");
 		
-		builder.add("dialogue.deer.what", "Have you no Maidens ?"); //not gonna translate a meme
+		builder.add("dialogue.deer.what", "Have you no Maidens ?"); //not gonna translate this meme
+		
+		
+		builder.add("screen.formidulus.config-screen.title", "Formidulus Server Einstellungen");
+		builder.add("config.formidulus.cultist_mending_chance", "Cultist Reperatur Chance");
+		builder.add("config.formidulus.cultist_mending_chance.description",
+				"Die Wahrscheinlichkeit dass ein Buch eines Kultisten mit Reperatur verzaubert ist; " +
+						"ACHTUNG: Die Wahrscheinlichkeit dass sie überhaupt ein Verzaubertes Buch tragen, ist an sich schon ziemlich gering.");
 	}
 }

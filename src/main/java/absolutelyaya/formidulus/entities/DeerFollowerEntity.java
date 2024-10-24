@@ -1,5 +1,6 @@
 package absolutelyaya.formidulus.entities;
 
+import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.entities.goal.ServantTargetGoal;
 import absolutelyaya.formidulus.registries.ItemRegistry;
 import absolutelyaya.formidulus.registries.ParticleRegistry;
@@ -144,7 +145,7 @@ public class DeerFollowerEntity extends ServantEntity
 		setEquipmentDropChance(EquipmentSlot.MAINHAND, 0.1f);
 		if(random.nextFloat() > 0.1f + localDifficulty.getLocalDifficulty() / 10f)
 			return;
-		if(getWorld() instanceof ServerWorld serverWorld && random.nextFloat() < localDifficulty.getLocalDifficulty() / 10f)
+		if(getWorld() instanceof ServerWorld serverWorld && random.nextFloat() < localDifficulty.getLocalDifficulty() / 7.5f)
 		{
 			ItemStack enchantedBook = Items.ENCHANTED_BOOK.getDefaultStack();
 			DynamicRegistryManager registryManager = serverWorld.getRegistryManager();
@@ -156,7 +157,7 @@ public class DeerFollowerEntity extends ServantEntity
 							Enchantments.SHARPNESS, Enchantments.SMITE, Enchantments.FIRE_PROTECTION)));
 			ItemEnchantmentsComponent.Builder componentBuilder = new ItemEnchantmentsComponent.Builder(
 					enchantedBook.getOrDefault(DataComponentTypes.ENCHANTMENTS, ItemEnchantmentsComponent.DEFAULT));
-			if(random.nextFloat() < 0.01f)
+			if(random.nextFloat() < Formidulus.config.cultistMendingChance.getValue())
 				enchantments.add(new EnchantmentLevelEntry(reg.getEntry(reg.get(Enchantments.MENDING)), 1));
 			for (EnchantmentLevelEntry e : enchantments)
 				componentBuilder.add(e.enchantment, e.level);

@@ -32,6 +32,8 @@
   "block.formidulus.deer_skull.lore5": "..aber wir konnten nichts verstehen.",
   "block.formidulus.ween": "Ween",
   "block.formidulus.ween.lore": "es ist ween",
+  "config.formidulus.cultist_mending_chance": "Cultist Reperatur Chance",
+  "config.formidulus.cultist_mending_chance.description": "Die Wahrscheinlichkeit dass ein Buch eines Kultisten mit Reperatur verzaubert ist; ACHTUNG: Die Wahrscheinlichkeit dass sie überhaupt ein Verzaubertes Buch tragen, ist an sich schon ziemlich gering.",
   "death.attack.claw": "%1$s wurde von %2$s zerrissen",
   "death.attack.claw.item": "%1s wurde von %2$s mit %3$s zerrissen",
   "death.attack.claw.player": "%1s wurde zerrissen beim Versuch %2$s zu entkommen",
@@ -88,5 +90,6 @@
   "item.formidulus.sacrificial_dagger.lore1": "Zuvor wurde er benutzt um Blutopfer zu erbringen.",
   "item.formidulus.soul_dagger": "Seelendolch",
   "item.formidulus.soul_dagger.lore0": "Eine bessere Version der Dolche die diese Kultisten mit sich tragen.",
-  "item.formidulus.soul_dagger.lore1": "Anstelle von dem Körper, blutet dieser Dolch direkt die Seele aus."
+  "item.formidulus.soul_dagger.lore1": "Anstelle von dem Körper, blutet dieser Dolch direkt die Seele aus.",
+  "screen.formidulus.config-screen.title": "Formidulus Server Einstellungen"
 }

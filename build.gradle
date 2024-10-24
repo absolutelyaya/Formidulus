@@ -17,6 +17,7 @@ repositories {
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
 	maven { url 'https://jitpack.io' }
+	mavenLocal()
 }
 
 loom {
@@ -44,7 +45,7 @@ dependencies {
 	modImplementation(include "com.github.Chocohead:Fabric-ASM:${project.fabric_asm_version}")
 
 	//yayConfig
-	modImplementation(include files("libs/yayconfig-1.0.0.jar"))
+	modImplementation(include "absolutelyaya:yayconfig:1.0.1")
 }
 
 processResources {

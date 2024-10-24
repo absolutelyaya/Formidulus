@@ -32,6 +32,8 @@
   "block.formidulus.deer_skull.lore5": "..but we couldn't comprehend it.",
   "block.formidulus.ween": "Ween",
   "block.formidulus.ween.lore": "it's ween",
+  "config.formidulus.cultist_mending_chance": "Cultist Mending Chance",
+  "config.formidulus.cultist_mending_chance.description": "How likely an enchanted book held by Cultists is to have Mending on it; NOTE: the chance that they hold an enchanted book at all is pretty low already.",
   "death.attack.claw": "%1$s was torn apart by %2$s",
   "death.attack.claw.item": "%1s was torn apart by %2$s using %3$s",
   "death.attack.claw.player": "%1s was torn apart trying to escape %2$s",
@@ -88,5 +90,6 @@
   "item.formidulus.sacrificial_dagger.lore1": "Previously used to make Blood Sacrifices.",
   "item.formidulus.soul_dagger": "Soul Dagger",
   "item.formidulus.soul_dagger.lore0": "A superior version of those Daggers the Cultists carry.",
-  "item.formidulus.soul_dagger.lore1": "Instead of the Body, it leeches directly off of the soul."
+  "item.formidulus.soul_dagger.lore1": "Instead of the Body, it leeches directly off of the soul.",
+  "screen.formidulus.config-screen.title": "Formidulus Config Screen"
 }
