@@ -998,7 +998,7 @@ public class DeerGodEntity extends BossEntity
 	
 	int getMaxCultists()
 	{
-		return 5 + (Math.max(getWorld().getDifficulty().getId() - 2, 0) * 2);
+		return 4 + (Math.max(getWorld().getDifficulty().getId() - 2, 0));
 	}
 	
 	boolean isAnyCultistNearby()

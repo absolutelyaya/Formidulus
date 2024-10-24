@@ -70,7 +70,7 @@ public class BossTargetGoal extends Goal
 		if(knownTargets.isEmpty())
 			return;
 		targetSwitchTimer--;
-		if((!isTargetValid(curTarget)))
+		if(!isTargetValid(curTarget))
 		{
 			mob.setTarget(getBestTarget());
 			targetSwitchTimer = switchInterval;

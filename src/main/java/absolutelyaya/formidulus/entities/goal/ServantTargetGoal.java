@@ -1,6 +1,7 @@
 package absolutelyaya.formidulus.entities.goal;
 
 import absolutelyaya.formidulus.entities.ServantEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 
 import java.util.EnumSet;
@@ -18,7 +19,10 @@ public class ServantTargetGoal extends Goal
 	@Override
 	public boolean canStart()
 	{
-		return mob.hasMaster() && mob.getMaster().isActive() && mob.getTarget() == null;
+		LivingEntity target = mob.getTarget();
+		if(target != null && (target.isDead() || target.isRemoved()))
+			mob.setTarget(null);
+		return mob.hasMaster() && mob.getMaster().isActive() && target == null;
 	}
 	
 	@Override

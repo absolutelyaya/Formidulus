@@ -92,7 +92,7 @@ public abstract class BossEntity extends AnimatedHostileEntity
 			bossBar.setPercent(getHealth() / getMaxHealth());
 		if(getWorld().isClient)
 			return;
-		if(getTarget() != null)
+		if(getTarget() instanceof LivingEntity living && living.isAlive() && !living.isRemoved())
 			combatTimer = 100;
 		else if(combatTimer > 0)
 			combatTimer--;
@@ -196,6 +196,8 @@ public abstract class BossEntity extends AnimatedHostileEntity
 			NbtCompound origin = nbt.getCompound("Origin");
 			dataTracker.set(ORIGIN, new Vector3f(origin.getFloat("x"), origin.getFloat("y"), origin.getFloat("z")));
 		}
+		if(nbt.contains("CombatTimer", NbtElement.INT_TYPE))
+			combatTimer = nbt.getInt("CombatTimer");
 	}
 	
 	@Override
@@ -211,5 +213,7 @@ public abstract class BossEntity extends AnimatedHostileEntity
 			origin.putFloat("z", originPos.z);
 			nbt.put("Origin", origin);
 		}
+		if(isInCombat())
+			nbt.putInt("CombatTimer", combatTimer);
 	}
 }
