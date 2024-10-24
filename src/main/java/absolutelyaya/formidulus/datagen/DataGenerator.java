@@ -2,6 +2,8 @@ package absolutelyaya.formidulus.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.minecraft.registry.RegistryBuilder;
+import net.minecraft.registry.RegistryKeys;
 
 public class DataGenerator implements DataGeneratorEntrypoint
 {
@@ -19,6 +21,18 @@ public class DataGenerator implements DataGeneratorEntrypoint
 		pack.addProvider(ItemTagProvider::new);
 		pack.addProvider(EffectTagProvider::new);
 		pack.addProvider(RecipeProvider::new);
+		pack.addProvider(BiomeTagProvider::new);
+		pack.addProvider(RegistryProvider::new);
 		pack.addProvider(BannerTagProvider::new);
+	}
+	
+	@Override
+	public void buildRegistry(RegistryBuilder registryBuilder)
+	{
+		DataGeneratorEntrypoint.super.buildRegistry(registryBuilder);
+		registryBuilder.addRegistry(RegistryKeys.BANNER_PATTERN, Bootstrap::bannerPatterns);
+		registryBuilder.addRegistry(RegistryKeys.STRUCTURE, Bootstrap::structures);
+		registryBuilder.addRegistry(RegistryKeys.STRUCTURE_SET, Bootstrap::structureSets);
+		registryBuilder.addRegistry(RegistryKeys.TEMPLATE_POOL, Bootstrap::templatePools);
 	}
 }

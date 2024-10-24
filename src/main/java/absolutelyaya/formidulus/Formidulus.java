@@ -30,6 +30,7 @@ public class Formidulus implements ModInitializer
 		StatusEffectRegistry.register();
 		SoundRegistry.register();
 		CriteriaRegistry.regiser();
+		StructureRegistry.register();
 		
 		ServerTickEvents.END_SERVER_TICK.register((server) -> {
 			BossFightManager.INSTANCE.tick();
