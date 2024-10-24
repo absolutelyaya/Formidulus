@@ -104,7 +104,7 @@ public class DeerFollowerEntity extends ServantEntity
 		super.initDataTracker(builder);
 		builder.add(MASK, true);
 		builder.add(ACTIVITY, ACTIVITY_IDLE);
-		builder.add(VARIANT, (byte)(random.nextFloat() * 3.99));
+		builder.add(VARIANT, (byte)0);
 		builder.add(ALTAR, new Vector3f());
 	}
 	
@@ -130,6 +130,8 @@ public class DeerFollowerEntity extends ServantEntity
 	public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, @Nullable EntityData entityData)
 	{
 		initEquipment(random, difficulty);
+		if(!world.isClient())
+			dataTracker.set(VARIANT, (byte)(random.nextFloat() * 3.99));
 		return super.initialize(world, difficulty, spawnReason, entityData);
 	}
 	
@@ -207,7 +209,7 @@ public class DeerFollowerEntity extends ServantEntity
 	@Override
 	protected void playHurtSound(DamageSource damageSource)
 	{
-		if(getVariant() <= 2)
+		if(getVariant() < 2)
 			playSound(SoundEvents.ENTITY_WITCH_HURT, 1f, 0.95f + random.nextFloat() * 0.1f);
 		else
 			playSound(SoundEvents.ENTITY_VINDICATOR_HURT, 1f, 0.8f + random.nextFloat() * 0.1f);
