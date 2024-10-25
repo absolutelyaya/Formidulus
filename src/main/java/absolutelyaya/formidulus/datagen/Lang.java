@@ -14,4 +14,9 @@ public interface Lang
 	String ADVANCEMENT_DEER_DESCRIPTION = BaseTranslationProvider.modKey("advancement", "deer.description");
 	String ADVANCEMENT_WEEN_TITLE = BaseTranslationProvider.modKey("advancement", "ween.title");
 	String ADVANCEMENT_WEEN_DESCRIPTION = BaseTranslationProvider.modKey("advancement", "ween.description");
+	
+	String SCREEN_CONFIG_TITLE = BaseTranslationProvider.modKey("screen", "config-screen.title");
+	
+	
+	String MESSAGE_DEER_WARNING = BaseTranslationProvider.modKey("message", "deer.warning");
 }

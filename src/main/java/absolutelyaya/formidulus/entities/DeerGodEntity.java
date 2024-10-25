@@ -2,6 +2,7 @@ package absolutelyaya.formidulus.entities;
 
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.damage.DamageSources;
+import absolutelyaya.formidulus.datagen.Lang;
 import absolutelyaya.formidulus.entities.boss.BossFightManager;
 import absolutelyaya.formidulus.entities.boss.BossType;
 import absolutelyaya.formidulus.entities.boss.DeerBossFight;
@@ -34,11 +35,13 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -105,7 +108,7 @@ public class DeerGodEntity extends BossEntity
 	public AnimationState runAttackLanternAnimationState = new AnimationState();
 	public AnimationState runAttackWallImpactAnimationState = new AnimationState();
 	public AnimationState deathAnimationState = new AnimationState();
-	int swingChain, swarmAttack;
+	int swingChain, swarmAttack, warnTimer;
 	DamageSource killingBlow;
 	PlayerEntity killer;
 	float rangedDamageTaken, eyeGlow;
@@ -224,6 +227,14 @@ public class DeerGodEntity extends BossEntity
 		super.tick();
 		if(!dataTracker.get(SUMMONED))
 		{
+			if(Formidulus.config.deerWarning.getValue() && warnTimer-- <= 0 && !getWorld().isClient)
+			{
+				getWorld().getEntitiesByType(TypeFilter.instanceOf(ServerPlayerEntity.class), getBoundingBox().expand(48f, 32f, 48f),
+						p -> p.canTakeDamage() && p.getArmor() < 20)
+						.forEach(p -> p.sendMessage(Text.translatable(Lang.MESSAGE_DEER_WARNING + random.nextInt(4))
+															.setStyle(Style.EMPTY.withColor(Formatting.RED)), true));
+				warnTimer = 500;
+			}
 			if(age % 20 != 0)
 				return;
 			if(!isAnyCultistNearby() && !getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class),

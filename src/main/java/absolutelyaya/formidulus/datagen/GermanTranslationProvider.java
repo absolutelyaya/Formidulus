@@ -1,5 +1,6 @@
 package absolutelyaya.formidulus.datagen;
 
+import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.item.DeerSkullItem;
 import absolutelyaya.formidulus.item.abilities.ItemAbilities;
 import absolutelyaya.formidulus.registries.BlockRegistry;
@@ -114,6 +115,11 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(StatusEffectRegistry.REVERENCE.value(), "Erzwungende Ehrfurcht");
 		builder.add(StatusEffectRegistry.DARKNESS.value(), "Zermürbendes Dunkel");
 		
+		builder.add(MESSAGE_DEER_WARNING + "0", "Dieser Ort gibt dir eine ganz böse Vorahnung.");
+		builder.add(MESSAGE_DEER_WARNING + "1", "Es fühlt sich an als würde etwas dich nicht hier wollen.");
+		builder.add(MESSAGE_DEER_WARNING + "2", "Du fühslt dich nicht bereit für.. was auch immer hier ist.");
+		builder.add(MESSAGE_DEER_WARNING + "3", "Irgendwas stimmt hier nicht... Du solltest besser ausgerüstet wieder kommen.");
+		
 		builder.add("dialogue.deer.intro1", "Wilderer.");
 		builder.add("dialogue.deer.intro2", "Du der kam nur um Blut zu verschwenden,");
 		builder.add("dialogue.deer.intro3", "bist hier nicht Willkommen.");
@@ -139,10 +145,16 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add("dialogue.deer.what", "Have you no Maidens ?"); //not gonna translate this meme
 		
 		
-		builder.add("screen.formidulus.config-screen.title", "Formidulus Server Einstellungen");
-		builder.add("config.formidulus.cultist_mending_chance", "Cultist Reperatur Chance");
-		builder.add("config.formidulus.cultist_mending_chance.description",
+		String cultistMendingChance = Formidulus.config.cultistMendingChance.getTranslationKey(Formidulus.MOD_ID);
+		String deerWarning = Formidulus.config.deerWarning.getTranslationKey(Formidulus.MOD_ID);
+		
+		builder.add(SCREEN_CONFIG_TITLE, "Formidulus Server Einstellungen");
+		builder.add(cultistMendingChance, "Cultist Reperatur Chance");
+		builder.add(cultistMendingChance + ".description",
 				"Die Wahrscheinlichkeit dass ein Buch eines Kultisten mit Reperatur verzaubert ist; " +
 						"ACHTUNG: Die Wahrscheinlichkeit dass sie überhaupt ein Verzaubertes Buch tragen, ist an sich schon ziemlich gering.");
+		builder.add(deerWarning, "Hirsch Warnung");
+		builder.add(deerWarning + ".description",
+				"Ob Spieler mit weniger als 20 Rüstung gewarnt werden sollten wenn sie in der Nähe von Cruor in seinem Ruhezustand sind.");
 	}
 }
