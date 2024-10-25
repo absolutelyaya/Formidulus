@@ -102,9 +102,7 @@ public class BossTargetGoal extends Goal
 	
 	boolean isTargetValid(LivingEntity living)
 	{
-		if(living instanceof PlayerEntity player && player.isCreative())
-			return false;
-		return !(living == null || living.isDead() || living.isRemoved() || living.isSpectator()) && living.canTakeDamage() && mob.distanceTo(living) < range * 2;
+		return mob.isTargetValid(living) && mob.distanceTo(living) < range * 2;
 	}
 	
 	float getStartPriority(LivingEntity living)

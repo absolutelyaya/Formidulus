@@ -14,6 +14,8 @@ public class DamageSources
 	public static final RegistryKey<DamageType> CLAW = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Formidulus.identifier("claw"));
 	public static final RegistryKey<DamageType> SACRIFICE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Formidulus.identifier("sacrifice"));
 	public static final RegistryKey<DamageType> SOULSTEAL = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Formidulus.identifier("soulsteal"));
+	public static final RegistryKey<DamageType> TRAMPLE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Formidulus.identifier("trample"));
+	public static final RegistryKey<DamageType> SCORCH = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Formidulus.identifier("scorch"));
 	
 	public static DamageSource get(World world, RegistryKey<DamageType> type)
 	{

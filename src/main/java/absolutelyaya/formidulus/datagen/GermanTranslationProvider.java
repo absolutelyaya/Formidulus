@@ -103,11 +103,19 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add("death.attack.soulsteal.item", "%1ss Seele wurde von %2$s verschlungen, mit hilfe von %3$s");
 		builder.add("death.attack.soulsteal.player", "%1ss Seele wurde verschlungen bei dem Versuch %2$s zu entkommen");
 		
+		builder.add("death.attack.trample", "%1$s stand in %2$s's Weg");
+		builder.add("death.attack.trample.item", "%1$s stand in %2$s's Weg");
+		builder.add("death.attack.trample.player", "%1s wurde zertrampelt bei dem Versuch %2$s zu entkommen");
+		
+		builder.add("death.attack.scorch", "%1$s wurde von %2$s kremiert");
+		builder.add("death.attack.scorch.item", "%1s wurde von %2$s mittels %3$s kremiert");
+		builder.add("death.attack.scorch.player", "%1s wurde kremiert bei dem Versuch %2$s zu entkommen");
+		
 		builder.add(StatusEffectRegistry.REVERENCE.value(), "Erzwungende Ehrfurcht");
 		builder.add(StatusEffectRegistry.DARKNESS.value(), "Zermürbendes Dunkel");
 		
 		builder.add("dialogue.deer.intro1", "Wilderer.");
-		builder.add("dialogue.deer.intro2", "Du der kam nur um Blut zu vergießen,");
+		builder.add("dialogue.deer.intro2", "Du der kam nur um Blut zu verschwenden,");
 		builder.add("dialogue.deer.intro3", "bist hier nicht Willkommen.");
 		builder.add("dialogue.deer.intro4", "Ich werde dir eine Lehre erteilen.");
 		

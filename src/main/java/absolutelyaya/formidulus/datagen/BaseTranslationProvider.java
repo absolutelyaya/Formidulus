@@ -102,12 +102,20 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add("death.attack.soulsteal.item", "%1s soul was consumed by %2$s using %3$s");
 		builder.add("death.attack.soulsteal.player", "%1s soul was consumed trying to escape %2$s");
 		
+		builder.add("death.attack.trample", "%1$s stood in %2$s's way");
+		builder.add("death.attack.trample.item", "%1$s stood in %2$s's way");
+		builder.add("death.attack.trample.player", "%1s was trampled to death trying to escape %2$s");
+		
+		builder.add("death.attack.scorch", "%1$s was reduced to ashes by %2$s");
+		builder.add("death.attack.scorch.item", "%1s was reduced to ashes by %2$s using %3$s");
+		builder.add("death.attack.scorch.player", "%1s was reduced to ashes trying to escape %2$s");
+		
 		builder.add(StatusEffectRegistry.REVERENCE.value(), "Unwilling Reverence");
 		builder.add(StatusEffectRegistry.DARKNESS.value(), "Encroaching Darkness");
 		
 		
 		builder.add("dialogue.deer.intro1", "Poacher.");
-		builder.add("dialogue.deer.intro2", "You who came only to spill Blood,");
+		builder.add("dialogue.deer.intro2", "You who came only to waste Blood,");
 		builder.add("dialogue.deer.intro3", "are not welcome here.");
 		builder.add("dialogue.deer.intro4", "I shall teach you manners.");
 		

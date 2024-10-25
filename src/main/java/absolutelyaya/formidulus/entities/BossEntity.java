@@ -166,6 +166,7 @@ public abstract class BossEntity extends AnimatedHostileEntity
 		return b;
 	}
 	
+	@Override
 	public void onDamageEntity(LivingEntity damaged)
 	{
 		if(damaged.equals(getTarget()))

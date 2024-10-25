@@ -277,9 +277,10 @@ public class DeerGodModel extends SinglePartEntityModel<DeerGodEntity>
 		updateAnimation(entity.phaseTransitionAnimationState, DeerGodAnimations.phaseTransition, ageInTicks);
 		updateAnimation(entity.simpleClawAttackAnimationState, DeerGodAnimations.simpleClawAttack, ageInTicks);
 		updateAnimation(entity.slamClawAnimationState, DeerGodAnimations.lanternSlamClaw, ageInTicks);
-		updateAnimation(entity.prepareRunAttackAnimationState, DeerGodAnimations.prepareRunAttack, ageInTicks);
-		//updateAnimation(entity.runAttackLanternAnimationState, DeerGodAnimations., ageInTicks); TODO: add run lantern attack anim
-		updateAnimation(entity.runAttackClawAnimationState, DeerGodAnimations.runClawAttack, ageInTicks);
+		int runAttackSpeed = entity.getRunAttackAnimSpeed();
+		updateAnimation(entity.prepareRunAttackAnimationState, DeerGodAnimations.prepareRunAttack, ageInTicks, runAttackSpeed);
+		//updateAnimation(entity.runAttackLanternAnimationState, DeerGodAnimations., ageInTicks, runAttackSpeed); TODO: add run lantern attack anim
+		updateAnimation(entity.runAttackClawAnimationState, DeerGodAnimations.runClawAttack, ageInTicks, runAttackSpeed);
 		updateAnimation(entity.runAttackWallImpactAnimationState, DeerGodAnimations.runAttackWallImpact, ageInTicks);
 		updateAnimation(entity.deathAnimationState, DeerGodAnimations.death, ageInTicks);
 		
