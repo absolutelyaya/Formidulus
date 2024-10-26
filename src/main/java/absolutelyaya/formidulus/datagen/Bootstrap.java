@@ -31,7 +31,7 @@ public class Bootstrap
 	{
 		registry.register(FormidableStructures.DEER_CULT_HIDEOUT, new DeerCultHideoutStructure(new Structure.Config.Builder(
 				registry.getRegistryLookup(RegistryKeys.BIOME).getOrThrow(FormidableBiomeTags.DEER_CULT_HIDEOUT_PLACEABLE))
-						.step(GenerationStep.Feature.TOP_LAYER_MODIFICATION).terrainAdaptation(StructureTerrainAdaptation.BEARD_THIN).build()));
+						.step(GenerationStep.Feature.TOP_LAYER_MODIFICATION).build()));
 	}
 	
 	static void structureSets(Registerable<StructureSet> registry)

@@ -119,6 +119,8 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(StatusEffectRegistry.REVERENCE.value(), "Unwilling Reverence");
 		builder.add(StatusEffectRegistry.DARKNESS.value(), "Encroaching Darkness");
 		
+		builder.add(MAP_CULT_HIDEOUT, "Cult Hideout Map");
+		
 		builder.add(MESSAGE_DEER_WARNING + "0", "You have a terrible feeling about this place.");
 		builder.add(MESSAGE_DEER_WARNING + "1", "It feels as though something doesn't want you here.");
 		builder.add(MESSAGE_DEER_WARNING + "2", "An evil presence lurks below... And you don't feel prepared to face it.");

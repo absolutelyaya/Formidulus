@@ -121,6 +121,8 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(StatusEffectRegistry.REVERENCE.value(), "Erzwungende Ehrfurcht");
 		builder.add(StatusEffectRegistry.DARKNESS.value(), "Zermürbendes Dunkel");
 		
+		builder.add(MAP_CULT_HIDEOUT, "Kult Versteck Karte");
+		
 		builder.add(MESSAGE_DEER_WARNING + "0", "Dieser Ort gibt dir eine ganz böse Vorahnung.");
 		builder.add(MESSAGE_DEER_WARNING + "1", "Es fühlt sich an als würde etwas dich nicht hier wollen.");
 		builder.add(MESSAGE_DEER_WARNING + "2", "Du fühslt dich nicht bereit für.. was auch immer hier ist.");

@@ -2,6 +2,5 @@
   "type": "formidulus:deer_cult_hideout",
   "biomes": "#formidulus:deer_cult_hideout_placeable",
   "spawn_overrides": {},
-  "step": "top_layer_modification",
-  "terrain_adaptation": "beard_thin"
+  "step": "top_layer_modification"
 }

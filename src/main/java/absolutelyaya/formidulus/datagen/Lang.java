@@ -21,6 +21,7 @@ public interface Lang
 	String SCREEN_BOSS_SPAWNER_RESPAWN_DELAY = BaseTranslationProvider.modKey("screen", "boss_spawner.respawn_delay");
 	String SCREEN_BOSS_SPAWNER_CLOSE = BaseTranslationProvider.modKey("screen", "boss_spawner.close");
 	
+	String MAP_CULT_HIDEOUT = BaseTranslationProvider.modKey("map", "cult_hideout");
 	
 	String MESSAGE_DEER_WARNING = BaseTranslationProvider.modKey("message", "deer.warning");
 }

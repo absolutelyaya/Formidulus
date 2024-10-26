@@ -3,6 +3,7 @@ package absolutelyaya.formidulus.structure;
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.registries.StructureRegistry;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.block.Blocks;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.structure.*;
 import net.minecraft.util.Identifier;
@@ -48,7 +49,7 @@ public class DeerCultHideoutStructure extends Structure
 		getStructurePosition(context).ifPresent(pos -> {
 			collector.addPiece(new Piece(StructureRegistry.DEER_CULT_HIDEOUT_PIECE, 0, context.structureTemplateManager(),
 					ID, ID.toString(), new StructurePlacementData().setLiquidSettings(StructureLiquidSettings.IGNORE_WATERLOGGING)
-											   .setPosition(new BlockPos(-30, -43, -30)),
+											   .setPosition(pos.position().subtract(new BlockPos(30, 43, 30))),
 					pos.position().subtract(new Vec3i(30, 43, 30))));
 		});
 	}
@@ -63,7 +64,14 @@ public class DeerCultHideoutStructure extends Structure
 		
 		public Piece(StructureContext context, NbtCompound nbt)
 		{
-			super(StructureRegistry.DEER_CULT_HIDEOUT_PIECE, nbt, context.structureTemplateManager(), identifier -> new StructurePlacementData());
+			super(StructureRegistry.DEER_CULT_HIDEOUT_PIECE, nbt, context.structureTemplateManager(),
+					identifier -> new StructurePlacementData().addProcessor(new GrowCropsProcessor(1f, Blocks.WHEAT.getDefaultState(), true)));
+		}
+		
+		@Override
+		public StructurePlacementData getPlacementData()
+		{
+			return super.getPlacementData();
 		}
 		
 		@Override
@@ -76,7 +84,7 @@ public class DeerCultHideoutStructure extends Structure
 		@Override
 		protected void handleMetadata(String metadata, BlockPos pos, ServerWorldAccess world, Random random, BlockBox boundingBox)
 		{
-			System.out.println(metadata + " - " + pos);
+		
 		}
 	}
 }
