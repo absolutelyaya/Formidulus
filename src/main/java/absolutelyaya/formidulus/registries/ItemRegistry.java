@@ -52,6 +52,10 @@ public class ItemRegistry
 	public static final BannerPatternItem EYES_BANNER_PATTERN = register(Formidulus.identifier("eyes_pattern"),
 			id -> new BannerPatternItem(FormidableBannerPatterns.EYES_TAG, new Item.Settings().rarity(Rarity.RARE).maxCount(1)));
 	
+	public static final BlockItem BOSS_SPAWNER = register(Formidulus.identifier("boss_spawner"),
+			id -> new BlockItem(BlockRegistry.BOSS_SPAWNER,
+					new Item.Settings().component(DataComponentTypes.RARITY, Rarity.EPIC)));
+	
 	public static <T extends Item> T register(Identifier id, Function<Identifier, T> factory)
 	{
 		return Registry.register(Registries.ITEM, id, factory.apply(id));
@@ -69,6 +73,9 @@ public class ItemRegistry
 		});
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register((entries) -> {
 			entries.add(EYES_BANNER_PATTERN);
+		});
+		ItemGroupEvents.modifyEntriesEvent(ItemGroups.OPERATOR).register((entries) -> {
+			entries.add(BOSS_SPAWNER);
 		});
 	}
 }

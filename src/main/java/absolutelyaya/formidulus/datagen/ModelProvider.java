@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
 import net.minecraft.data.client.*;
 import net.minecraft.item.Items;
-import net.minecraft.util.Identifier;
 
 public class ModelProvider extends FabricModelProvider
 {
@@ -24,6 +23,8 @@ public class ModelProvider extends FabricModelProvider
 		
 		builder.registerNorthDefaultHorizontalRotation(BlockRegistry.DEER_SKULL);
 		builder.registerParentedItemModel(BlockRegistry.DEER_SKULL, Formidulus.identifier("item/deer_skull_cap"));
+		
+		builder.registerSimpleCubeAll(BlockRegistry.BOSS_SPAWNER);
 	}
 	
 	@Override

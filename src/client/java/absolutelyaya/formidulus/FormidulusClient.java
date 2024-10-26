@@ -8,6 +8,7 @@ import absolutelyaya.formidulus.particle.DarknessParticle;
 import absolutelyaya.formidulus.particle.GatheringDarknessParticle;
 import absolutelyaya.formidulus.particle.RisingDarknessParticle;
 import absolutelyaya.formidulus.registries.*;
+import absolutelyaya.formidulus.rendering.block.BossSpawnerRenderer;
 import absolutelyaya.formidulus.rendering.block.DeerSkullBlockEntityRenderer;
 import absolutelyaya.formidulus.rendering.entity.*;
 import absolutelyaya.formidulus.sound.BossMusicHandler;
@@ -54,6 +55,7 @@ public class FormidulusClient implements ClientModInitializer
 		
 		//Block Entities
 		BlockEntityRendererFactories.register(BlockEntityRegistry.DEER_SKULL, DeerSkullBlockEntityRenderer::new);
+		BlockEntityRendererFactories.register(BlockEntityRegistry.BOSS_SPAWNER, BossSpawnerRenderer::new);
 		
 		HudRenderCallback.EVENT.register((context, tickCounter) -> TitleHUD.render(context, tickCounter.getLastFrameDuration()));
 		

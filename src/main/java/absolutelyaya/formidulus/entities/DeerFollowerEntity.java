@@ -40,6 +40,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
@@ -48,7 +49,6 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -59,7 +59,7 @@ public class DeerFollowerEntity extends ServantEntity
 	static final TrackedData<Boolean> MASK = DataTracker.registerData(DeerFollowerEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 	static final TrackedData<Byte> ACTIVITY = DataTracker.registerData(DeerFollowerEntity.class, TrackedDataHandlerRegistry.BYTE);
 	static final TrackedData<Byte> VARIANT = DataTracker.registerData(DeerFollowerEntity.class, TrackedDataHandlerRegistry.BYTE);
-	static final TrackedData<Vector3f> ALTAR = DataTracker.registerData(DeerFollowerEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
+	static final TrackedData<BlockPos> ALTAR = DataTracker.registerData(DeerFollowerEntity.class, TrackedDataHandlerRegistry.BLOCK_POS);
 	public static final byte ACTIVITY_IDLE = 0;
 	public static final byte ACTIVITY_READING = 1;
 	public static final byte ACTIVITY_WORSHIP = 2;
@@ -106,7 +106,7 @@ public class DeerFollowerEntity extends ServantEntity
 		builder.add(MASK, true);
 		builder.add(ACTIVITY, ACTIVITY_IDLE);
 		builder.add(VARIANT, (byte)0);
-		builder.add(ALTAR, new Vector3f());
+		builder.add(ALTAR, BlockPos.ORIGIN);
 	}
 	
 	@Override
@@ -121,7 +121,7 @@ public class DeerFollowerEntity extends ServantEntity
 				addHeadParticles(ParticleRegistry.DARKNESS, 1f, 16);
 		}
 		if(data.equals(ALTAR))
-			hasAltar = !dataTracker.get(ALTAR).equals(new Vector3f());
+			hasAltar = !dataTracker.get(ALTAR).equals(BlockPos.ORIGIN);
 		if(data.equals(ACTIVITY))
 			activity = dataTracker.get(ACTIVITY);
 	}
@@ -233,11 +233,12 @@ public class DeerFollowerEntity extends ServantEntity
 		
 		if(!isHasAltar())
 		{
-			List<DeerGodEntity> list = getWorld().getEntitiesByType(TypeFilter.instanceOf(DeerGodEntity.class), Box.from(getPos()).expand(32), i -> true);
+			List<DeerGodEntity> list = getWorld().getEntitiesByType(TypeFilter.instanceOf(DeerGodEntity.class),
+					Box.from(getPos().subtract(0.5, 0.5, 0.5)).expand(32), i -> true);
 			if(!list.isEmpty())
 			{
 				DeerGodEntity deer = list.getFirst();
-				dataTracker.set(ALTAR, deer.getOrigin());
+				dataTracker.set(ALTAR, deer.getOriginBlock());
 				setTarget(deer.getTarget());
 			}
 		}
@@ -292,9 +293,15 @@ public class DeerFollowerEntity extends ServantEntity
 		return dataTracker.get(VARIANT);
 	}
 	
-	public Vector3f getAltar()
+	public BlockPos getAltar()
 	{
 		return dataTracker.get(ALTAR);
+	}
+	
+	public Vec3d getAltarMinCorner()
+	{
+		BlockPos pos = getAltar();
+		return new Vec3d(pos.getX(), pos.getY(), pos.getZ());
 	}
 	
 	public boolean isHasAltar()
@@ -330,11 +337,8 @@ public class DeerFollowerEntity extends ServantEntity
 			dataTracker.set(VARIANT, (byte)(random.nextFloat() * 3.99));
 		if(nbt.contains("Mask", NbtElement.BYTE_TYPE))
 			dataTracker.set(MASK, nbt.getBoolean("Mask"));
-		if(nbt.contains("Altar", NbtElement.COMPOUND_TYPE))
-		{
-			NbtCompound altar = nbt.getCompound("Altar");
-			dataTracker.set(ALTAR, new Vector3f(altar.getFloat("x"), altar.getFloat("y"), altar.getFloat("z")));
-		}
+		if(nbt.contains("Altar", NbtElement.LONG_TYPE))
+			dataTracker.set(ALTAR, BlockPos.fromLong(nbt.getLong("Altar")));
 	}
 	
 	@Override
@@ -344,14 +348,7 @@ public class DeerFollowerEntity extends ServantEntity
 		nbt.putByte("Variante", dataTracker.get(VARIANT));
 		nbt.putBoolean("Mask", dataTracker.get(MASK));
 		if(isHasAltar())
-		{
-			NbtCompound altar = new NbtCompound();
-			Vector3f altarPos = dataTracker.get(ALTAR);
-			altar.putFloat("x", altarPos.x);
-			altar.putFloat("y", altarPos.y);
-			altar.putFloat("z", altarPos.z);
-			nbt.put("Altar", altar);
-		}
+			nbt.putLong("Altar", NbtElement.LONG_TYPE);
 	}
 	
 	static class SearchForAltarGoal extends WanderAroundGoal
@@ -393,7 +390,7 @@ public class DeerFollowerEntity extends ServantEntity
 		public void start()
 		{
 			super.start();
-			Vec3d center = new Vec3d(mob.getAltar());
+			Vec3d center = mob.getAltar().toBottomCenterPos();
 			for (int i = 0; i < 16; i++)
 			{
 				Vec3d dest = center.add((mob.random.nextFloat() - 0.5) * 2 * 32f, 0f, (mob.random.nextFloat() - 0.5) * 2 * 32f);
@@ -551,8 +548,8 @@ public class DeerFollowerEntity extends ServantEntity
 		public void tick()
 		{
 			super.tick();
-			Vec3d altar = new Vec3d(mob.getAltar());
-			if(!arrived && mob.getAltar().distance(mob.getPos().toVector3f()) > 4)
+			Vec3d altar = mob.getAltar().toBottomCenterPos();
+			if(!arrived && mob.getAltar().isWithinDistance(mob.getPos(), 4f))
 			{
 				if(!mob.navigation.isIdle())
 					return;
@@ -619,14 +616,14 @@ public class DeerFollowerEntity extends ServantEntity
 			if(!mob.hasAltar || mob.getTarget() != null)
 				return false;
 			return !mob.getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class),
-					Box.from(new Vec3d(mob.getAltar())).expand(4f), i -> i.isAlive() && !i.isCreative() && !i.isSpectator()).isEmpty();
+					Box.from(mob.getAltarMinCorner()).expand(4f), i -> i.isAlive() && !i.isCreative() && !i.isSpectator()).isEmpty();
 		}
 		
 		@Override
 		public void start()
 		{
 			super.start();
-			Vec3d dest = new Vec3d(mob.getAltar());
+			Vec3d dest = mob.getAltar().toBottomCenterPos();
 			if(!mob.navigation.startMovingTo(dest.x, dest.y, dest.z, 3, speed))
 				stop();
 		}

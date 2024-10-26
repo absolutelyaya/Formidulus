@@ -109,7 +109,7 @@ public class IrrlichtEntity extends MobEntity
 		setVelocity(0f, 0.4 * (lifetime / 100f), 0f);
 		if(lifetime == 1)
 		{
-			Vec3d checkPos = getPos();
+			Vec3d checkPos = getPos().subtract(0.5, 0.5, 0.5);
 			if(owner != null)
 				checkPos = owner.getPos();
 			LivingEntity target = null;

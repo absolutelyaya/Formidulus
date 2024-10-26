@@ -19,7 +19,6 @@ public class BossOutOfCombatGoal extends Goal
 	final BossEntity mob;
 	final byte behavior;
 	final float regenPerTick, speed;
-	BossEntity reborn;
 	boolean wasInCombat;
 	
 	public BossOutOfCombatGoal(BossEntity mob, byte behavior)
@@ -53,10 +52,10 @@ public class BossOutOfCombatGoal extends Goal
 	public void start()
 	{
 		super.start();
-		BlockPos originBlock = BlockPos.ofFloored(new Vec3d(mob.getDataTracker().get(BossEntity.ORIGIN)));
+		BlockPos originBlock = mob.getDataTracker().get(BossEntity.ORIGIN);
 		if (behavior == BEHAVIOR_TELEPORT_TO_ORIGIN_AND_HEAL ||
 					mob.getNavigation().findPathTo(originBlock, 1) == null)
-			mob.setPosition(new Vec3d(mob.getDataTracker().get(BossEntity.ORIGIN)));
+			mob.setPosition(mob.getDataTracker().get(BossEntity.ORIGIN).toBottomCenterPos());
 		else if (behavior == BEHAVIOR_DESPAWN)
 		{
 			mob.discard();
@@ -83,7 +82,7 @@ public class BossOutOfCombatGoal extends Goal
 		if(mob.getTarget() != null)
 			return false;
 		if (behavior == BEHAVIOR_RETURN_TO_ORIGIN_AND_HEAL)
-			return mob.getHealth() < mob.getMaxHealth() && mob.squaredDistanceTo(new Vec3d(mob.getDataTracker().get(BossEntity.ORIGIN))) < 1f;
+			return mob.getHealth() < mob.getMaxHealth() && mob.getDataTracker().get(BossEntity.ORIGIN).isWithinDistance(mob.getPos(), 1f);
 		else if (behavior == BEHAVIOR_TELEPORT_TO_ORIGIN_AND_HEAL)
 			return mob.getHealth() < mob.getMaxHealth();
 		return false;
@@ -101,7 +100,7 @@ public class BossOutOfCombatGoal extends Goal
 		super.tick();
 		if (behavior == BEHAVIOR_RETURN_TO_ORIGIN_AND_HEAL || behavior == BEHAVIOR_TELEPORT_TO_ORIGIN_AND_HEAL)
 			mob.heal(regenPerTick);
-		Vec3d origin = new Vec3d(mob.getDataTracker().get(BossEntity.ORIGIN));
+		Vec3d origin = mob.getDataTracker().get(BossEntity.ORIGIN).toBottomCenterPos();
 		if (!mob.getBlockPos().isWithinDistance(origin, 2f) && mob.getNavigation().isIdle())
 			if (!mob.getNavigation().startMovingTo(origin.x, origin.y, origin.z, speed))
 				mob.setPosition(origin);

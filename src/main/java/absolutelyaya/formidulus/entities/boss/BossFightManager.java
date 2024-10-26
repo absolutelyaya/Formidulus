@@ -3,6 +3,7 @@ package absolutelyaya.formidulus.entities.boss;
 import absolutelyaya.formidulus.Formidulus;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -75,8 +76,18 @@ public class BossFightManager
 		activeFights.values().forEach(f -> f.leaveFight(player));
 	}
 	
-	public boolean isActive(DeerBossFight bossFight)
+	public boolean isActive(BossFight bossFight)
 	{
-		return activeFights.containsKey(bossFight.fightID);
+		return isActive(bossFight.fightID);
+	}
+	
+	public boolean isActive(UUID id)
+	{
+		return activeFights.containsKey(id);
+	}
+	
+	public @Nullable BossFight fromId(UUID id)
+	{
+		return activeFights.get(id);
 	}
 }

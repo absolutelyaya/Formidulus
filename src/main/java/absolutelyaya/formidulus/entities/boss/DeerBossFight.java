@@ -1,40 +1,19 @@
 package absolutelyaya.formidulus.entities.boss;
 
-import absolutelyaya.formidulus.entities.DeerGodEntity;
+import absolutelyaya.formidulus.entities.BossEntity;
 import absolutelyaya.formidulus.network.SequenceTriggerPayload;
 import absolutelyaya.formidulus.registries.SoundRegistry;
 import absolutelyaya.formidulus.sound.BossMusicEntry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 
 import java.util.UUID;
 
 public class DeerBossFight extends BossFight
 {
-	public DeerBossFight(DeerGodEntity deer, boolean continuation)
+	public DeerBossFight(BossEntity entity, UUID id)
 	{
-		super(deer.getWorld(), BossType.DEER, BlockPos.ofFloored(new Vec3d(deer.getOrigin())), UUID.randomUUID(), continuation);
-		registerBossEntity(deer);
-	}
-	
-	@Override
-	String getCurMusicKey()
-	{
-		return "phase" + (phase + 1);
-	}
-	
-	@Override
-	public void interrupt(boolean removeRemainingBossEntities)
-	{
-		bossEntities.forEach(i -> {
-			if(i instanceof DeerGodEntity deer)
-				deer.forceReset();
-			else
-				i.discard();
-		});
-		onFightEnded();
+		super(entity, id);
 	}
 	
 	@Override

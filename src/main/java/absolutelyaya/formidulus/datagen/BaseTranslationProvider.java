@@ -76,6 +76,7 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add("block.formidulus.banner.eyes.red", "Red Eyes");
 		builder.add("block.formidulus.banner.eyes.white", "White Eyes");
 		builder.add("block.formidulus.banner.eyes.yellow", "Yellow Eyes");
+		builder.add(BlockRegistry.BOSS_SPAWNER, "Boss Spawner");
 		
 		builder.add(ADVANCEMENT_ROOT_TITLE, "Absolute Spooky Month 24");
 		builder.add(ADVANCEMENT_ROOT_DESCRIPTION, "it's ween");

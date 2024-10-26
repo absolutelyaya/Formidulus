@@ -8,8 +8,10 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public record BossType(Identifier id, List<EntityType<? extends BossEntity>> bossEntities, Class<? extends BossFight> fight)
 {
@@ -20,6 +22,19 @@ public record BossType(Identifier id, List<EntityType<? extends BossEntity>> bos
 	public static @Nullable BossType fromId(Identifier id)
 	{
 		return types.get(id);
+	}
+	
+	public @Nullable BossFight beginFight(BossEntity e, @Nullable UUID id)
+	{
+		try
+		{
+			return BossFightManager.INSTANCE.beginFight(fight().getConstructor(BossEntity.class, UUID.class).newInstance(e, id));
+		}
+		catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException exception)
+		{
+			Formidulus.LOGGER.error("Failed to start Boss Fight of type '{}': {}", this.id, exception);
+		}
+		return null;
 	}
 	
 	static {

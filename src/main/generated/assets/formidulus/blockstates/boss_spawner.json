@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "formidulus:block/boss_spawner"
+    }
+  }
+}

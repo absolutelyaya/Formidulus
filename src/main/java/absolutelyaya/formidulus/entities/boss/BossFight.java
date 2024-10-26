@@ -1,6 +1,7 @@
 package absolutelyaya.formidulus.entities.boss;
 
 import absolutelyaya.formidulus.advancement.CriteriaRegistry;
+import absolutelyaya.formidulus.block.BossSpawnerBlockEntity;
 import absolutelyaya.formidulus.entities.BossEntity;
 import absolutelyaya.formidulus.network.BossMusicUpdatePayload;
 import absolutelyaya.formidulus.sound.BossMusicEntry;
@@ -31,17 +32,18 @@ public abstract class BossFight
 	String lastMusicKey;
 	boolean playerWin;
 	
-	protected BossFight(World world, BossType type, BlockPos origin, UUID id, boolean continuation)
+	protected BossFight(BossEntity entity, UUID id)
 	{
-		this.world = world;
-		this.type = type;
-		this.origin = origin;
-		this.fightID = id;
+		this.world = entity.getWorld();
+		this.type = entity.getBossType();
+		this.origin = entity.getOriginBlock();
 		
-		if(!continuation) //if continuation, all players should be counted as late so music intros don't repeat
+		if(id == null) //if continuation, all players should be counted as late so music intros don't repeat
 			participants = world.getEntitiesByType(TypeFilter.instanceOf(ServerPlayerEntity.class), new Box(origin).expand(playerCheckRange),
 					i -> !i.isSpectator() && i.isPartOfGame());
-		playerCheckTimer = playerCheckIntervall;
+		this.fightID = id == null ? UUID.randomUUID() : id;
+		
+		registerBossEntity(entity);
 	}
 	
 	public void registerBossEntity(BossEntity boss)
@@ -103,7 +105,10 @@ public abstract class BossFight
 		return bossMusic.get(key);
 	}
 	
-	abstract String getCurMusicKey();
+	protected String getCurMusicKey()
+	{
+		return "phase" + (phase + 1);
+	}
 	
 	void onMusicChange(String key)
 	{
@@ -132,7 +137,7 @@ public abstract class BossFight
 	public void interrupt(boolean removeRemainingBossEntities)
 	{
 		if(removeRemainingBossEntities)
-			bossEntities.forEach(BossEntity::discard);
+			bossEntities.forEach(BossEntity::forceReset);
 		onFightEnded();
 	}
 	
@@ -144,7 +149,16 @@ public abstract class BossFight
 	void onFightEnded()
 	{
 		if(playerWin)
+		{
 			participants.forEach(p -> CriteriaRegistry.BOSSFIGHT_WIN.trigger(p, type.id()));
+			if(world.getBlockEntity(origin) instanceof BossSpawnerBlockEntity spawner && fightID.equals(spawner.getFightId()))
+				spawner.onFightEnded();
+		}
 		onMusicChange("cancel");
+	}
+	
+	public UUID getFightID()
+	{
+		return fightID;
 	}
 }

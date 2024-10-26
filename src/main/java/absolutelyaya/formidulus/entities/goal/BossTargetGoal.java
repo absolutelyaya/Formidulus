@@ -55,7 +55,8 @@ public class BossTargetGoal extends Goal
 			lastTargetDamagedTime = mob.getLastTargetDamagedTime();
 			targetSwitchTimer = Math.min(targetSwitchTimer + switchInterval / 4, switchInterval);
 		}
-		mob.getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), Box.from(mob.getPos()).expand(range), this::isTargetValid)
+		mob.getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class),
+						Box.from(mob.getPos().subtract(0.5, 0.5, 0.5)).expand(range), this::isTargetValid)
 				.forEach(p -> {
 					if(!knownTargets.containsKey(p))
 						knownTargets.put(p, 5f);

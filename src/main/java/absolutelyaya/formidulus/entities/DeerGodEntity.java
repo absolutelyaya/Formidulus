@@ -5,7 +5,6 @@ import absolutelyaya.formidulus.damage.DamageSources;
 import absolutelyaya.formidulus.datagen.Lang;
 import absolutelyaya.formidulus.entities.boss.BossFightManager;
 import absolutelyaya.formidulus.entities.boss.BossType;
-import absolutelyaya.formidulus.entities.boss.DeerBossFight;
 import absolutelyaya.formidulus.entities.goal.AnimatedAttackGoal;
 import absolutelyaya.formidulus.entities.goal.BossOutOfCombatGoal;
 import absolutelyaya.formidulus.entities.goal.BossTargetGoal;
@@ -113,11 +112,10 @@ public class DeerGodEntity extends BossEntity
 	PlayerEntity killer;
 	float rangedDamageTaken, eyeGlow;
 	boolean swarmAttackPending;
-	DeerBossFight bossFight;
 	
 	public DeerGodEntity(EntityType<? extends BossEntity> entityType, World world)
 	{
-		super(entityType, world);
+		super(entityType, world, BossType.DEER);
 		unsummonedPoseAnimationState.start(age);
 		holdLanternAnimationState.start(age);
 		noLanternAnimationState.start(age);
@@ -240,7 +238,7 @@ public class DeerGodEntity extends BossEntity
 			if(!isAnyCultistNearby() && !getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class),
 					getBoundingBox().expand(12), p -> !p.isSpectator() && !p.isCreative()).isEmpty())
 			{
-				bossFight = BossFightManager.INSTANCE.beginFight(new DeerBossFight(this, false));
+				beginFight();
 				setAnimation(SPAWN_SEQUENCE_ANIM);
 				triggerMonologueSequence(SequenceTriggerPayload.SPAWN_SEQUENCE);
 				dataTracker.set(SUMMONED, true);
@@ -352,7 +350,7 @@ public class DeerGodEntity extends BossEntity
 					setAnimationFlag(0, true);
 					setAttackCooldown(20);
 					if(!getWorld().isClient)
-						dataTracker.set(ORIGIN, getPos().toVector3f());
+						dataTracker.set(ORIGIN, getBlockPos());
 				}
 				if(duration < 8.7f)
 				{
@@ -429,14 +427,14 @@ public class DeerGodEntity extends BossEntity
 						playSound(SoundEvents.ENTITY_EVOKER_PREPARE_ATTACK, 0.6f, 1f);
 					}
 					spawnVanishingParticles(12, getPos());
-					spawnVanishingParticles(12, new Vec3d(dataTracker.get(ORIGIN)));
+					spawnVanishingParticles(12, getOriginBlock().toBottomCenterPos());
 				}
 				if(!getAnimationFlag(2) && duration >= 4.05f)
 				{
 					setAnimationFlag(2, true);
-					Vector3f pos = dataTracker.get(ORIGIN);
+					BlockPos pos = dataTracker.get(ORIGIN);
 					playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 0.6f, 1f);
-					setPosition(pos.x, pos.y, pos.z);
+					setPosition(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f);
 					playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 0.6f, 1f);
 					if(getTarget() != null)
 						lookAt(EntityAnchorArgumentType.EntityAnchor.FEET, getTarget().getPos());
@@ -664,7 +662,7 @@ public class DeerGodEntity extends BossEntity
 	 */
 	void triggerMonologueSequence(byte id)
 	{
-		if(getWorld().isClient)
+		if(getWorld().isClient || bossFight == null)
 			return;
 		bossFight.getAllParticipants().forEach(i -> ServerPlayNetworking.send(i, new SequenceTriggerPayload(id)));
 	}
@@ -879,7 +877,7 @@ public class DeerGodEntity extends BossEntity
 		super.cancelActiveGoals();
 		dataTracker.set(TELEPORT_TIMER, Integer.MIN_VALUE);
 		setAnimation(IDLE_ANIM);
-		getWorld().getEntitiesByType(TypeFilter.instanceOf(IrrlichtEntity.class), Box.from(getPos()).expand(32), i -> i.owner == this)
+		getWorld().getEntitiesByType(TypeFilter.instanceOf(IrrlichtEntity.class), box(getPos()).expand(32), i -> i.owner == this)
 				.forEach(LivingEntity::kill);
 	}
 	
@@ -978,12 +976,6 @@ public class DeerGodEntity extends BossEntity
 		return DamageUtil.getDamageLeft(this, amount, source, armor, toughness);
 	}
 	
-	public void forceReset()
-	{
-		cancelActiveGoals();
-		outOfCombatGoal.start(); //discard this entity and respawn at Origin
-	}
-	
 	@Override
 	public void afterBossReset()
 	{
@@ -1017,7 +1009,7 @@ public class DeerGodEntity extends BossEntity
 	List<DeerFollowerEntity> getAllNearbyCultists()
 	{
 		return getWorld().getEntitiesByType(TypeFilter.instanceOf(DeerFollowerEntity.class),
-				Box.from(new Vec3d(getOrigin())).expand(48), LivingEntity::isPartOfGame);
+				Box.from(getOriginBlockMinCorner()).expand(48), LivingEntity::isPartOfGame);
 	}
 	
 	@Override
@@ -1070,11 +1062,6 @@ public class DeerGodEntity extends BossEntity
 		return super.onKilledOther(world, other);
 	}
 	
-	public Vector3f getOrigin()
-	{
-		return dataTracker.get(ORIGIN);
-	}
-	
 	@Override
 	public List<Class<? extends LivingEntity>> getIgnoredClasses()
 	{
@@ -1087,15 +1074,18 @@ public class DeerGodEntity extends BossEntity
 	}
 	
 	@Override
+	boolean shouldFightBeActive()
+	{
+		return dataTracker.get(SUMMONED);
+	}
+	
+	@Override
 	public void readCustomDataFromNbt(NbtCompound nbt)
 	{
-		super.readCustomDataFromNbt(nbt);
 		if(nbt.contains("Summoned", NbtElement.BYTE_TYPE))
 		{
 			dataTracker.set(SUMMONED, nbt.getBoolean("Summoned"));
 			setAnimation(IDLE_ANIM);
-			if(bossFight == null || !BossFightManager.INSTANCE.isActive(bossFight))
-				bossFight = BossFightManager.INSTANCE.beginFight(new DeerBossFight(this, true));
 		}
 		if(nbt.contains("Claw", NbtElement.BYTE_TYPE))
 			dataTracker.set(CLAW, nbt.getBoolean("Claw"));
@@ -1107,6 +1097,7 @@ public class DeerGodEntity extends BossEntity
 			rangedDamageTaken = nbt.getFloat("RangedDamageTaken");
 		if(nbt.contains("SwarmAttack", NbtElement.INT_TYPE))
 			swarmAttack = nbt.getInt("SwarmAttack");
+		super.readCustomDataFromNbt(nbt);
 	}
 	
 	@Override
@@ -1251,7 +1242,7 @@ public class DeerGodEntity extends BossEntity
 		{
 			Vec3d impact = mob.getPos().add(new Vec3d(0.5, 0, 3).rotateY((float)Math.toRadians(-mob.getYaw())));
 			List<LivingEntity> hits = mob.getWorld().getNonSpectatingEntities(LivingEntity.class,
-					Box.from(impact).expand(radius));
+					Box.from(impact.subtract(0.5, 0.5, 0.5)).expand(radius));
 			for (LivingEntity hit : hits)
 			{
 				if(mob.getIgnoredClasses().contains(hit.getClass()))
@@ -1369,7 +1360,7 @@ public class DeerGodEntity extends BossEntity
 				stop();
 				return;
 			}
-			failed = mob.getTarget().getPos().distanceTo(new Vec3d(mob.dataTracker.get(ORIGIN))) > 32f || ++time > 200;
+			failed = mob.getTarget().getPos().distanceTo(mob.getOriginBlock().toBottomCenterPos()) > 32f || ++time > 200;
 			if(mob.distanceTo(mob.getTarget()) <= 3f || failed)
 				return;
 			Vec3d target = mob.getTarget().getPos();
@@ -1469,7 +1460,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public void start()
 		{
-			origin = new Vec3d(mob.dataTracker.get(ORIGIN));
+			origin = mob.getOriginBlock().toBottomCenterPos();
 			super.start();
 		}
 		
@@ -1635,8 +1626,8 @@ public class DeerGodEntity extends BossEntity
 				spawnCooldown -= 2;
 			if(fade < 50 || mob.dataTracker.get(SCHEDULED_SPAWNS) <= 0 || spawnCooldown-- > 0 || cultists >= mob.getMaxCultists())
 				return;
-			if(mob.getPos().distanceTo(new Vec3d(mob.getOrigin())) > 1f)
-				mob.setPosition(new Vec3d(mob.getOrigin()));
+			if(mob.getPos().distanceTo(mob.getOriginBlock().toBottomCenterPos()) > 1f)
+				mob.setPosition(mob.getOriginBlock().toCenterPos());
 			mob.spawnCultist(new Vec2f(10, 15), false);
 			mob.setTarget(mob.getRandomTarget());
 			mob.playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 1f, 1f);

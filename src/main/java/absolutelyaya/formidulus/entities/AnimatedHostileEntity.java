@@ -189,7 +189,7 @@ public abstract class AnimatedHostileEntity extends HostileEntity
 										  Vec3d offset, BiConsumer<LivingEntity, Boolean> extraProcess)
 	{
 		int successfulHits = 0;
-		Box area = Box.from(getPos()).expand(radius, 0, radius).stretch(0f, height, 0f).offset(offset);
+		Box area = box(getPos()).expand(radius, 0, radius).stretch(0f, height, 0f).offset(offset);
 		List<LivingEntity> hits = getWorld().getNonSpectatingEntities(LivingEntity.class, area);
 		for (LivingEntity hit : hits)
 		{
@@ -241,5 +241,10 @@ public abstract class AnimatedHostileEntity extends HostileEntity
 	public void onDamageEntity(LivingEntity damaged)
 	{
 	
+	}
+	
+	protected Box box(Vec3d pos)
+	{
+		return new Box(pos.subtract(0.5, 0.5, 0.5), pos.add(0.5, 0.5, 0.5));
 	}
 }

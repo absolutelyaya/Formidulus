@@ -1,5 +1,6 @@
 package absolutelyaya.formidulus.entities;
 
+import absolutelyaya.formidulus.entities.boss.BossFight;
 import absolutelyaya.formidulus.entities.boss.BossType;
 import absolutelyaya.formidulus.entities.goal.BossOutOfCombatGoal;
 import absolutelyaya.formidulus.entities.goal.BossTargetGoal;
@@ -17,33 +18,37 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.TypeFilter;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3f;
 
 import java.util.List;
+import java.util.UUID;
 
 public abstract class BossEntity extends AnimatedHostileEntity
 {
-	public static final TrackedData<Vector3f> ORIGIN = DataTracker.registerData(BossEntity.class, TrackedDataHandlerRegistry.VECTOR3F);
+	public static final TrackedData<BlockPos> ORIGIN = DataTracker.registerData(BossEntity.class, TrackedDataHandlerRegistry.BLOCK_POS);
 	protected ServerBossBar bossBar;
 	boolean wasBossbarVisible, shouldUpdateBossbar = true;
 	float lastDamageTakenRaw, lastDamageTaken;
 	int lastTargetDamagedTime, combatTimer;
 	BossTargetGoal targetGoal;
 	BossOutOfCombatGoal outOfCombatGoal;
+	BossFight bossFight;
+	BossType type;
 	
-	protected BossEntity(EntityType<? extends AnimatedHostileEntity> entityType, World world)
+	protected BossEntity(EntityType<? extends AnimatedHostileEntity> entityType, World world, BossType type)
 	{
 		super(entityType, world);
+		this.type = type;
 	}
 	
 	@Override
 	protected void initDataTracker(DataTracker.Builder builder)
 	{
 		super.initDataTracker(builder);
-		builder.add(ORIGIN, getPos().toVector3f());
+		builder.add(ORIGIN, getBlockPos());
 	}
 	
 	protected ServerBossBar initBossBar()
@@ -96,8 +101,8 @@ public abstract class BossEntity extends AnimatedHostileEntity
 			combatTimer = 100;
 		else if(combatTimer > 0)
 			combatTimer--;
-		if(dataTracker.get(ORIGIN).equals(new Vector3f()))
-			dataTracker.set(ORIGIN, getPos().toVector3f());
+		if(dataTracker.get(ORIGIN).equals(BlockPos.ORIGIN))
+			dataTracker.set(ORIGIN, getBlockPos());
 		if(wasBossbarVisible && !isBossBarVisible())
 			bossBar.clearPlayers();
 		else if(!wasBossbarVisible && isBossBarVisible())
@@ -188,33 +193,60 @@ public abstract class BossEntity extends AnimatedHostileEntity
 	
 	public abstract boolean isActive();
 	
+	public BlockPos getOriginBlock()
+	{
+		return dataTracker.get(ORIGIN);
+	}
+	
+	public Vec3d getOriginBlockMinCorner()
+	{
+		BlockPos pos = getOriginBlock();
+		return new Vec3d(pos.getX(), pos.getY(), pos.getZ());
+	}
+	
+	protected void beginFight()
+	{
+		bossFight = type.beginFight(this, getFightId());
+	}
+	
+	public UUID getFightId()
+	{
+		if(bossFight == null)
+			return null;
+		return bossFight.getFightID();
+	}
+	
+	public void forceReset()
+	{
+		cancelActiveGoals();
+		outOfCombatGoal.start(); //discard this entity and respawn at Origin
+	}
+	
+	abstract boolean shouldFightBeActive();
+	
 	@Override
 	public void readCustomDataFromNbt(NbtCompound nbt)
 	{
 		super.readCustomDataFromNbt(nbt);
-		if(nbt.contains("Origin", NbtElement.COMPOUND_TYPE))
-		{
-			NbtCompound origin = nbt.getCompound("Origin");
-			dataTracker.set(ORIGIN, new Vector3f(origin.getFloat("x"), origin.getFloat("y"), origin.getFloat("z")));
-		}
+		if(nbt.contains("Origin", NbtElement.LONG_TYPE))
+			dataTracker.set(ORIGIN, BlockPos.fromLong(nbt.getLong("Origin")));
 		if(nbt.contains("CombatTimer", NbtElement.INT_TYPE))
 			combatTimer = nbt.getInt("CombatTimer");
+		if(nbt.containsUuid("FightId"))
+			bossFight = type.beginFight(this, nbt.getUuid("FightId"));
+		else if(shouldFightBeActive())
+			beginFight();
 	}
 	
 	@Override
 	public void writeCustomDataToNbt(NbtCompound nbt)
 	{
 		super.writeCustomDataToNbt(nbt);
-		if(!dataTracker.get(ORIGIN).equals(new Vector3f()))
-		{
-			NbtCompound origin = new NbtCompound();
-			Vector3f originPos = dataTracker.get(ORIGIN);
-			origin.putFloat("x", originPos.x);
-			origin.putFloat("y", originPos.y);
-			origin.putFloat("z", originPos.z);
-			nbt.put("Origin", origin);
-		}
+		if(!dataTracker.get(ORIGIN).equals(BlockPos.ORIGIN))
+			nbt.putLong("Origin", dataTracker.get(ORIGIN).asLong());
 		if(isInCombat())
 			nbt.putInt("CombatTimer", combatTimer);
+		if(bossFight != null)
+			nbt.putUuid("FightId", bossFight.getFightID());
 	}
 }
