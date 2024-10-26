@@ -37,6 +37,8 @@
   "config.formidulus.cultist_mending_chance.description": "How likely an enchanted book held by Cultists is to have Mending on it; NOTE: the chance that they hold an enchanted book at all is pretty low already.",
   "config.formidulus.deer_warning": "Deer Warning",
   "config.formidulus.deer_warning.description": "Whether Players with less than 20 Armor should be warned when close to Cruor in its unsummoned state.",
+  "config.formidulus.fightCheckInverval": "Bossfight Check Interval",
+  "config.formidulus.fightCheckInverval.description": "The interval between checks a boss spawner performs to see if there's an active fight, or a spawned boss belonging to it.",
   "death.attack.claw": "%1$s was torn apart by %2$s",
   "death.attack.claw.item": "%1s was torn apart by %2$s using %3$s",
   "death.attack.claw.player": "%1s was torn apart trying to escape %2$s",
@@ -104,5 +106,9 @@
   "message.formidulus.deer.warning1": "It feels as though something doesn't want you here.",
   "message.formidulus.deer.warning2": "An evil presence lurks below... And you don't feel prepared to face it.",
   "message.formidulus.deer.warning3": "Something feels off... you shouldn't be here yet.",
+  "screen.formidulus.boss_spawner.boss_type": "Boss Type:",
+  "screen.formidulus.boss_spawner.close": "Save and Close",
+  "screen.formidulus.boss_spawner.respawn_delay": "Respawn Delay:",
+  "screen.formidulus.boss_spawner.title": "Boss Spawner Settings",
   "screen.formidulus.config-screen.title": "Formidulus Server Config Screen"
 }

@@ -348,7 +348,7 @@ public class DeerFollowerEntity extends ServantEntity
 		nbt.putByte("Variante", dataTracker.get(VARIANT));
 		nbt.putBoolean("Mask", dataTracker.get(MASK));
 		if(isHasAltar())
-			nbt.putLong("Altar", NbtElement.LONG_TYPE);
+			nbt.putLong("Altar", getAltar().asLong());
 	}
 	
 	static class SearchForAltarGoal extends WanderAroundGoal

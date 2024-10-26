@@ -43,6 +43,9 @@ public abstract class BossFight
 					i -> !i.isSpectator() && i.isPartOfGame());
 		this.fightID = id == null ? UUID.randomUUID() : id;
 		
+		if(world.getBlockEntity(origin) instanceof BossSpawnerBlockEntity spawner)
+			spawner.setBossFightId(fightID);
+		
 		registerBossEntity(entity);
 	}
 	

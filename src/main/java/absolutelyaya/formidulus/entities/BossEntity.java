@@ -4,8 +4,10 @@ import absolutelyaya.formidulus.entities.boss.BossFight;
 import absolutelyaya.formidulus.entities.boss.BossType;
 import absolutelyaya.formidulus.entities.goal.BossOutOfCombatGoal;
 import absolutelyaya.formidulus.entities.goal.BossTargetGoal;
+import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.boss.ServerBossBar;
 import net.minecraft.entity.damage.DamageSource;
@@ -20,6 +22,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.LocalDifficulty;
+import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -202,6 +206,11 @@ public abstract class BossEntity extends AnimatedHostileEntity
 	{
 		BlockPos pos = getOriginBlock();
 		return new Vec3d(pos.getX(), pos.getY(), pos.getZ());
+	}
+	
+	public void setOriginBlock(BlockPos pos)
+	{
+		dataTracker.set(ORIGIN, pos);
 	}
 	
 	protected void beginFight()

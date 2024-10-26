@@ -78,6 +78,7 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add("block.formidulus.banner.eyes.red", "Rote Augen");
 		builder.add("block.formidulus.banner.eyes.white", "Weiße Augen");
 		builder.add("block.formidulus.banner.eyes.yellow", "Gelbe Augen");
+		builder.add(BlockRegistry.BOSS_SPAWNER, "Boss Spawner");
 		
 		builder.add(ADVANCEMENT_ROOT_TITLE, "Absolute Spooky Month 24");
 		builder.add(ADVANCEMENT_ROOT_DESCRIPTION, "es ist ween");
@@ -87,6 +88,11 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(ADVANCEMENT_DEER_DESCRIPTION, "Erschlage das Skelettbiest das der Kult verehrt.");
 		builder.add(ADVANCEMENT_WEEN_TITLE, "es ist ween");
 		builder.add(ADVANCEMENT_WEEN_DESCRIPTION, "ich hoffe du hast dich nicht zu sehr erschreckt-");
+		
+		builder.add(SCREEN_BOSS_SPAWNER_TITLE, "Boss Spawner Einstellungen");
+		builder.add(SCREEN_BOSS_SPAWNER_BOSS_TYPE, "Boss Typ:");
+		builder.add(SCREEN_BOSS_SPAWNER_RESPAWN_DELAY, "Respawn-Wartedauer:");
+		builder.add(SCREEN_BOSS_SPAWNER_CLOSE, "Speichern und Schließen");
 		
 		builder.add("death.attack.lantern", "%1$s wurde von %2$s ins Licht geführt");
 		builder.add("death.attack.lantern.item", "%1$s wurde von %2$s mittels %3$s ins Licht geführt");
@@ -147,6 +153,7 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		
 		String cultistMendingChance = Formidulus.config.cultistMendingChance.getTranslationKey(Formidulus.MOD_ID);
 		String deerWarning = Formidulus.config.deerWarning.getTranslationKey(Formidulus.MOD_ID);
+		String fightCheckInterval = Formidulus.config.fightCheckInterval.getTranslationKey(Formidulus.MOD_ID);
 		
 		builder.add(SCREEN_CONFIG_TITLE, "Formidulus Server Einstellungen");
 		builder.add(cultistMendingChance, "Cultist Reperatur Chance");
@@ -156,5 +163,8 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(deerWarning, "Hirsch Warnung");
 		builder.add(deerWarning + ".description",
 				"Ob Spieler mit weniger als 20 Rüstung gewarnt werden sollten wenn sie in der Nähe von Cruor in seinem Ruhezustand sind.");
+		builder.add(fightCheckInterval, "Bosskampf Check Intervall");
+		builder.add(fightCheckInterval + ".description",
+				"Der Intervall zwischen den checks die ein Boss Spawner ausführt um zu testen ob sein Kampf läuft, oder ein Lebender Boss zu ihm gehört.");
 	}
 }

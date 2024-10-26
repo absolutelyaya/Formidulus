@@ -16,6 +16,10 @@ public interface Lang
 	String ADVANCEMENT_WEEN_DESCRIPTION = BaseTranslationProvider.modKey("advancement", "ween.description");
 	
 	String SCREEN_CONFIG_TITLE = BaseTranslationProvider.modKey("screen", "config-screen.title");
+	String SCREEN_BOSS_SPAWNER_TITLE = BaseTranslationProvider.modKey("screen", "boss_spawner.title");
+	String SCREEN_BOSS_SPAWNER_BOSS_TYPE = BaseTranslationProvider.modKey("screen", "boss_spawner.boss_type");
+	String SCREEN_BOSS_SPAWNER_RESPAWN_DELAY = BaseTranslationProvider.modKey("screen", "boss_spawner.respawn_delay");
+	String SCREEN_BOSS_SPAWNER_CLOSE = BaseTranslationProvider.modKey("screen", "boss_spawner.close");
 	
 	
 	String MESSAGE_DEER_WARNING = BaseTranslationProvider.modKey("message", "deer.warning");

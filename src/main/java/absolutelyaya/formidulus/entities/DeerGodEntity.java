@@ -204,7 +204,7 @@ public class DeerGodEntity extends BossEntity
 	@Override
 	public boolean canHit()
 	{
-		return getVanishingPercent() < 0.5f;
+		return getVanishingPercent() < 0.5f && dataTracker.get(SUMMONED);
 	}
 	
 	@Override

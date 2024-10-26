@@ -37,6 +37,11 @@ public record BossType(Identifier id, List<EntityType<? extends BossEntity>> bos
 		return null;
 	}
 	
+	public static Map<Identifier, BossType> getAllTypes()
+	{
+		return Map.copyOf(types);
+	}
+	
 	static {
 		ImmutableMap.Builder<Identifier, BossType> builder = new ImmutableMap.Builder<>();
 		DEER = new BossType(Formidulus.identifier("deer"), List.of(EntityRegistry.DEER_GOD), DeerBossFight.class);

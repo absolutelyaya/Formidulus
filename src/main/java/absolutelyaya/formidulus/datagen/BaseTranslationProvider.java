@@ -87,6 +87,11 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(ADVANCEMENT_WEEN_TITLE, "it's ween");
 		builder.add(ADVANCEMENT_WEEN_DESCRIPTION, "hope you didn't get scared too bad-");
 		
+		builder.add(SCREEN_BOSS_SPAWNER_TITLE, "Boss Spawner Settings");
+		builder.add(SCREEN_BOSS_SPAWNER_BOSS_TYPE, "Boss Type:");
+		builder.add(SCREEN_BOSS_SPAWNER_RESPAWN_DELAY, "Respawn Delay:");
+		builder.add(SCREEN_BOSS_SPAWNER_CLOSE, "Save and Close");
+		
 		builder.add("death.attack.lantern", "%1$s was shown the Light by %2$s");
 		builder.add("death.attack.lantern.item", "%1s was shown the Light by %2$s using %3$s");
 		builder.add("death.attack.lantern.player", "%1s was shown the Light whilst fighting %2$s");
@@ -146,6 +151,7 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		
 		String cultistMendingChance = Formidulus.config.cultistMendingChance.getTranslationKey(Formidulus.MOD_ID);
 		String deerWarning = Formidulus.config.deerWarning.getTranslationKey(Formidulus.MOD_ID);
+		String fightCheckInterval = Formidulus.config.fightCheckInterval.getTranslationKey(Formidulus.MOD_ID);
 		
 		builder.add(SCREEN_CONFIG_TITLE, "Formidulus Server Config Screen");
 		builder.add(cultistMendingChance, "Cultist Mending Chance");
@@ -155,6 +161,9 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(deerWarning, "Deer Warning");
 		builder.add(deerWarning + ".description",
 				"Whether Players with less than 20 Armor should be warned when close to Cruor in its unsummoned state.");
+		builder.add(fightCheckInterval, "Bossfight Check Interval");
+		builder.add(fightCheckInterval + ".description",
+				"The interval between checks a boss spawner performs to see if there's an active fight, or a spawned boss belonging to it.");
 	}
 	
 	public static String modKey(String category, String path)

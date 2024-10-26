@@ -23,6 +23,7 @@
   "block.formidulus.banner.eyes.red": "Rote Augen",
   "block.formidulus.banner.eyes.white": "Weiße Augen",
   "block.formidulus.banner.eyes.yellow": "Gelbe Augen",
+  "block.formidulus.boss_spawner": "Boss Spawner",
   "block.formidulus.deer_skull": "Hirsch Schädel",
   "block.formidulus.deer_skull.lore0": "Der Schädel eines schrecklichen Skelettbiests,",
   "block.formidulus.deer_skull.lore1": "in dessen Stirn ein drittes Auge geschnitzt wurde.",
@@ -36,6 +37,8 @@
   "config.formidulus.cultist_mending_chance.description": "Die Wahrscheinlichkeit dass ein Buch eines Kultisten mit Reperatur verzaubert ist; ACHTUNG: Die Wahrscheinlichkeit dass sie überhaupt ein Verzaubertes Buch tragen, ist an sich schon ziemlich gering.",
   "config.formidulus.deer_warning": "Hirsch Warnung",
   "config.formidulus.deer_warning.description": "Ob Spieler mit weniger als 20 Rüstung gewarnt werden sollten wenn sie in der Nähe von Cruor in seinem Ruhezustand sind.",
+  "config.formidulus.fightCheckInverval": "Bosskampf Check Intervall",
+  "config.formidulus.fightCheckInverval.description": "Der Intervall zwischen den checks die ein Boss Spawner ausführt um zu testen ob sein Kampf läuft, oder ein Lebender Boss zu ihm gehört.",
   "death.attack.claw": "%1$s wurde von %2$s zerrissen",
   "death.attack.claw.item": "%1s wurde von %2$s mit %3$s zerrissen",
   "death.attack.claw.player": "%1s wurde zerrissen beim Versuch %2$s zu entkommen",
@@ -103,5 +106,9 @@
   "message.formidulus.deer.warning1": "Es fühlt sich an als würde etwas dich nicht hier wollen.",
   "message.formidulus.deer.warning2": "Du fühslt dich nicht bereit für.. was auch immer hier ist.",
   "message.formidulus.deer.warning3": "Irgendwas stimmt hier nicht... Du solltest besser ausgerüstet wieder kommen.",
+  "screen.formidulus.boss_spawner.boss_type": "Boss Typ:",
+  "screen.formidulus.boss_spawner.close": "Speichern und Schließen",
+  "screen.formidulus.boss_spawner.respawn_delay": "Respawn-Wartedauer:",
+  "screen.formidulus.boss_spawner.title": "Boss Spawner Einstellungen",
   "screen.formidulus.config-screen.title": "Formidulus Server Einstellungen"
 }

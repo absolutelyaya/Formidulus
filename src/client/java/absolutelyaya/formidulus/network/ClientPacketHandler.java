@@ -2,7 +2,9 @@ package absolutelyaya.formidulus.network;
 
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.FormidulusClient;
+import absolutelyaya.formidulus.block.BossSpawnerBlockEntity;
 import absolutelyaya.formidulus.gui.TitleHUD;
+import absolutelyaya.formidulus.gui.screen.BossSpawnerScreen;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 
 public class ClientPacketHandler
@@ -73,7 +75,7 @@ public class ClientPacketHandler
 				}
 			}
 		});
-		ClientPlayNetworking.registerGlobalReceiver(BossMusicUpdatePayload.ID, ((payload, context) -> {
+		ClientPlayNetworking.registerGlobalReceiver(BossMusicUpdatePayload.ID, (payload, context) -> {
 			String key = payload.trackKey();
 			if(key.equals("cancel"))
 				FormidulusClient.bossMusicHandler.stopCurrentTrackNoOutro();
@@ -81,6 +83,11 @@ public class ClientPacketHandler
 				FormidulusClient.bossMusicHandler.stopCurrentTrack();
 			else
 				FormidulusClient.bossMusicHandler.startTrack(payload.bossId(), key, payload.late());
-		}));
+		});
+		ClientPlayNetworking.registerGlobalReceiver(OpenBossSpawnerScreenPayload.ID, (payload, context) -> {
+			if(!(context.player().getWorld().getBlockEntity(payload.pos()) instanceof BossSpawnerBlockEntity spawner))
+				return;
+			context.client().setScreen(new BossSpawnerScreen(spawner));
+		});
 	}
 }

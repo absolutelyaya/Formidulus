@@ -1,6 +1,8 @@
 package absolutelyaya.formidulus.block;
 
+import absolutelyaya.formidulus.network.OpenBossSpawnerScreenPayload;
 import com.mojang.serialization.MapCodec;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.EntityShapeContext;
@@ -9,6 +11,9 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -56,6 +61,26 @@ public class BossSpawnerBlock extends BlockWithEntity
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type)
 	{
-		return world.isClient ? null : BossSpawnerBlockEntity::tick;
+		return world.isClient ? null : (w, p, s, t) -> BossSpawnerBlockEntity.tick(w.getBlockEntity(p));
+	}
+	
+	@Override
+	protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit)
+	{
+		if(player.hasPermissionLevel(2))
+		{
+			if(!world.isClient && player instanceof ServerPlayerEntity serverPlayer)
+				ServerPlayNetworking.send(serverPlayer, new OpenBossSpawnerScreenPayload(pos));
+			return ActionResult.CONSUME;
+		}
+		return super.onUse(state, world, pos, player, hit);
+	}
+	
+	@Override
+	public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player)
+	{
+		if(world.getBlockEntity(pos) instanceof BossSpawnerBlockEntity spawner)
+			spawner.onBlockBroken();
+		return super.onBreak(world, pos, state, player);
 	}
 }
