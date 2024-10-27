@@ -243,7 +243,7 @@ public class DeerGodEntity extends BossEntity
 				triggerMonologueSequence(SequenceTriggerPayload.SPAWN_SEQUENCE);
 				dataTracker.set(SUMMONED, true);
 			}
-			else if(age % 300 == 0 && getAllNearbyCultists().size() < getMaxCultists())
+			else if(age % 1200 == 0 && getAllNearbyCultists().size() < getMaxCultists())
 				spawnCultist(new Vec2f(3f, 8f), true);
 			return;
 		}

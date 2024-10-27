@@ -57,7 +57,7 @@ public class Formidulus implements ModInitializer
 			if(source.isBuiltin() && key.equals(LootTables.ANCIENT_CITY_CHEST))
 			{
 				LootPool.Builder poolBuilder = LootPool.builder();
-				poolBuilder.with(EmptyEntry.builder().weight(34))
+				poolBuilder.with(EmptyEntry.builder().weight(24))
 						.with(ItemEntry.builder(Items.MAP).weight(1))
 						.apply(ExplorationMapLootFunction.builder()
 									   .withDestination(TagRegistry.CULT_HIDEOUT)
