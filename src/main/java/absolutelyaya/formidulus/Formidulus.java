@@ -10,6 +10,7 @@ import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.Items;
 import net.minecraft.loot.LootPool;
 import net.minecraft.loot.LootTables;
@@ -28,6 +29,7 @@ public class Formidulus implements ModInitializer
 	public static final String MOD_ID = "formidulus";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static ServerConfig config;
+	public static boolean ENCHANCEMENT;
 
 	@Override
 	public void onInitialize()
@@ -66,6 +68,8 @@ public class Formidulus implements ModInitializer
 				tableBuilder.pool(poolBuilder);
 			}
 		});
+		
+		ENCHANCEMENT = FabricLoader.getInstance().getModContainer("enchancement").isPresent();
 	}
 	
 	public static Identifier identifier(String path)

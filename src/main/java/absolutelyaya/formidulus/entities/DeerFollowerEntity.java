@@ -145,7 +145,7 @@ public class DeerFollowerEntity extends ServantEntity
 		setEquipmentDropChance(EquipmentSlot.MAINHAND, 0.1f);
 		if(random.nextFloat() > 0.1f + localDifficulty.getLocalDifficulty() / 10f)
 			return;
-		if(getWorld() instanceof ServerWorld serverWorld && random.nextFloat() < localDifficulty.getLocalDifficulty() / 7.5f)
+		if(!Formidulus.ENCHANCEMENT && getWorld() instanceof ServerWorld serverWorld && random.nextFloat() < localDifficulty.getLocalDifficulty() / 7.5f)
 		{
 			ItemStack enchantedBook = Items.ENCHANTED_BOOK.getDefaultStack();
 			DynamicRegistryManager registryManager = serverWorld.getRegistryManager();
