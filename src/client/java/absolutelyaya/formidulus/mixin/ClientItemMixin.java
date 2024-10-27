@@ -53,8 +53,7 @@ public abstract class ClientItemMixin
 			int accessoryMode = component.activeMode() % component.modes().size();
 			tooltip.add(Text.translatable(Lang.ACCESSORY_MODE_PREFIX,
 					Text.translatable("item.accessory_mode." + component.modes().get(accessoryMode))));
-			tooltip.add(Text.translatable(Lang.ACCESSORY_MODE_HINT)
-								.getWithStyle(Style.EMPTY.withColor(shouldCycleAccessoryMode() ? Formatting.LIGHT_PURPLE : Formatting.GRAY)).getFirst());
+			tooltip.add(Text.translatable(Lang.ACCESSORY_MODE_HINT).setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
 		}
 		
 		boolean hasAbilityDescription = abilityComponent != null && abilityComponent.ability().getDescriptionLines() > 0;
@@ -71,13 +70,13 @@ public abstract class ClientItemMixin
 				tooltip.addAll(component.lines());
 		}
 		else
-			tooltip.add(Text.translatable(Lang.EXPANDABLE_LORE_HINT).getWithStyle(Style.EMPTY.withColor(Formatting.GRAY)).getFirst());
+			tooltip.add(Text.translatable(Lang.EXPANDABLE_LORE_HINT).setStyle(Style.EMPTY.withColor(Formatting.GRAY)));
 	}
 	
 	@Inject(method = "onClicked", at = @At("TAIL"), cancellable = true)
 	void onClicked(ItemStack stack, ItemStack otherStack, Slot slot, ClickType clickType, PlayerEntity player, StackReference cursorStackReference, CallbackInfoReturnable<Boolean> cir)
 	{
-		if(!shouldCycleAccessoryMode() || !otherStack.isEmpty())
+		if(!otherStack.isEmpty() || clickType == ClickType.LEFT)
 			return;
 		cir.setReturnValue(true);
 		if(!stack.contains(DataComponentRegistry.ACCESSORY))
@@ -92,12 +91,6 @@ public abstract class ClientItemMixin
 			player.getWorld().playSound(null, player.getX(), player.getY(), player.getZ(), sound,
 					SoundCategory.PLAYERS, 1f, 1f, player.getRandom().nextLong());
 		}
-	}
-	
-	@Unique boolean shouldCycleAccessoryMode()
-	{
-		long windowHandle = MinecraftClient.getInstance().getWindow().getHandle();
-		return InputUtil.isKeyPressed(windowHandle, GLFW.GLFW_KEY_LEFT_ALT) || InputUtil.isKeyPressed(windowHandle, GLFW.GLFW_KEY_RIGHT_ALT);
 	}
 	
 	@Unique boolean shouldDisplayLore()

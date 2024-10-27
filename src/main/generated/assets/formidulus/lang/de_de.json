@@ -91,7 +91,7 @@
   "item.accessory_mode.cap": "Kappe",
   "item.accessory_mode.default": "Standard",
   "item.accessory_mode.mask": "Maske",
-  "item.formidulus.accessory_mode_hint": "[Drück Alt & Klick zum Modus wechseln]",
+  "item.formidulus.accessory_mode_hint": "[Rechtsklick zum Modus wechseln]",
   "item.formidulus.accessory_mode_prefix": "Accessoire Modus: %s",
   "item.formidulus.expandable_lore_hint": "[Drücke Shift für mehr Infos]",
   "item.formidulus.eyes_pattern": "Bannervorlage",

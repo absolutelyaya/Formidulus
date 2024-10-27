@@ -42,7 +42,7 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(genericKey("item.accessory_mode", "default"), "Standard");
 		builder.add(genericKey("item.accessory_mode", DeerSkullItem.ACCESSORY_MODE_CAP), "Kappe");
 		builder.add(genericKey("item.accessory_mode", DeerSkullItem.ACCESSORY_MODE_MASK), "Maske");
-		builder.add(ACCESSORY_MODE_HINT, "[Drück Alt & Klick zum Modus wechseln]");
+		builder.add(ACCESSORY_MODE_HINT, "[Rechtsklick zum Modus wechseln]");
 		builder.add(ItemRegistry.SACRIFICIAL_DAGGER, "Opferdolch");
 		builder.add(ItemRegistry.SACRIFICIAL_DAGGER.getTranslationKey() + ".lore0", "Der Dolch eines Kultisten.");
 		builder.add(ItemRegistry.SACRIFICIAL_DAGGER.getTranslationKey() + ".lore1", "Zuvor wurde er benutzt um Blutopfer zu erbringen.");

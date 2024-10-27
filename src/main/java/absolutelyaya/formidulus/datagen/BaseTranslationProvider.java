@@ -40,7 +40,7 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(genericKey("item.accessory_mode", "default"), "Default");
 		builder.add(genericKey("item.accessory_mode", DeerSkullItem.ACCESSORY_MODE_CAP), "Cap");
 		builder.add(genericKey("item.accessory_mode", DeerSkullItem.ACCESSORY_MODE_MASK), "Mask");
-		builder.add(ACCESSORY_MODE_HINT, "[Press Alt & Click to cycle]");
+		builder.add(ACCESSORY_MODE_HINT, "[Right Click to cycle]");
 		builder.add(ItemRegistry.SACRIFICIAL_DAGGER, "Sacrificial Dagger");
 		builder.add(ItemRegistry.SACRIFICIAL_DAGGER.getTranslationKey() + ".lore0", "The Dagger of a Cultist.");
 		builder.add(ItemRegistry.SACRIFICIAL_DAGGER.getTranslationKey() + ".lore1", "Previously used to make Blood Sacrifices.");
