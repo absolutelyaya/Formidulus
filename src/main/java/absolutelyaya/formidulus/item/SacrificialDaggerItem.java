@@ -37,7 +37,7 @@ public class SacrificialDaggerItem extends ToolItem implements FabricItem
 		return new AttributeModifiersComponent(List.of(
 				new AttributeModifiersComponent.Entry(
 						EntityAttributes.GENERIC_ATTACK_DAMAGE,
-						new EntityAttributeModifier(BASE_ATTACK_DAMAGE_MODIFIER_ID, 7f, EntityAttributeModifier.Operation.ADD_VALUE),
+						new EntityAttributeModifier(BASE_ATTACK_DAMAGE_MODIFIER_ID, 9f, EntityAttributeModifier.Operation.ADD_VALUE),
 						AttributeModifierSlot.MAINHAND
 				),
 				new AttributeModifiersComponent.Entry(
@@ -45,12 +45,6 @@ public class SacrificialDaggerItem extends ToolItem implements FabricItem
 						new EntityAttributeModifier(BASE_ATTACK_SPEED_MODIFIER_ID, 1f, EntityAttributeModifier.Operation.ADD_VALUE),
 						AttributeModifierSlot.MAINHAND
 				),
-				//TODO: figure out why knockback reduction doesn't work
-				//new AttributeModifiersComponent.Entry(
-				//		EntityAttributes.GENERIC_ATTACK_KNOCKBACK,
-				//		new EntityAttributeModifier(Formidulus.identifier("low_knockback"), 1f, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL),
-				//		AttributeModifierSlot.MAINHAND
-				//),
 				new AttributeModifiersComponent.Entry(
 						EntityAttributes.PLAYER_ENTITY_INTERACTION_RANGE,
 						new EntityAttributeModifier(Formidulus.identifier("low_range_combat"), -0.75f, EntityAttributeModifier.Operation.ADD_VALUE),

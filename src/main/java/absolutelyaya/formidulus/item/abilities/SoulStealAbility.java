@@ -40,6 +40,6 @@ public class SoulStealAbility extends VampirismAbility
 	@Override
 	protected float getHealMultiplier()
 	{
-		return 0.6f;
+		return 0.75f;
 	}
 }
