@@ -598,6 +598,13 @@ public class DeerGodEntity extends BossEntity
 			playSound(SoundEvents.BLOCK_CHAIN_BREAK, 0.1f, 0.6f);
 	}
 	
+	@Override
+	protected void playHurtSound(DamageSource damageSource)
+	{
+		super.playHurtSound(damageSource);
+		playSound(SoundEvents.ENTITY_SKELETON_HURT, 0.25f, 0.6f);
+	}
+	
 	/**
 	 * Apply {@link absolutelyaya.formidulus.effects.ReverenceStatusEffect} to all Participants of the Fight, and all other entities within 32 Blocks.<br>
 	 * Needs to be run every tick while it should be active.<br>
@@ -1819,6 +1826,7 @@ public class DeerGodEntity extends BossEntity
 			start = mob.getPos();
 			dir = null;
 			mob.setAnimation(PREPARE_RUN_ATTACK_ANIM);
+			mob.playSound(SoundEvents.ENTITY_BREEZE_INHALE, 10, 1);
 			impactTicks = -1;
 			firstInChain = chain == 0;
 			if(firstInChain)

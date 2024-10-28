@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier;
 public class ServerConfig extends Config
 {
 	static final Identifier BG_TEX = Identifier.of("textures/block/stone_bricks.png");
-	public final FloatEntry cultistMendingChance = new FloatEntry("cultist_mending_chance", 0.2f).setIcon(getIconPath("mending_chance"));
+	public final FloatEntry cultistMendingChance = new FloatEntry("cultist_mending_chance", 0.1f).setIcon(getIconPath("mending_chance"));
 	public final BooleanEntry deerWarning = new BooleanEntry("deer_warning", true).setIcon(getIconPath("deer_warning"));
 	public final IntegerEntry fightCheckInterval = new IntegerEntry("fightCheckInverval", 100);
 	
