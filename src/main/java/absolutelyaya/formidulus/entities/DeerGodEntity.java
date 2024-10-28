@@ -980,7 +980,8 @@ public class DeerGodEntity extends BossEntity
 	public void afterBossReset()
 	{
 		Vec2f range = new Vec2f(2f, 7f);
-		for (int i = 0; i < getMaxCultists(); i++)
+		int count = getMaxCultists() - getAllNearbyCultists().size();
+		for (int i = 0; i < count; i++)
 			spawnCultist(range, true);
 	}
 	

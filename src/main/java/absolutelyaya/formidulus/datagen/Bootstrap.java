@@ -13,7 +13,6 @@ import net.minecraft.structure.pool.StructurePool;
 import net.minecraft.structure.pool.StructurePoolElement;
 import net.minecraft.structure.pool.StructurePools;
 import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.StructureTerrainAdaptation;
 import net.minecraft.world.gen.chunk.placement.RandomSpreadStructurePlacement;
 import net.minecraft.world.gen.chunk.placement.SpreadType;
 import net.minecraft.world.gen.structure.Structure;
@@ -38,7 +37,7 @@ public class Bootstrap
 	{
 		registry.register(FormidableStructures.DEER_CULT_HIDEOUT_SET,
 				new StructureSet(registry.getRegistryLookup(RegistryKeys.STRUCTURE).getOrThrow(FormidableStructures.DEER_CULT_HIDEOUT),
-				new RandomSpreadStructurePlacement(24, 12, SpreadType.LINEAR, 38494572)));
+				new RandomSpreadStructurePlacement(64, 26, SpreadType.LINEAR, 606734432)));
 	}
 	
 	static void templatePools(Registerable<StructurePool> registry)

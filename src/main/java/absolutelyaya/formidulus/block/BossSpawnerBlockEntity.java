@@ -92,7 +92,10 @@ public class BossSpawnerBlockEntity extends BlockEntity
 				e.setBodyYaw(0f);
 				e.refreshPositionAndAngles(e.getPos(), 0f, 0f);
 				if(e instanceof BossEntity boss)
+				{
 					boss.setOriginBlock(pos);
+					boss.afterBossReset();
+				}
 			}, pos, SpawnReason.SPAWNER, false ,false);
 			if(entity != null)
 				bossEntities.add(entity.getUuid());
