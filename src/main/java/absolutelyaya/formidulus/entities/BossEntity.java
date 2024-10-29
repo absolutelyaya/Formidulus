@@ -4,10 +4,8 @@ import absolutelyaya.formidulus.entities.boss.BossFight;
 import absolutelyaya.formidulus.entities.boss.BossType;
 import absolutelyaya.formidulus.entities.goal.BossOutOfCombatGoal;
 import absolutelyaya.formidulus.entities.goal.BossTargetGoal;
-import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.boss.BossBar;
 import net.minecraft.entity.boss.ServerBossBar;
 import net.minecraft.entity.damage.DamageSource;
@@ -22,8 +20,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.LocalDifficulty;
-import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -102,7 +98,7 @@ public abstract class BossEntity extends AnimatedHostileEntity
 		if(getWorld().isClient)
 			return;
 		if(getTarget() instanceof LivingEntity living && living.isAlive() && !living.isRemoved())
-			combatTimer = 100;
+			combatTimer = 10;
 		else if(combatTimer > 0)
 			combatTimer--;
 		if(dataTracker.get(ORIGIN).equals(BlockPos.ORIGIN))
@@ -188,6 +184,11 @@ public abstract class BossEntity extends AnimatedHostileEntity
 	}
 	
 	/**
+	 * Runs before the OutOfCombatGoal is completed.
+	 */
+	public abstract void beforeBossReset();
+	
+	/**
 	 * Runs after the OutOfCombatGoal is completed.<br>
 	 * If the Behavior is RESPAWN_AT_ORIGIN, this will be run on the newly spawned instance of the boss.
 	 */
@@ -225,10 +226,16 @@ public abstract class BossEntity extends AnimatedHostileEntity
 		return bossFight.getFightID();
 	}
 	
+	public BossFight getBossFightInstance()
+	{
+		return bossFight;
+	}
+	
 	public void forceReset()
 	{
 		cancelActiveGoals();
-		outOfCombatGoal.start(); //discard this entity and respawn at Origin
+		if(outOfCombatGoal != null)
+			outOfCombatGoal.start(); //perform reset logic
 	}
 	
 	abstract boolean shouldFightBeActive();

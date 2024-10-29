@@ -24,4 +24,5 @@ public interface Lang
 	String MAP_CULT_HIDEOUT = BaseTranslationProvider.modKey("map", "cult_hideout");
 	
 	String MESSAGE_DEER_WARNING = BaseTranslationProvider.modKey("message", "deer.warning");
+	String MESSAGE_OUT_OF_BOUNDS = BaseTranslationProvider.modKey("message", "out_of_bounds");
 }

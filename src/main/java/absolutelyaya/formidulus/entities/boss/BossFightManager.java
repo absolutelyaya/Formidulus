@@ -71,9 +71,9 @@ public class BossFightManager
 		return Optional.empty();
 	}
 	
-	public void leaveAllFights(ServerPlayerEntity player)
+	public void onPlayerDeath(ServerPlayerEntity player)
 	{
-		activeFights.values().forEach(f -> f.leaveFight(player));
+		activeFights.values().forEach(f -> f.onPlayerDeath(player));
 	}
 	
 	public boolean isActive(BossFight bossFight)

@@ -2,11 +2,13 @@ package absolutelyaya.formidulus.entities.boss;
 
 import absolutelyaya.formidulus.advancement.CriteriaRegistry;
 import absolutelyaya.formidulus.block.BossSpawnerBlockEntity;
+import absolutelyaya.formidulus.datagen.Lang;
 import absolutelyaya.formidulus.entities.BossEntity;
 import absolutelyaya.formidulus.network.BossMusicUpdatePayload;
 import absolutelyaya.formidulus.sound.BossMusicEntry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -25,10 +27,11 @@ public abstract class BossFight
 	
 	protected int phase;
 	protected List<ServerPlayerEntity> participants = new ArrayList<>();
+	protected Map<ServerPlayerEntity, Integer> outOfBoundsParticipants = new HashMap<>();
 	protected int playerCheckIntervall = 20;
-	protected int playerCheckRange = 48;
+	protected int playerCheckRange = 40;
 	
-	int playerCheckTimer;
+	int playerCheckTimer, warmUp = 100;
 	String lastMusicKey;
 	boolean playerWin;
 	
@@ -56,31 +59,51 @@ public abstract class BossFight
 	
 	public void tick()
 	{
+		if(shouldEnd())
+			return;
 		if(playerCheckTimer-- <= 0)
-		{
-			List<ServerPlayerEntity> validParticipants = world.getEntitiesByType(TypeFilter.instanceOf(ServerPlayerEntity.class), new Box(origin).expand(playerCheckRange),
-					i -> !i.isSpectator() && i.isPartOfGame());
-			List<ServerPlayerEntity> remove = new ArrayList<>();
-			participants.forEach(p -> {
-				if(!validParticipants.contains(p) || p.isDead() || p.isRemoved())
-					remove.add(p);
-			});
-			remove.forEach(this::leaveFight);
-			validParticipants.forEach(p -> {
-				if(!participants.contains(p))
-					joinFight(p);
-			});
-			playerCheckTimer = playerCheckIntervall;
-		}
-		bossEntities.removeIf(BossEntity::isRemoved);
+			performParticipantCheck();
+		bossEntities.removeIf(BossEntity::isDead);
 		String music = getCurMusicKey();
 		if(music != null && !music.equals(lastMusicKey))
 		{
 			onMusicChange(music);
 			lastMusicKey = music;
 		}
+		if(warmUp-- > 0)
+			return;
 		if(shouldEnd())
 			BossFightManager.INSTANCE.endFight(this);
+	}
+	
+	void performParticipantCheck()
+	{
+		List<ServerPlayerEntity> validParticipants = world.getEntitiesByType(TypeFilter.instanceOf(ServerPlayerEntity.class), new Box(origin).expand(playerCheckRange),
+				i -> true);
+		List<ServerPlayerEntity> remove = new ArrayList<>();
+		participants.forEach(p -> {
+			if(!validParticipants.contains(p))
+			{
+				if(!outOfBoundsParticipants.containsKey(p))
+					outOfBoundsParticipants.put(p, 6);
+				int oob = outOfBoundsParticipants.get(p);
+				if(oob > 0)
+				{
+					outOfBoundsParticipants.put(p, oob - 1);
+					p.sendMessage(Text.translatable(Lang.MESSAGE_OUT_OF_BOUNDS, oob - 1), true);
+				}
+			}
+			else
+				outOfBoundsParticipants.remove(p);
+			if(outOfBoundsParticipants.getOrDefault(p, 5) <= 0 || !p.isPartOfGame() || p.isCreative())
+				remove.add(p);
+		});
+		remove.forEach(this::leaveFight);
+		validParticipants.forEach(p -> {
+			if(!participants.contains(p))
+				joinFight(p);
+		});
+		playerCheckTimer = playerCheckIntervall;
 	}
 	
 	protected boolean shouldEnd()
@@ -130,11 +153,35 @@ public abstract class BossFight
 	{
 		if(participants.remove(player))
 			ServerPlayNetworking.send(player, new BossMusicUpdatePayload(type.id(), "cancel"));
+		outOfBoundsParticipants.remove(player);
+	}
+	
+	public void onPlayerDeath(ServerPlayerEntity player)
+	{
+		if(!participants.contains(player))
+			return;
+		leaveFight(player);
+		performParticipantCheck();
 	}
 	
 	public List<ServerPlayerEntity> getAllParticipants()
 	{
 		return participants;
+	}
+	
+	public boolean isParticipant(ServerPlayerEntity player)
+	{
+		return participants.contains(player);
+	}
+	
+	public void setPlayerCheckRange(int range)
+	{
+		playerCheckRange = range;
+	}
+	
+	public void setPlayerCheckIntervall(int intervall)
+	{
+		playerCheckIntervall = intervall;
 	}
 	
 	public void interrupt(boolean removeRemainingBossEntities)
@@ -157,6 +204,8 @@ public abstract class BossFight
 			if(world.getBlockEntity(origin) instanceof BossSpawnerBlockEntity spawner && fightID.equals(spawner.getFightId()))
 				spawner.onFightEnded();
 		}
+		else
+			bossEntities.forEach(BossEntity::forceReset);
 		onMusicChange("cancel");
 	}
 	

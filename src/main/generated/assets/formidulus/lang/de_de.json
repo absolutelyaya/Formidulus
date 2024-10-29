@@ -107,6 +107,7 @@
   "message.formidulus.deer.warning1": "Es fühlt sich an als würde etwas dich nicht hier wollen.",
   "message.formidulus.deer.warning2": "Du fühslt dich nicht bereit für.. was auch immer hier ist.",
   "message.formidulus.deer.warning3": "Irgendwas stimmt hier nicht... Du solltest besser ausgerüstet wieder kommen.",
+  "message.formidulus.out_of_bounds": "Außerhalb der Arena! Kampf wird verlassen in %s...",
   "screen.formidulus.boss_spawner.boss_type": "Boss Typ:",
   "screen.formidulus.boss_spawner.close": "Speichern und Schließen",
   "screen.formidulus.boss_spawner.respawn_delay": "Respawn-Wartedauer:",

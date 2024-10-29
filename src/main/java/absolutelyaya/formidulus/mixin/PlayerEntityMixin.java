@@ -48,6 +48,6 @@ public abstract class PlayerEntityMixin extends LivingEntity
 	void onDeath(DamageSource damageSource, CallbackInfo ci)
 	{
 		if((Object)this instanceof ServerPlayerEntity player)
-			BossFightManager.INSTANCE.leaveAllFights(player);
+			BossFightManager.INSTANCE.onPlayerDeath(player);
 	}
 }

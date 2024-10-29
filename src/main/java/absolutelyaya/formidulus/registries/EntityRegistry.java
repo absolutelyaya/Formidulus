@@ -33,7 +33,7 @@ public class EntityRegistry
 		FabricDefaultAttributeRegistry.register(IRRLICHT, IrrlichtEntity.createMobAttributes()
 																  .add(EntityAttributes.GENERIC_MAX_HEALTH, 1));
 		FabricDefaultAttributeRegistry.register(DEER_FOLLOWER, DeerFollowerEntity.createMobAttributes()
-																	   .add(EntityAttributes.GENERIC_MAX_HEALTH, 35)
+																	   .add(EntityAttributes.GENERIC_MAX_HEALTH, 25)
 																	   .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2)
 																	   .add(EntityAttributes.GENERIC_ARMOR, 3));
 	}

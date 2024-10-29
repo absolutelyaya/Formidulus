@@ -52,6 +52,7 @@ public class BossOutOfCombatGoal extends Goal
 	public void start()
 	{
 		super.start();
+		mob.beforeBossReset();
 		BlockPos originBlock = mob.getDataTracker().get(BossEntity.ORIGIN);
 		if (behavior == BEHAVIOR_TELEPORT_TO_ORIGIN_AND_HEAL ||
 					mob.getNavigation().findPathTo(originBlock, 1) == null)
@@ -111,9 +112,6 @@ public class BossOutOfCombatGoal extends Goal
 	{
 		super.stop();
 		if (!mob.isRemoved())
-		{
 			mob.setYaw(0f);
-			mob.afterBossReset();
-		}
 	}
 }

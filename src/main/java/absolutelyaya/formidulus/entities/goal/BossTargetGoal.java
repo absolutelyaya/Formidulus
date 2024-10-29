@@ -4,6 +4,7 @@ import absolutelyaya.formidulus.entities.BossEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.Box;
 
@@ -103,7 +104,8 @@ public class BossTargetGoal extends Goal
 	
 	boolean isTargetValid(LivingEntity living)
 	{
-		return mob.isTargetValid(living) && mob.distanceTo(living) < range * 2;
+		return mob.isTargetValid(living) && (!(living instanceof ServerPlayerEntity serverPlayer) ||
+													 (mob.getBossFightInstance() != null && mob.getBossFightInstance().isParticipant(serverPlayer)));
 	}
 	
 	float getStartPriority(LivingEntity living)

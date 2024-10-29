@@ -107,6 +107,7 @@
   "message.formidulus.deer.warning1": "It feels as though something doesn't want you here.",
   "message.formidulus.deer.warning2": "An evil presence lurks below... And you don't feel prepared to face it.",
   "message.formidulus.deer.warning3": "Something feels off... you shouldn't be here yet.",
+  "message.formidulus.out_of_bounds": "Out of Bounds! Leaving the Fight in %s...",
   "screen.formidulus.boss_spawner.boss_type": "Boss Type:",
   "screen.formidulus.boss_spawner.close": "Save and Close",
   "screen.formidulus.boss_spawner.respawn_delay": "Respawn Delay:",

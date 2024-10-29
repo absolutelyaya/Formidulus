@@ -127,6 +127,7 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(MESSAGE_DEER_WARNING + "1", "Es fühlt sich an als würde etwas dich nicht hier wollen.");
 		builder.add(MESSAGE_DEER_WARNING + "2", "Du fühslt dich nicht bereit für.. was auch immer hier ist.");
 		builder.add(MESSAGE_DEER_WARNING + "3", "Irgendwas stimmt hier nicht... Du solltest besser ausgerüstet wieder kommen.");
+		builder.add(MESSAGE_OUT_OF_BOUNDS, "Außerhalb der Arena! Kampf wird verlassen in %s...");
 		
 		builder.add("dialogue.deer.intro1", "Wilderer.");
 		builder.add("dialogue.deer.intro2", "Du der kam nur um Blut zu verschwenden,");

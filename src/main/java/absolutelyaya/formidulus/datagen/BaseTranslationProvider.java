@@ -125,6 +125,7 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(MESSAGE_DEER_WARNING + "1", "It feels as though something doesn't want you here.");
 		builder.add(MESSAGE_DEER_WARNING + "2", "An evil presence lurks below... And you don't feel prepared to face it.");
 		builder.add(MESSAGE_DEER_WARNING + "3", "Something feels off... you shouldn't be here yet.");
+		builder.add(MESSAGE_OUT_OF_BOUNDS, "Out of Bounds! Leaving the Fight in %s...");
 		
 		builder.add("dialogue.deer.intro1", "Poacher.");
 		builder.add("dialogue.deer.intro2", "You who came only to waste Blood,");
