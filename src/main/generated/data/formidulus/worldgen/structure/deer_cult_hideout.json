@@ -1,6 +1,11 @@
 {
   "type": "formidulus:deer_cult_hideout",
   "biomes": "#formidulus:deer_cult_hideout_placeable",
-  "spawn_overrides": {},
+  "spawn_overrides": {
+    "monster": {
+      "bounding_box": "full",
+      "spawns": []
+    }
+  },
   "step": "top_layer_modification"
 }

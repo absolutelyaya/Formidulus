@@ -26,9 +26,10 @@ public record BossType(Identifier id, List<EntityType<? extends BossEntity>> bos
 	
 	public @Nullable BossFight beginFight(BossEntity e, @Nullable UUID id)
 	{
+		if(e.getWorld().isClient)
+			return null;
 		try
 		{
-			Formidulus.LOGGER.info("started fight {} for {}", id, e);
 			return BossFightManager.INSTANCE.beginFight(fight().getConstructor(BossEntity.class, UUID.class).newInstance(e, id));
 		}
 		catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException exception)
