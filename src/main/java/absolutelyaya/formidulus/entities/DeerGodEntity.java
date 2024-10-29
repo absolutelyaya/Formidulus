@@ -984,6 +984,16 @@ public class DeerGodEntity extends BossEntity
 	}
 	
 	@Override
+	public void forceReset()
+	{
+		super.forceReset();
+		getAllNearbyCultists().forEach(i -> {
+			if(i.getMaster().equals(this))
+				i.discard();
+		});
+	}
+	
+	@Override
 	public void afterBossReset()
 	{
 		Vec2f range = new Vec2f(2f, 7f);
