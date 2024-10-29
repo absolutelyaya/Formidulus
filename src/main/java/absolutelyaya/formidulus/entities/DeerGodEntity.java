@@ -463,6 +463,11 @@ public class DeerGodEntity extends BossEntity
 					setAnimationFlag(4, true);
 					playSound(SoundEvents.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, 5f, 0.6f);
 				}
+				if(!getAnimationFlag(5) && duration >= 16.25f)
+				{
+					setAnimationFlag(5, true);
+					playSound(SoundEvents.ENTITY_POLAR_BEAR_WARNING, 5f, 0.5f);
+				}
 				if(duration > 4.05f)
 					applyReverence(18f - duration);
 				if(!getWorld().isClient && duration >= 18.05f)
@@ -545,6 +550,8 @@ public class DeerGodEntity extends BossEntity
 				}
 			}
 		}
+		if(dataTracker.get(RUN_ATTACK) == RUN_ATTACK_CLAW && dataTracker.get(ANIMATION) == IDLE_ANIM && age % 15 == 0)
+			playSound(SoundEvents.BLOCK_GRINDSTONE_USE,0.8f, 0.7f);
 		//TODO: add sounds and particles to run attacks
 		//TODO: add sounds and particles simple claw attack
 	}
@@ -602,7 +609,7 @@ public class DeerGodEntity extends BossEntity
 	protected void playHurtSound(DamageSource damageSource)
 	{
 		super.playHurtSound(damageSource);
-		playSound(SoundEvents.ENTITY_SKELETON_HURT, 0.25f, 0.6f);
+		playSound(SoundEvents.ENTITY_SKELETON_HURT, 0.5f, 0.6f);
 	}
 	
 	/**
