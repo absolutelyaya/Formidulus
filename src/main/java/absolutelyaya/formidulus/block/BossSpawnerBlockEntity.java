@@ -19,6 +19,7 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,7 +71,7 @@ public class BossSpawnerBlockEntity extends BlockEntity
 		if(world instanceof ServerWorld serverWorld && !wasBossfightActive)
 		{
 			if(bossEntities.isEmpty() && (serverWorld.getTime() > lastFightEnded + respawnDelay || lastFightEnded == 0))
-				spawnBoss();
+				trySpawnBoss();
 			bossEntities.removeIf(i -> {
 				Entity entity = serverWorld.getEntity(i);
 				return entity == null || !entity.isAlive() || entity.isRemoved();
@@ -80,12 +81,21 @@ public class BossSpawnerBlockEntity extends BlockEntity
 		wasBossfightActive = active;
 	}
 	
-	void spawnBoss()
+	void trySpawnBoss()
 	{
 		if(bossType == null)
 			bossType = BossType.DEER;
 		if(world instanceof ServerWorld serverWorld)
 		{
+			List<? extends BossEntity> bosses = serverWorld.getEntitiesByType(TypeFilter.instanceOf(BossEntity.class), i -> true);
+			for (BossEntity boss : bosses)
+			{
+				if(boss.getBossType().equals(bossType) && pos.equals(boss.getOriginBlock()))
+				{
+					bossEntities.add(boss.getUuid());
+					return;
+				}
+			}
 			BossEntity entity = bossType.bossEntities().getFirst().spawn(serverWorld, e -> {
 				e.setYaw(0f);
 				e.setHeadYaw(0f);
@@ -100,6 +110,7 @@ public class BossSpawnerBlockEntity extends BlockEntity
 			if(entity != null)
 				bossEntities.add(entity.getUuid());
 		}
+		
 	}
 	
 	boolean isBossFightActive(UUID id)

@@ -33,7 +33,7 @@ public abstract class BossFight
 	
 	int playerCheckTimer, warmUp = 100;
 	String lastMusicKey;
-	boolean playerWin;
+	boolean playerWin, ended;
 	
 	protected BossFight(BossEntity entity, UUID id)
 	{
@@ -59,7 +59,7 @@ public abstract class BossFight
 	
 	public void tick()
 	{
-		if(shouldEnd())
+		if(ended)
 			return;
 		if(playerCheckTimer-- <= 0)
 			performParticipantCheck();
@@ -108,7 +108,7 @@ public abstract class BossFight
 	
 	protected boolean shouldEnd()
 	{
-		return bossEntities.isEmpty() || participants.isEmpty();
+		return bossEntities.isEmpty() || !hasAnyValidParticipants();
 	}
 	
 	public void setPhase(int phase)
@@ -169,6 +169,21 @@ public abstract class BossFight
 		return participants;
 	}
 	
+	public boolean isValidParticipant(ServerPlayerEntity player)
+	{
+		return player.isPartOfGame() && !player.isCreative();
+	}
+	
+	public boolean hasAnyValidParticipants()
+	{
+		for (ServerPlayerEntity p : participants)
+		{
+			if(isValidParticipant(p))
+				return true;
+		}
+		return false;
+	}
+	
 	public boolean isParticipant(ServerPlayerEntity player)
 	{
 		return participants.contains(player);
@@ -191,6 +206,11 @@ public abstract class BossFight
 		onFightEnded();
 	}
 	
+	public UUID getFightID()
+	{
+		return fightID;
+	}
+	
 	public void markWon()
 	{
 		playerWin = true;
@@ -198,6 +218,8 @@ public abstract class BossFight
 	
 	void onFightEnded()
 	{
+		if(ended)
+			return;
 		if(playerWin)
 		{
 			participants.forEach(p -> CriteriaRegistry.BOSSFIGHT_WIN.trigger(p, type.id()));
@@ -207,10 +229,11 @@ public abstract class BossFight
 		else
 			bossEntities.forEach(BossEntity::forceReset);
 		onMusicChange("cancel");
+		ended = true;
 	}
 	
-	public UUID getFightID()
+	public boolean hasEnded()
 	{
-		return fightID;
+		return ended;
 	}
 }

@@ -248,9 +248,9 @@ public abstract class BossEntity extends AnimatedHostileEntity
 			dataTracker.set(ORIGIN, BlockPos.fromLong(nbt.getLong("Origin")));
 		if(nbt.contains("CombatTimer", NbtElement.INT_TYPE))
 			combatTimer = nbt.getInt("CombatTimer");
-		if(nbt.containsUuid("FightId"))
+		if(nbt.containsUuid("FightId") && (bossFight == null || bossFight.hasEnded()))
 			bossFight = type.beginFight(this, nbt.getUuid("FightId"));
-		else if(shouldFightBeActive())
+		else if(shouldFightBeActive() && (bossFight == null || bossFight.hasEnded()))
 			beginFight();
 	}
 	

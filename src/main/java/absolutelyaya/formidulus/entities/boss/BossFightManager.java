@@ -18,14 +18,14 @@ public class BossFightManager
 	public void tick()
 	{
 		activeFights.values().forEach(BossFight::tick);
-		newFights.forEach(fight -> {
+		List.copyOf(newFights).forEach(fight -> {
 			activeFights.put(fight.fightID, fight);
 			if(!activeFightIdsByType.containsKey(fight.type))
 				activeFightIdsByType.put(fight.type, new ArrayList<>());
 			activeFightIdsByType.get(fight.type).add(fight.fightID);
 		});
 		newFights.clear();
-		endedFights.forEach(fight -> {
+		List.copyOf(endedFights).forEach(fight -> {
 			BossFight removed = activeFights.remove(fight.fightID);
 			if(removed != null)
 				removed.onFightEnded();

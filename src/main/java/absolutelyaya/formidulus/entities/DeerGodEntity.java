@@ -987,7 +987,7 @@ public class DeerGodEntity extends BossEntity
 	public void beforeBossReset()
 	{
 		getAllNearbyCultists().forEach(i -> {
-			if(i.getMaster().equals(this))
+			if(this.equals(i.getMaster()))
 				i.discard();
 		});
 	}
