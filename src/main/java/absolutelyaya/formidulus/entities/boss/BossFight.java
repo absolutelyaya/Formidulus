@@ -58,15 +58,15 @@ public abstract class BossFight
 	{
 		if(playerCheckTimer-- <= 0)
 		{
-			List<ServerPlayerEntity> newParticipantList = world.getEntitiesByType(TypeFilter.instanceOf(ServerPlayerEntity.class), new Box(origin).expand(playerCheckRange),
+			List<ServerPlayerEntity> validParticipants = world.getEntitiesByType(TypeFilter.instanceOf(ServerPlayerEntity.class), new Box(origin).expand(playerCheckRange),
 					i -> !i.isSpectator() && i.isPartOfGame());
 			List<ServerPlayerEntity> remove = new ArrayList<>();
 			participants.forEach(p -> {
-				if(!newParticipantList.contains(p) || p.isDead())
+				if(!validParticipants.contains(p) || p.isDead() || p.isRemoved())
 					remove.add(p);
 			});
 			remove.forEach(this::leaveFight);
-			newParticipantList.forEach(p -> {
+			validParticipants.forEach(p -> {
 				if(!participants.contains(p))
 					joinFight(p);
 			});
@@ -85,7 +85,7 @@ public abstract class BossFight
 	
 	protected boolean shouldEnd()
 	{
-		return bossEntities.isEmpty();
+		return bossEntities.isEmpty() || participants.isEmpty();
 	}
 	
 	public void setPhase(int phase)
