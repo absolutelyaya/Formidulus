@@ -436,10 +436,7 @@ public class DeerGodEntity extends BossEntity
 					playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 0.6f, 1f);
 					setPosition(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f);
 					playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 0.6f, 1f);
-					if(getTarget() != null)
-						lookAt(EntityAnchorArgumentType.EntityAnchor.FEET, getTarget().getPos());
-					else
-						setYaw(0);
+					setYaw(0);
 				}
 				if(getWorld().isClient && !getAnimationFlag(3) && duration >= 5.5f)
 				{

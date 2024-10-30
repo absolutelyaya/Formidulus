@@ -218,6 +218,15 @@ public class DeerFollowerEntity extends ServantEntity
 	}
 	
 	@Override
+	protected SoundEvent getDeathSound()
+	{
+		if(getVariant() < 2)
+			return SoundEvents.ENTITY_WITCH_DEATH;
+		else
+			return SoundEvents.ENTITY_VINDICATOR_DEATH;
+	}
+	
+	@Override
 	public void tickMovement()
 	{
 		super.tickMovement();
@@ -339,6 +348,8 @@ public class DeerFollowerEntity extends ServantEntity
 			dataTracker.set(MASK, nbt.getBoolean("Mask"));
 		if(nbt.contains("Altar", NbtElement.LONG_TYPE))
 			dataTracker.set(ALTAR, BlockPos.fromLong(nbt.getLong("Altar")));
+		if(nbt.contains("Activity", NbtElement.BYTE_TYPE))
+			setActivity(nbt.getByte("Activity"));
 	}
 	
 	@Override
@@ -549,7 +560,7 @@ public class DeerFollowerEntity extends ServantEntity
 		{
 			super.tick();
 			Vec3d altar = mob.getAltar().toBottomCenterPos();
-			if(!arrived && mob.getAltar().isWithinDistance(mob.getPos(), 4f))
+			if(!arrived && !mob.getAltar().isWithinDistance(mob.getPos(), 4f))
 			{
 				if(!mob.navigation.isIdle())
 					return;
