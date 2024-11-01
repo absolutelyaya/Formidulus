@@ -151,6 +151,7 @@ public class DeerGodEntity extends BossEntity
 		super.initGoals();
 		goalSelector.add(0, new SwarmGoal(this));
 		goalSelector.add(0, outOfCombatGoal = new BossOutOfCombatGoal(this, BossOutOfCombatGoal.BEHAVIOR_RESPAWN_AT_ORIGIN));
+		goalSelector.add(0, new TeleportAwayFromTargets(this));
 		goalSelector.add(0, new TeleportRandomlyGoal(this));
 		goalSelector.add(1, new RunClawAttackGoal(this, 0.9f));
 		goalSelector.add(1, new SimpleClawAttackGoal(this));
@@ -436,7 +437,7 @@ public class DeerGodEntity extends BossEntity
 					playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 0.6f, 1f);
 					setPosition(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f);
 					playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 0.6f, 1f);
-					setYaw(0);
+					setYaw(prevYaw = headYaw = prevHeadYaw = bodyYaw = prevBodyYaw = 0);
 				}
 				if(getWorld().isClient && !getAnimationFlag(3) && duration >= 5.5f)
 				{
@@ -1465,6 +1466,7 @@ public class DeerGodEntity extends BossEntity
 	static class TeleportRandomlyGoal extends DeerTeleportGoal
 	{
 		Vec3d origin;
+		int attempt;
 		
 		public TeleportRandomlyGoal(DeerGodEntity mob)
 		{
@@ -1474,8 +1476,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public boolean canStart()
 		{
-			return super.canStart() && ((!mob.hasClaw() && !mob.hasLantern() && mob.getTarget() != null && mob.distanceTo(mob.getTarget()) < 5) ||
-												(mob.random.nextFloat() < (isCanReachTarget() ? 0.01f : 0.05f)));
+			return super.canStart() && (mob.random.nextFloat() < (isCanReachTarget() ? 0.01f : 0.05f));
 		}
 		
 		@Override
@@ -1488,7 +1489,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		protected @Nullable Vec3d getTeleportDestination()
 		{
-			for (int i = 0; i < 8; i++)
+			for (attempt = 0; attempt < getMaxAttempts(); attempt++)
 			{
 				Vec3d dest = origin.add((mob.random.nextFloat() - 0.5) * 2f * 16f, 8f, (mob.random.nextFloat() - 0.5) * 2f * 16f);
 				BlockHitResult bHit = mob.getWorld().raycast(new RaycastContext(dest, dest.subtract(0, 16f, 0), RaycastContext.ShapeType.COLLIDER,
@@ -1497,6 +1498,44 @@ public class DeerGodEntity extends BossEntity
 					return bHit.getPos();
 			}
 			return null;
+		}
+		
+		protected int getMaxAttempts()
+		{
+			return 16;
+		}
+	}
+	
+	static class TeleportAwayFromTargets extends TeleportRandomlyGoal
+	{
+		public TeleportAwayFromTargets(DeerGodEntity mob)
+		{
+			super(mob);
+		}
+		
+		@Override
+		public boolean canStart()
+		{
+			return mob.isReadyToAttack() && mob.isReadyToTeleport() &&
+						   (!mob.hasClaw() && !mob.hasLantern() && mob.getTarget() != null && mob.distanceTo(mob.getTarget()) < 8);
+		}
+		
+		@Override
+		protected int getMaxAttempts()
+		{
+			return 32;
+		}
+		
+		@Override
+		boolean isDestinationFree(Vec3d dest)
+		{
+			float distanceMult = 1f - ((float)attempt / (float)getMaxAttempts());
+			for(LivingEntity target : mob.targetGoal.getAllTargets())
+			{
+				if(target != null && target.isPartOfGame() && target.distanceTo(mob) > 10f * distanceMult)
+					return false;
+			}
+			return super.isDestinationFree(dest);
 		}
 	}
 	
