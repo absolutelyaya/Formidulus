@@ -238,7 +238,7 @@ public abstract class BossEntity extends AnimatedHostileEntity
 			outOfCombatGoal.start(); //perform reset logic
 	}
 	
-	abstract boolean shouldFightBeActive();
+	abstract int getFightPhase();
 	
 	@Override
 	public void readCustomDataFromNbt(NbtCompound nbt)
@@ -250,8 +250,11 @@ public abstract class BossEntity extends AnimatedHostileEntity
 			combatTimer = nbt.getInt("CombatTimer");
 		if(nbt.containsUuid("FightId") && (bossFight == null || bossFight.hasEnded()))
 			bossFight = type.beginFight(this, nbt.getUuid("FightId"));
-		else if(shouldFightBeActive() && (bossFight == null || bossFight.hasEnded()))
+		else if(getFightPhase() >= 0 && (bossFight == null || bossFight.hasEnded()))
+		{
 			beginFight();
+			bossFight.setPhase(getFightPhase());
+		}
 	}
 	
 	@Override

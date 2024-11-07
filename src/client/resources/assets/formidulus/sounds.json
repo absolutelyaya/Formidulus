@@ -46,5 +46,23 @@
         "preload": true
       }
     ]
+  },
+  "music.deer.phase2_intro": {
+    "category": "music",
+    "sounds": [
+      {
+        "name": "formidulus:music/boss/deer_phase2_intro",
+        "preload": true
+      }
+    ]
+  },
+  "music.deer.phase2": {
+    "category": "music",
+    "sounds": [
+      {
+        "name": "formidulus:music/boss/deer_phase2",
+        "preload": true
+      }
+    ]
   }
 }

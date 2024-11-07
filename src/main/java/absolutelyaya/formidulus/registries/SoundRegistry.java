@@ -12,6 +12,8 @@ public class SoundRegistry
 	
 	public static final SoundEvent MUSIC_DEER_INTRO = register(Formidulus.identifier("music.deer.intro"));
 	public static final SoundEvent MUSIC_DEER_PHASE1 = register(Formidulus.identifier("music.deer.phase1"));
+	public static final SoundEvent MUSIC_DEER_PHASE2_INTRO = register(Formidulus.identifier("music.deer.phase2_intro"));
+	public static final SoundEvent MUSIC_DEER_PHASE2 = register(Formidulus.identifier("music.deer.phase2"));
 	
 	static SoundEvent register(Identifier id)
 	{

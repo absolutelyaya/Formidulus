@@ -9,6 +9,7 @@ import absolutelyaya.formidulus.entities.goal.AnimatedAttackGoal;
 import absolutelyaya.formidulus.entities.goal.BossOutOfCombatGoal;
 import absolutelyaya.formidulus.entities.goal.BossTargetGoal;
 import absolutelyaya.formidulus.entities.goal.InterruptableGoal;
+import absolutelyaya.formidulus.network.BossMusicUpdatePayload;
 import absolutelyaya.formidulus.network.SequenceTriggerPayload;
 import absolutelyaya.formidulus.particle.BloodDropParticleEffect;
 import absolutelyaya.formidulus.registries.EntityRegistry;
@@ -28,6 +29,7 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -419,6 +421,13 @@ public class DeerGodEntity extends BossEntity
 					setAnimationFlag(0, true);
 					triggerMonologueSequence(SequenceTriggerPayload.PHASE_TRANSITION_SEQUENCE);
 					setAttackCooldown(20);
+					if(!getWorld().isClient)
+						bossFight.getAllParticipants().forEach(p -> ServerPlayNetworking.send(p, new BossMusicUpdatePayload(type.id(), "cancel")));
+				}
+				if(!getWorld().isClient && !getAnimationFlag(10) && duration >= 1.75f)
+				{
+					setAnimationFlag(10, true);
+					bossFight.setPhase(1);
 				}
 				if(duration >= 3.5f && duration <= 4f)
 				{
@@ -464,7 +473,10 @@ public class DeerGodEntity extends BossEntity
 				if(!getAnimationFlag(5) && duration >= 16.25f)
 				{
 					setAnimationFlag(5, true);
-					playSound(SoundEvents.ENTITY_POLAR_BEAR_WARNING, 5f, 0.5f);
+					playSound(SoundEvents.ENTITY_POLAR_BEAR_WARNING, 15f, 0.5f);
+					if(bossFight != null && !getWorld().isClient)
+						bossFight.getAllParticipants()
+								.forEach(i -> i.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 0, 2, false, false)));
 				}
 				if(duration > 4.05f)
 					applyReverence(18f - duration);
@@ -1096,9 +1108,11 @@ public class DeerGodEntity extends BossEntity
 	}
 	
 	@Override
-	boolean shouldFightBeActive()
+	int getFightPhase()
 	{
-		return dataTracker.get(SUMMONED);
+		if(!dataTracker.get(SUMMONED))
+			return -1;
+		return dataTracker.get(CLAW) ? 1 : 0;
 	}
 	
 	@Override

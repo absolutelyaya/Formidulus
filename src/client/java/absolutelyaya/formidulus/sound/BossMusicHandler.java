@@ -78,17 +78,29 @@ public class BossMusicHandler
 				playingOutro = true;
 			else
 				current = null;
-			mainInstance.startFadeOut();
+			if(mainInstance != null)
+				mainInstance.startFadeOut();
 			if(introTicks > 0)
 			{
-				introInstance.startFadeOut();
+				if(introInstance != null)
+					introInstance.startFadeOut();
 				introTicks = 0;
 			}
 			stopping = false;
 			noOutro = false;
 			return;
 		}
-		if(introTicks > 0 || outroTicks > 0)
+		if(introTicks > 0)
+		{
+			if(next != null)
+			{
+				playingIntro = false;
+				introInstance.startFadeOut();
+				introTicks = 0;
+			}
+			return;
+		}
+		if(outroTicks > 0)
 			return;
 		if(current != null)
 		{
