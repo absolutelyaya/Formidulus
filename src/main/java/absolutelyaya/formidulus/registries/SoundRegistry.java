@@ -9,6 +9,7 @@ import net.minecraft.util.Identifier;
 public class SoundRegistry
 {
 	public static final SoundEvent WEEN = register(Formidulus.identifier("ween"));
+	public static final SoundEvent KNIFE = register(Formidulus.identifier("deer.knife"));
 	
 	public static final SoundEvent MUSIC_DEER_INTRO = register(Formidulus.identifier("music.deer.intro"));
 	public static final SoundEvent MUSIC_DEER_PHASE1 = register(Formidulus.identifier("music.deer.phase1"));

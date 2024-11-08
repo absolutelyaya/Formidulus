@@ -28,6 +28,11 @@
       "formidulus:ween/marmaween-09"
     ]
   },
+  "deer.knife": {
+    "sounds": [
+      "formidulus:deer/knife"
+    ]
+  },
 
   "music.deer.intro": {
     "category": "music",

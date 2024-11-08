@@ -14,6 +14,7 @@ import absolutelyaya.formidulus.network.SequenceTriggerPayload;
 import absolutelyaya.formidulus.particle.BloodDropParticleEffect;
 import absolutelyaya.formidulus.registries.EntityRegistry;
 import absolutelyaya.formidulus.registries.ParticleRegistry;
+import absolutelyaya.formidulus.registries.SoundRegistry;
 import absolutelyaya.formidulus.registries.StatusEffectRegistry;
 import com.chocohead.mm.api.ClassTinkerers;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -483,6 +484,13 @@ public class DeerGodEntity extends BossEntity
 				if(!getWorld().isClient && duration >= 18.05f)
 					setAnimation(IDLE_ANIM);
 			}
+			case SIMPLE_CLAW_ATTACK_ANIM -> {
+				if(!getAnimationFlag(1) && duration >= 0.25f)
+				{
+					setAnimationFlag(1, true);
+					playSound(SoundEvents.ENTITY_WITCH_THROW, 1f, 0.5f);
+				}
+			}
 			case PREPARE_RUN_ATTACK_ANIM -> {
 				for (int i = 0; i < 4; i++)
 				{
@@ -490,6 +498,26 @@ public class DeerGodEntity extends BossEntity
 							getPos().add(Vec3d.ZERO.addRandom(random, 2f).multiply(1f, 0f, 1f)).add(0, 0.1, 0);
 					Vec3d vel = Vec3d.ZERO.addRandom(random, 0.5f);
 					getWorld().addParticle(ParticleTypes.TRIAL_SPAWNER_DETECTION, true, pos.x, pos.y, pos.z, 0f, vel.y, 0f);
+				}
+			}
+			case RUN_ATTACK_CLAW_ANIM -> {
+				if(!getAnimationFlag(1) && duration >= 0f)
+				{
+					setAnimationFlag(1, true);
+					playSound(SoundRegistry.KNIFE, 1f, 1f);
+				}
+				if(!getAnimationFlag(2) && duration >= 0.5f)
+				{
+					Vec3d offset = new Vec3d(0, 0, 2).rotateY((float)Math.toRadians(-getYaw()));
+					setAnimationFlag(2, true);
+					BlockState state = getWorld().getBlockState(BlockPos.ofFloored(getPos().subtract(0f, 0.5f, 0f)));
+					for (int i = 0; i < 32; i++)
+					{
+						Vec3d rand = Vec3d.ZERO.addRandom(random, 2f);
+						Vec3d pos = getPos().add(offset).add(0f, 0.15f, 0f).add(rand.multiply(1.5f, 0f, 1.5f));
+						getWorld().addParticle(new BlockStateParticleEffect(ParticleTypes.DUST_PILLAR, state),
+								pos.x, pos.y, pos.z, 0f, 0f, 0f);
+					}
 				}
 			}
 			case RUN_ATTACK_WALL_IMPACT_ANIM -> {
@@ -562,8 +590,9 @@ public class DeerGodEntity extends BossEntity
 		}
 		if(dataTracker.get(RUN_ATTACK) == RUN_ATTACK_CLAW && dataTracker.get(ANIMATION) == IDLE_ANIM && age % 15 == 0)
 			playSound(SoundEvents.BLOCK_GRINDSTONE_USE,0.8f, 0.7f);
-		//TODO: add sounds and particles to run attacks
-		//TODO: add sounds and particles simple claw attack
+		
+		if(isInSequence() && dataTracker.get(SWARM_TRANSITION_TICKS) > 0)
+			dataTracker.set(SWARM_TRANSITION_TICKS, 0);
 	}
 	
 	/**
@@ -903,6 +932,7 @@ public class DeerGodEntity extends BossEntity
 		setAnimation(IDLE_ANIM);
 		dataTracker.set(SWARM_TRANSITION_TICKS, 0);
 		dataTracker.set(SCHEDULED_SPAWNS, 0);
+		dataTracker.set(TELEPORT_TIMER, Integer.MIN_VALUE);
 		getWorld().getEntitiesByType(TypeFilter.instanceOf(IrrlichtEntity.class), box(getPos()).expand(32), i -> i.owner == this)
 				.forEach(LivingEntity::kill);
 	}
@@ -1820,7 +1850,8 @@ public class DeerGodEntity extends BossEntity
 								hit.setFireTicks(Math.max(hit.getFireTicks() + 40 * (mob.getWorld().getDifficulty().getId() + 1), 0));
 							else if(mob.age % 3 == 0)
 									hit.setFireTicks(Math.max(hit.getFireTicks() + 40 * (mob.getWorld().getDifficulty().getId() + 1), 0));
-							hit.setVelocity(hit.getPos().subtract(impact).normalize().multiply(strength * 4f).add(0f, 0.1f, 0f));
+							float distanceFactor = 1f - (float)Math.min(hit.getPos().distanceTo(impact) / radius + 0.5f, 1f);
+							hit.setVelocity(hit.getPos().subtract(impact).normalize().multiply(strength * 4f * distanceFactor).add(0f, 0.1f, 0f));
 						});
 			}
 		}
@@ -1896,7 +1927,7 @@ public class DeerGodEntity extends BossEntity
 			start = mob.getPos();
 			dir = null;
 			mob.setAnimation(PREPARE_RUN_ATTACK_ANIM);
-			mob.playSound(SoundEvents.ENTITY_BREEZE_INHALE, 10, 1);
+			mob.playSound(SoundEvents.ENTITY_POLAR_BEAR_WARNING, 10, 0.6f);
 			impactTicks = -1;
 			firstInChain = chain == 0;
 			if(firstInChain)
