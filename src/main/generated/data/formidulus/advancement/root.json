@@ -6,13 +6,24 @@
   },
   "display": {
     "announce_to_chat": false,
-    "background": "formidulus:textures/block/ween_side.png",
+    "background": "minecraft:textures/block/polished_tuff.png",
     "description": {
       "translate": "advancement.formidulus.root.description"
     },
     "icon": {
+      "components": {
+        "minecraft:map_color": 9325736,
+        "minecraft:map_decorations": {
+          "+": {
+            "type": "formidulus:cult_hideout",
+            "rotation": 180.0,
+            "x": 0.0,
+            "z": 0.0
+          }
+        }
+      },
       "count": 1,
-      "id": "minecraft:jack_o_lantern"
+      "id": "minecraft:filled_map"
     },
     "show_toast": false,
     "title": {

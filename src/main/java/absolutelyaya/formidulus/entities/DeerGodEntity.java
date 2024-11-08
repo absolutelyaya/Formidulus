@@ -901,6 +901,8 @@ public class DeerGodEntity extends BossEntity
 		super.cancelActiveGoals();
 		dataTracker.set(TELEPORT_TIMER, Integer.MIN_VALUE);
 		setAnimation(IDLE_ANIM);
+		dataTracker.set(SWARM_TRANSITION_TICKS, 0);
+		dataTracker.set(SCHEDULED_SPAWNS, 0);
 		getWorld().getEntitiesByType(TypeFilter.instanceOf(IrrlichtEntity.class), box(getPos()).expand(32), i -> i.owner == this)
 				.forEach(LivingEntity::kill);
 	}
@@ -956,6 +958,8 @@ public class DeerGodEntity extends BossEntity
 	
 	public float getVanishingPercent()
 	{
+		if(isInSequence())
+			return 0f;
 		if(dataTracker.get(SWARM_TRANSITION_TICKS) > 0)
 			return Math.min(dataTracker.get(SWARM_TRANSITION_TICKS) / 20f, 1f);
 		return MathHelper.clamp(1f - (Math.abs((float)getTeleportTimer()) / (float) getTeleportFadeDuration()), 0f, 1f);

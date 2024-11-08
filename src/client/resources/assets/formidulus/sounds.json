@@ -64,5 +64,14 @@
         "preload": true
       }
     ]
+  },
+  "music.deer.outro": {
+    "category": "music",
+    "sounds": [
+      {
+        "name": "formidulus:music/boss/deer_outro",
+        "preload": true
+      }
+    ]
   }
 }

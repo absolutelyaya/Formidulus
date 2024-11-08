@@ -18,6 +18,7 @@
       "count": 1,
       "id": "formidulus:deer_skull"
     },
+    "show_toast": false,
     "title": {
       "translate": "advancement.formidulus.deer.title"
     }

@@ -36,6 +36,12 @@ public class FadingMusicInstance extends PositionedSoundInstance implements Tick
 		active = false;
 	}
 	
+	public void stopImmediately()
+	{
+		active = false;
+		volume = 0f;
+	}
+	
 	@Override
 	public void tick()
 	{

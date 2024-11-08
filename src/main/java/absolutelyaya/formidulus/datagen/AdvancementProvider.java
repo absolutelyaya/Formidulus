@@ -4,6 +4,7 @@ import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.advancement.BossFightWonCriterion;
 import absolutelyaya.formidulus.entities.boss.BossType;
 import absolutelyaya.formidulus.registries.EntityRegistry;
+import absolutelyaya.formidulus.registries.FormidableMapDecorations;
 import absolutelyaya.formidulus.registries.ItemRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricAdvancementProvider;
@@ -15,10 +16,14 @@ import net.minecraft.advancement.criterion.Criteria;
 import net.minecraft.advancement.criterion.ImpossibleCriterion;
 import net.minecraft.advancement.criterion.OnKilledCriterion;
 import net.minecraft.advancement.criterion.TickCriterion;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.item.map.MapState;
 import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -46,11 +51,13 @@ public class AdvancementProvider extends FabricAdvancementProvider
 	}
 	
 	static {
+		ItemStack stack = Items.FILLED_MAP.getDefaultStack();
+		MapState.addDecorationsNbt(stack, BlockPos.ORIGIN, "+", FormidableMapDecorations.CULT_HIDEOUT);
 		ROOT = Advancement.Builder.create()
-					   .display(new AdvancementDisplay(Items.JACK_O_LANTERN.getDefaultStack(),
+					   .display(new AdvancementDisplay(stack,
 							   Text.translatable(Lang.ADVANCEMENT_ROOT_TITLE),
 							   Text.translatable(Lang.ADVANCEMENT_ROOT_DESCRIPTION),
-							   Optional.of(Formidulus.identifier("textures/block/ween_side.png")),
+							   Optional.of(Identifier.of("textures/block/polished_tuff.png")),
 							   AdvancementFrame.TASK,
 							   false,
 							   false,
@@ -79,7 +86,7 @@ public class AdvancementProvider extends FabricAdvancementProvider
 												Text.translatable(Lang.ADVANCEMENT_DEER_DESCRIPTION),
 												Optional.empty(),
 												AdvancementFrame.CHALLENGE,
-												true,
+												false,
 												true,
 												true))
 										.criterion("win", BossFightWonCriterion.Conditions.createBossfigthWon(BossType.DEER.id()))

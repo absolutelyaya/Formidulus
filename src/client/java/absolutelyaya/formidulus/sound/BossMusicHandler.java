@@ -14,8 +14,8 @@ public class BossMusicHandler
 {
 	static SoundManager manager;
 	BossMusicEntry last, current, next;
-	int introTicks, outroTicks;
-	boolean playingIntro, playingOutro, stopping, late, noOutro;
+	int introTicks, outroTicks, outroDelayTicks;
+	boolean playIntro, playOutro, stopping, late, noOutro, noFade, startedOutro;
 	List<PositionedSoundInstance> soundInstances = new ArrayList<>();
 	FadingMusicInstance mainInstance, introInstance, outroInstance;
 	
@@ -40,13 +40,11 @@ public class BossMusicHandler
 		}
 		catch (NoSuchMethodException exception)
 		{
-			Formidulus.LOGGER.warn("BossMusicHandler -> Couldn't find 'getMusicEntry' in BossType '{}'s fight class!", bossId);
-			exception.printStackTrace();
+			Formidulus.LOGGER.warn("BossMusicHandler -> Couldn't find 'getMusicEntry' in BossType '{}'s fight class!", bossId, exception);
 		}
 		catch (Exception exception)
 		{
-			Formidulus.LOGGER.warn("BossMusicHandler -> Something went wrong trying to get musicEntry from '{}'s fight class!", bossId);
-			exception.printStackTrace();
+			Formidulus.LOGGER.warn("BossMusicHandler -> Something went wrong trying to get musicEntry from '{}'s fight class!", bossId, exception);
 		}
 	}
 	
@@ -61,6 +59,13 @@ public class BossMusicHandler
 		noOutro = true;
 	}
 	
+	public void stopCurrentTrackNoFade()
+	{
+		stopping = true;
+		noFade = true;
+		noOutro = false;
+	}
+	
 	public void tick()
 	{
 		if(manager == null)
@@ -72,20 +77,46 @@ public class BossMusicHandler
 			introTicks--;
 		if(outroTicks > 0)
 			outroTicks--;
-		if(stopping)
+		if(stopping && !playOutro)
 		{
-			if(!noOutro && current.hasOutro())
-				playingOutro = true;
+			if(!startedOutro)
+			{
+				if(mainInstance != null)
+				{
+					if(noFade)
+					{
+						mainInstance.stopImmediately();
+						noFade = false;
+					}
+					else
+						mainInstance.startFadeOut();
+				}
+				if(introTicks > 0)
+				{
+					if(introInstance != null)
+					{
+						if(noFade)
+						{
+							introInstance.stopImmediately();
+							noFade = false;
+						}
+						else
+							introInstance.startFadeOut();
+					}
+					introTicks = 0;
+				}
+				startedOutro = true;
+			}
+			if(!noOutro && current != null && current.hasOutro())
+			{
+				if(outroDelayTicks <= 0)
+					playOutro = true;
+				else
+					outroDelayTicks--;
+				return;
+			}
 			else
 				current = null;
-			if(mainInstance != null)
-				mainInstance.startFadeOut();
-			if(introTicks > 0)
-			{
-				if(introInstance != null)
-					introInstance.startFadeOut();
-				introTicks = 0;
-			}
 			stopping = false;
 			noOutro = false;
 			return;
@@ -94,7 +125,7 @@ public class BossMusicHandler
 		{
 			if(next != null)
 			{
-				playingIntro = false;
+				playIntro = false;
 				introInstance.startFadeOut();
 				introTicks = 0;
 			}
@@ -104,21 +135,22 @@ public class BossMusicHandler
 			return;
 		if(current != null)
 		{
-			if(playingIntro)
+			if(playIntro)
 			{
 				if(next == null)
 				{
 					mainInstance.startFadeIn();
 					manager.play(mainInstance);
 				}
-				playingIntro = false;
+				playIntro = false;
 				return;
 			}
-			if(playingOutro)
+			if(playOutro)
 			{
+				outroInstance.setFullVolume();
 				manager.play(outroInstance);
 				outroTicks = current.outroTicks;
-				playingOutro = false;
+				playOutro = false;
 				last = current;
 				current = null;
 				return;
@@ -126,8 +158,8 @@ public class BossMusicHandler
 		}
 		if(next != null)
 		{
-			if(playingIntro)
-				playingIntro = false;
+			if(playIntro)
+				playIntro = false;
 			current = next;
 			mainInstance = new FadingMusicInstance(current.mainSound, current.fadeIn, current.fadeOut, true);
 			next = null;
@@ -137,7 +169,7 @@ public class BossMusicHandler
 				introInstance.setFullVolume();
 				manager.play(introInstance);
 				introTicks = current.introTicks;
-				playingIntro = true;
+				playIntro = true;
 			}
 			else
 			{
@@ -148,6 +180,8 @@ public class BossMusicHandler
 			}
 			if(current.hasOutro())
 				outroInstance = new FadingMusicInstance(current.outroSound, current.fadeIn, 0f, false);
+			outroDelayTicks = current.outroDelayTicks;
+			startedOutro = false;
 		}
 	}
 	
@@ -156,7 +190,7 @@ public class BossMusicHandler
 		soundInstances.forEach(manager::stop);
 		soundInstances.clear();
 		last = current = next = null;
-		introTicks = outroTicks = 0;
+		introTicks = outroTicks = outroDelayTicks = 0;
 	}
 	
 	public boolean isPlayingMusic()

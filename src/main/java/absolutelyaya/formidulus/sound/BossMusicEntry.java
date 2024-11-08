@@ -1,7 +1,6 @@
 package absolutelyaya.formidulus.sound;
 
 import net.minecraft.sound.SoundEvent;
-import org.jetbrains.annotations.NotNull;
 
 public class BossMusicEntry
 {
@@ -10,7 +9,7 @@ public class BossMusicEntry
 	
 	SoundEvent introSound, outroSound;
 	boolean intro, outro, skipIntroIfLate;
-	int introTicks, outroTicks;
+	int introTicks, outroTicks, outroDelayTicks;
 	
 	public BossMusicEntry(SoundEvent mainSound, float fadeIn, float fadeOut)
 	{
@@ -19,22 +18,17 @@ public class BossMusicEntry
 		this.fadeOut = fadeOut;
 	}
 	
-	public @NotNull SoundEvent getMainSound()
+	public BossMusicEntry withIntro(SoundEvent sound, int lengthMs)
 	{
-		return mainSound;
+		return withIntro(sound, lengthMs, true);
 	}
 	
-	public BossMusicEntry withIntro(SoundEvent sound, int lengthMilliseconds)
-	{
-		return withIntro(sound, lengthMilliseconds, true);
-	}
-	
-	public BossMusicEntry withIntro(SoundEvent sound, int lengthMilliseconds, boolean skipIfLate)
+	public BossMusicEntry withIntro(SoundEvent sound, int lengthMs, boolean skipIfLate)
 	{
 		introSound = sound;
 		intro = true;
 		skipIntroIfLate = skipIfLate;
-		introTicks = millisecondsToTicks(lengthMilliseconds);
+		introTicks = millisecondsToTicks(lengthMs);
 		return this;
 	}
 	
@@ -43,27 +37,23 @@ public class BossMusicEntry
 		return intro;
 	}
 	
-	public BossMusicEntry withOutro(SoundEvent sound, int lengthMilliseconds)
+	public BossMusicEntry withOutro(SoundEvent sound, int lengthMs)
 	{
 		outroSound = sound;
 		outro = true;
-		outroTicks = millisecondsToTicks(lengthMilliseconds);
+		outroTicks = millisecondsToTicks(lengthMs);
+		return this;
+	}
+	
+	public BossMusicEntry withOutroDelay(int delayMs)
+	{
+		outroDelayTicks = millisecondsToTicks(delayMs);
 		return this;
 	}
 	
 	public boolean hasOutro()
 	{
 		return outro;
-	}
-	
-	public float getFadeIn()
-	{
-		return fadeIn;
-	}
-	
-	public float getFadeOut()
-	{
-		return fadeOut;
 	}
 	
 	int millisecondsToTicks(int milliseconds)

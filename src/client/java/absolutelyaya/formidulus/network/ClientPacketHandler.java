@@ -77,12 +77,13 @@ public class ClientPacketHandler
 		});
 		ClientPlayNetworking.registerGlobalReceiver(BossMusicUpdatePayload.ID, (payload, context) -> {
 			String key = payload.trackKey();
-			if(key.equals("cancel"))
-				FormidulusClient.bossMusicHandler.stopCurrentTrackNoOutro();
-			else if(key.equals("end"))
-				FormidulusClient.bossMusicHandler.stopCurrentTrack();
-			else
-				FormidulusClient.bossMusicHandler.startTrack(payload.bossId(), key, payload.late());
+			switch (key)
+			{
+				case "cancel" -> FormidulusClient.bossMusicHandler.stopCurrentTrackNoOutro();
+				case "stopImmediately" -> FormidulusClient.bossMusicHandler.stopCurrentTrackNoFade();
+				case "end" -> FormidulusClient.bossMusicHandler.stopCurrentTrack();
+				default -> FormidulusClient.bossMusicHandler.startTrack(payload.bossId(), key, payload.late());
+			}
 		});
 		ClientPlayNetworking.registerGlobalReceiver(OpenBossSpawnerScreenPayload.ID, (payload, context) -> {
 			if(!(context.player().getWorld().getBlockEntity(payload.pos()) instanceof BossSpawnerBlockEntity spawner))

@@ -1,6 +1,7 @@
 package absolutelyaya.formidulus.entities.boss;
 
 import absolutelyaya.formidulus.entities.BossEntity;
+import absolutelyaya.formidulus.network.BossMusicUpdatePayload;
 import absolutelyaya.formidulus.network.SequenceTriggerPayload;
 import absolutelyaya.formidulus.registries.SoundRegistry;
 import absolutelyaya.formidulus.sound.BossMusicEntry;
@@ -24,10 +25,18 @@ public class DeerBossFight extends BossFight
 		super.leaveFight(player);
 	}
 	
+	@Override
+	public void markWon()
+	{
+		super.markWon();
+		participants.forEach(p -> ServerPlayNetworking.send(p, new BossMusicUpdatePayload(type.id(), "end")));
+	}
+	
 	static {
 		bossMusic.put("phase1", new BossMusicEntry(SoundRegistry.MUSIC_DEER_PHASE1, 0f, 2f)
 										.withIntro(SoundRegistry.MUSIC_DEER_INTRO, 67011, true));
-		bossMusic.put("phase2", new BossMusicEntry(SoundRegistry.MUSIC_DEER_PHASE2, 0f, 3f)
-										.withIntro(SoundRegistry.MUSIC_DEER_PHASE2_INTRO, 14470 + 1500));
+		bossMusic.put("phase2", new BossMusicEntry(SoundRegistry.MUSIC_DEER_PHASE2, 0f, 2f)
+										.withIntro(SoundRegistry.MUSIC_DEER_PHASE2_INTRO, 14470 + 1500)
+										.withOutro(SoundRegistry.MUSIC_DEER_OUTRO, 15944).withOutroDelay(950));
 	}
 }

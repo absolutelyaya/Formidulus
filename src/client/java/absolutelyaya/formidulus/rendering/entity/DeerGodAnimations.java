@@ -60,8 +60,7 @@ public class DeerGodAnimations
 	
 	static Animation initSpawnSequenceAnim()
 	{
-		return Animation.Builder.create(18.0F)
-				.addBoneAnimation("body", new Transformation(Transformation.Targets.ROTATE,
+		return Animation.Builder.create(18.0F).addBoneAnimation("body", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(12.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(14.65F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
@@ -70,8 +69,7 @@ public class DeerGodAnimations
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(17.35F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(0.0F, 7.5F, 0.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("body", new Transformation(Transformation.Targets.TRANSLATE,
+				)).addBoneAnimation("body", new Transformation(Transformation.Targets.TRANSLATE,
 						new Keyframe(5.0F, AnimationHelper.createTranslationalVector(0.0F, -49.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(6.5F, AnimationHelper.createTranslationalVector(0.0F, -49.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.5F, AnimationHelper.createTranslationalVector(0.0F, 6.1F, 0.0F), Transformation.Interpolations.LINEAR),
@@ -83,8 +81,7 @@ public class DeerGodAnimations
 						new Keyframe(14.65F, AnimationHelper.createTranslationalVector(0.0F, -0.8F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createTranslationalVector(0.0F, -0.8F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(17.35F, AnimationHelper.createTranslationalVector(0.0F, -0.9F, 0.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("spineBottom", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("spineBottom", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(5.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(7.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(4.5739F, 2.4438F, -5.1971F), Transformation.Interpolations.LINEAR),
@@ -93,13 +90,11 @@ public class DeerGodAnimations
 						new Keyframe(13.0F, AnimationHelper.createRotationalVector(4.6758F, 2.2422F, -2.7032F), Transformation.Interpolations.LINEAR),
 						new Keyframe(17.35F, AnimationHelper.createRotationalVector(4.6758F, 2.2422F, -2.7032F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(4.5739F, 2.4438F, -5.1971F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("spineBottomEnd", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("spineBottomEnd", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(12.5F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(12.5F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(12.5F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("hips", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("hips", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 2.5F), Transformation.Interpolations.LINEAR),
 						new Keyframe(12.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
@@ -109,16 +104,14 @@ public class DeerGodAnimations
 						new Keyframe(15.55F, AnimationHelper.createRotationalVector(0.0F, 15.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(17.35F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
-						new Keyframe(18.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 2.5F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("hips", new Transformation(Transformation.Targets.SCALE,
+						new Keyframe(18.0F, AnimationHelper.createRotationalVector(0.0F, 1.0F, 2.5F), Transformation.Interpolations.LINEAR)
+				)).addBoneAnimation("hips", new Transformation(Transformation.Targets.SCALE,
 						new Keyframe(5.0F, AnimationHelper.createScalingVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.699F, AnimationHelper.createScalingVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.7F, AnimationHelper.createScalingVector(1.0F, 1.0F, 1.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(17.999F, AnimationHelper.createScalingVector(1.0F, 1.0F, 1.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createScalingVector(1.0F, 1.0F, 1.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("legLeftTop", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("legLeftTop", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(5.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(-42.8111F, -7.8418F, 1.4283F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.95F, AnimationHelper.createRotationalVector(-42.8111F, -7.8418F, 1.4283F), Transformation.Interpolations.LINEAR),
@@ -132,16 +125,14 @@ public class DeerGodAnimations
 						new Keyframe(15.55F, AnimationHelper.createRotationalVector(-18.0915F, -23.4954F, -5.4331F), Transformation.Interpolations.LINEAR),
 						new Keyframe(15.95F, AnimationHelper.createRotationalVector(-18.6743F, -20.3348F, -3.7262F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(-17.5515F, -9.6905F, -0.2746F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("legLeftTop", new Transformation(Transformation.Targets.TRANSLATE,
+				)).addBoneAnimation("legLeftTop", new Transformation(Transformation.Targets.TRANSLATE,
 						new Keyframe(9.05F, AnimationHelper.createTranslationalVector(-0.8737F, -0.0923F, 1.5322F), Transformation.Interpolations.LINEAR),
 						new Keyframe(10.5F, AnimationHelper.createTranslationalVector(-0.8737F, -0.0923F, 1.5322F), Transformation.Interpolations.LINEAR),
 						new Keyframe(12.0F, AnimationHelper.createTranslationalVector(-1.0F, 0.0F, 0.5F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createTranslationalVector(-1.0F, 0.0F, 0.5F), Transformation.Interpolations.LINEAR),
 						new Keyframe(15.95F, AnimationHelper.createTranslationalVector(-1.0F, 0.0F, 0.5F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createTranslationalVector(-1.0F, 0.0F, 0.5F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("legLeftMid", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("legLeftMid", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(5.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(57.621F, 0.7341F, 3.009F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.95F, AnimationHelper.createRotationalVector(57.621F, 0.7341F, 3.009F), Transformation.Interpolations.LINEAR),
@@ -157,8 +148,7 @@ public class DeerGodAnimations
 						new Keyframe(15.9F, AnimationHelper.createRotationalVector(49.0221F, 3.1449F, 3.8876F), Transformation.Interpolations.LINEAR),
 						new Keyframe(17.35F, AnimationHelper.createRotationalVector(49.0221F, 3.1449F, 3.8876F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(52.6597F, 1.0544F, 5.4887F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("legLeftBottom", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("legLeftBottom", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(5.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(-64.1649F, -1.3726F, 0.9571F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.95F, AnimationHelper.createRotationalVector(-64.1649F, -1.3726F, 0.9571F), Transformation.Interpolations.LINEAR),
@@ -173,8 +163,7 @@ public class DeerGodAnimations
 						new Keyframe(15.55F, AnimationHelper.createRotationalVector(-59.1649F, -1.3726F, 0.9571F), Transformation.Interpolations.LINEAR),
 						new Keyframe(15.9F, AnimationHelper.createRotationalVector(-59.1649F, -1.3726F, 0.9571F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(-59.1649F, -1.3726F, 0.9571F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("hoofLeft", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("hoofLeft", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(10.5F, AnimationHelper.createRotationalVector(42.5F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(12.0F, AnimationHelper.createRotationalVector(17.5F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createRotationalVector(17.5F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
@@ -184,8 +173,7 @@ public class DeerGodAnimations
 						new Keyframe(15.9F, AnimationHelper.createRotationalVector(25.92F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(17.35F, AnimationHelper.createRotationalVector(25.92F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(17.5F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("legRightTop", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("legRightTop", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(5.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.7F, AnimationHelper.createRotationalVector(-5.6157F, 13.7149F, 8.5641F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.95F, AnimationHelper.createRotationalVector(19.3843F, 13.7149F, 8.5641F), Transformation.Interpolations.LINEAR),
@@ -197,13 +185,11 @@ public class DeerGodAnimations
 						new Keyframe(14.9F, AnimationHelper.createRotationalVector(-14.2224F, 11.1045F, 4.9194F), Transformation.Interpolations.LINEAR),
 						new Keyframe(15.55F, AnimationHelper.createRotationalVector(-14.2224F, 11.1045F, 4.9194F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(9.3843F, 13.7149F, 8.5641F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("legRightTop", new Transformation(Transformation.Targets.TRANSLATE,
+				)).addBoneAnimation("legRightTop", new Transformation(Transformation.Targets.TRANSLATE,
 						new Keyframe(12.0F, AnimationHelper.createTranslationalVector(1.0F, 0.0F, 1.5F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createTranslationalVector(1.0F, 0.0F, 1.5F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createTranslationalVector(1.0F, 0.0F, 1.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("legRightMid", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("legRightMid", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(5.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.7F, AnimationHelper.createRotationalVector(57.2427F, -7.0384F, 0.6325F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.9F, AnimationHelper.createRotationalVector(67.2427F, -7.0384F, 0.6325F), Transformation.Interpolations.LINEAR),
@@ -214,8 +200,7 @@ public class DeerGodAnimations
 						new Keyframe(13.0F, AnimationHelper.createRotationalVector(52.6597F, -1.0544F, -5.4887F), Transformation.Interpolations.LINEAR),
 						new Keyframe(15.55F, AnimationHelper.createRotationalVector(52.6597F, -1.0544F, -5.4887F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(37.2427F, -7.0384F, 0.6325F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("legRightBottom", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("legRightBottom", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(5.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.7F, AnimationHelper.createRotationalVector(-81.8103F, -3.0341F, 0.539F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.95F, AnimationHelper.createRotationalVector(-56.8103F, -3.0341F, 0.539F), Transformation.Interpolations.LINEAR),
@@ -227,12 +212,10 @@ public class DeerGodAnimations
 						new Keyframe(14.85F, AnimationHelper.createRotationalVector(-61.6649F, 1.3726F, -0.9571F), Transformation.Interpolations.LINEAR),
 						new Keyframe(15.55F, AnimationHelper.createRotationalVector(-61.6649F, 1.3726F, -0.9571F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(-64.3103F, -3.0341F, 0.539F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("legRightBottom", new Transformation(Transformation.Targets.TRANSLATE,
+				)).addBoneAnimation("legRightBottom", new Transformation(Transformation.Targets.TRANSLATE,
 						new Keyframe(5.0F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("hoofRight", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("hoofRight", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(5.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.7F, AnimationHelper.createRotationalVector(25.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.95F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
@@ -242,8 +225,7 @@ public class DeerGodAnimations
 						new Keyframe(13.0F, AnimationHelper.createRotationalVector(17.5F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(15.55F, AnimationHelper.createRotationalVector(22.5F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(15.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("hoofRight", new Transformation(Transformation.Targets.TRANSLATE,
+				)).addBoneAnimation("hoofRight", new Transformation(Transformation.Targets.TRANSLATE,
 						new Keyframe(5.0F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.95F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(9.05F, AnimationHelper.createTranslationalVector(0.0F, 1.406F, 0.2706F), Transformation.Interpolations.LINEAR),
@@ -252,8 +234,7 @@ public class DeerGodAnimations
 						new Keyframe(13.0F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(15.55F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("spineCenter", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("spineCenter", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(5.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(7.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(10.1402F, 10.7145F, -3.1723F), Transformation.Interpolations.LINEAR),
@@ -268,8 +249,7 @@ public class DeerGodAnimations
 						new Keyframe(14.9F, AnimationHelper.createRotationalVector(7.6493F, 10.6431F, 1.7058F), Transformation.Interpolations.LINEAR),
 						new Keyframe(15.55F, AnimationHelper.createRotationalVector(7.6493F, 10.6431F, 1.7058F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.0F, AnimationHelper.createRotationalVector(10.2533F, 5.3516F, -1.5833F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("spineTop", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("spineTop", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(5.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(7.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(37.4011F, -2.6841F, 4.22F), Transformation.Interpolations.LINEAR),
@@ -282,8 +262,7 @@ public class DeerGodAnimations
 						new Keyframe(16.5F, AnimationHelper.createRotationalVector(27.2642F, -0.0044F, -2.1618F), Transformation.Interpolations.LINEAR),
 						new Keyframe(17.0F, AnimationHelper.createRotationalVector(27.2642F, -0.0044F, -2.1618F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(37.4011F, -2.6841F, 4.22F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("head", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("head", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(1.0F, AnimationHelper.createRotationalVector(-7.2888F, -2.4751F, 0.3165F), Transformation.Interpolations.LINEAR),
 						new Keyframe(1.15F, AnimationHelper.createRotationalVector(-7.29F, -2.48F, 2.82F), Transformation.Interpolations.LINEAR),
 						new Keyframe(2.9F, AnimationHelper.createRotationalVector(-7.29F, -2.48F, 2.82F), Transformation.Interpolations.LINEAR),
@@ -359,14 +338,12 @@ public class DeerGodAnimations
 						new Keyframe(16.5F, AnimationHelper.createRotationalVector(-7.218F, 5.0209F, 20.9373F), Transformation.Interpolations.LINEAR),
 						new Keyframe(17.0F, AnimationHelper.createRotationalVector(-6.919F, 7.8095F, 23.1238F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(-34.344F, -6.5042F, 8.5351F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("head", new Transformation(Transformation.Targets.TRANSLATE,
+				)).addBoneAnimation("head", new Transformation(Transformation.Targets.TRANSLATE,
 						new Keyframe(4.35F, AnimationHelper.createTranslationalVector(0.0F, -2.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.2F, AnimationHelper.createTranslationalVector(0.0F, -2.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.5F, AnimationHelper.createTranslationalVector(0.0F, 0.9F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createTranslationalVector(0.0F, 0.9F, 0.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("jaw", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("jaw", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(7.3F, AnimationHelper.createRotationalVector(-1.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.9F, AnimationHelper.createRotationalVector(-1.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(9.15F, AnimationHelper.createRotationalVector(15.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
@@ -380,8 +357,7 @@ public class DeerGodAnimations
 						new Keyframe(16.0F, AnimationHelper.createRotationalVector(10.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(10.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(10.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("jaw", new Transformation(Transformation.Targets.TRANSLATE,
+				)).addBoneAnimation("jaw", new Transformation(Transformation.Targets.TRANSLATE,
 						new Keyframe(7.3F, AnimationHelper.createTranslationalVector(0.0197F, 2.9888F, -0.1979F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.9F, AnimationHelper.createTranslationalVector(0.0197F, 2.9888F, -0.1979F), Transformation.Interpolations.LINEAR),
 						new Keyframe(9.15F, AnimationHelper.createTranslationalVector(0.0F, 1.3513F, -0.0344F), Transformation.Interpolations.LINEAR),
@@ -394,20 +370,17 @@ public class DeerGodAnimations
 						new Keyframe(16.0F, AnimationHelper.createTranslationalVector(0.0565F, 1.9829F, 0.2549F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createTranslationalVector(0.0565F, 1.9829F, 0.2549F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createTranslationalVector(0.0F, 2.0274F, -0.2156F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("torso", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("torso", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(0.0437F, 4.4899F, 0.832F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(0.0437F, 4.4899F, 0.832F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(0.0436F, -0.5101F, 0.8282F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("torso", new Transformation(Transformation.Targets.SCALE,
+				)).addBoneAnimation("torso", new Transformation(Transformation.Targets.SCALE,
 						new Keyframe(5.0F, AnimationHelper.createScalingVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.699F, AnimationHelper.createScalingVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(8.7F, AnimationHelper.createScalingVector(1.0F, 1.0F, 1.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(17.999F, AnimationHelper.createScalingVector(1.0F, 1.0F, 1.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createScalingVector(1.0F, 1.0F, 1.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("leftArm", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("leftArm", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(9.05F, AnimationHelper.createRotationalVector(13.4843F, 13.5362F, -33.479F), Transformation.Interpolations.LINEAR),
 						new Keyframe(9.15F, AnimationHelper.createRotationalVector(23.1083F, 5.9081F, -6.6443F), Transformation.Interpolations.LINEAR),
 						new Keyframe(9.3F, AnimationHelper.createRotationalVector(18.3377F, 5.1262F, -4.2587F), Transformation.Interpolations.LINEAR),
@@ -424,15 +397,13 @@ public class DeerGodAnimations
 						new Keyframe(17.15F, AnimationHelper.createRotationalVector(-47.2907F, 14.5647F, -39.7003F), Transformation.Interpolations.LINEAR),
 						new Keyframe(17.5F, AnimationHelper.createRotationalVector(-27.2434F, 6.6857F, -42.219F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(8.7685F, 16.9416F, -51.2783F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("leftArm", new Transformation(Transformation.Targets.TRANSLATE,
+				)).addBoneAnimation("leftArm", new Transformation(Transformation.Targets.TRANSLATE,
 						new Keyframe(9.05F, AnimationHelper.createTranslationalVector(-0.6428F, -0.926F, -0.3495F), Transformation.Interpolations.LINEAR),
 						new Keyframe(9.15F, AnimationHelper.createTranslationalVector(-0.6428F, -0.926F, -0.3495F), Transformation.Interpolations.LINEAR),
 						new Keyframe(12.0F, AnimationHelper.createTranslationalVector(0.0F, -0.9962F, -0.0872F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createTranslationalVector(0.0F, -0.9962F, -0.0872F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createTranslationalVector(-0.5F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("leftArmLower", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("leftArmLower", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(9.0F, AnimationHelper.createRotationalVector(-57.5F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(9.1F, AnimationHelper.createRotationalVector(-40.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(9.25F, AnimationHelper.createRotationalVector(-45.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
@@ -448,8 +419,7 @@ public class DeerGodAnimations
 						new Keyframe(17.15F, AnimationHelper.createRotationalVector(-77.5093F, 0.434F, -2.4621F), Transformation.Interpolations.LINEAR),
 						new Keyframe(17.5F, AnimationHelper.createRotationalVector(-60.01F, 0.43F, -2.46F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(-67.5F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("hand", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("hand", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(-16.8502F, -3.6311F, -62.5178F), Transformation.Interpolations.LINEAR),
 						new Keyframe(12.0F, AnimationHelper.createRotationalVector(-15.6263F, 22.9193F, -35.6867F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createRotationalVector(-15.6263F, 22.9193F, -35.6867F), Transformation.Interpolations.LINEAR),
@@ -459,13 +429,11 @@ public class DeerGodAnimations
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(-24.6385F, 41.1819F, -47.5377F), Transformation.Interpolations.LINEAR),
 						new Keyframe(17.5F, AnimationHelper.createRotationalVector(-18.218F, 43.9278F, -20.5584F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(-16.8502F, -3.6311F, -62.5178F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("hand", new Transformation(Transformation.Targets.TRANSLATE,
+				)).addBoneAnimation("hand", new Transformation(Transformation.Targets.TRANSLATE,
 						new Keyframe(8.5F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.75F), Transformation.Interpolations.LINEAR),
 						new Keyframe(14.7F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.75F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.75F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("leftFinger1", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("leftFinger1", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(-18.1429F, 15.2099F, 30.0306F), Transformation.Interpolations.LINEAR),
 						new Keyframe(12.0F, AnimationHelper.createRotationalVector(-15.6249F, 7.9813F, 13.9032F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createRotationalVector(-15.6249F, 7.9813F, 13.9032F), Transformation.Interpolations.LINEAR),
@@ -478,14 +446,12 @@ public class DeerGodAnimations
 						new Keyframe(14.7F, AnimationHelper.createRotationalVector(-18.1429F, 15.2099F, 30.0306F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(-18.1429F, 15.2099F, 30.0306F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(-18.1429F, 15.2099F, 30.0306F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("leftFinger1", new Transformation(Transformation.Targets.TRANSLATE,
+				)).addBoneAnimation("leftFinger1", new Transformation(Transformation.Targets.TRANSLATE,
 						new Keyframe(8.5F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, -0.3F), Transformation.Interpolations.LINEAR),
 						new Keyframe(14.7F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, -0.3F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, -0.3F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, -0.3F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("leftFingerTip1", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("leftFingerTip1", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 80.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(12.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 60.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 60.0F), Transformation.Interpolations.LINEAR),
@@ -497,8 +463,7 @@ public class DeerGodAnimations
 						new Keyframe(14.7F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 80.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 80.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 80.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("leftFinger2", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("leftFinger2", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(-4.2764F, 5.8539F, 28.3899F), Transformation.Interpolations.LINEAR),
 						new Keyframe(12.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 15.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 15.0F), Transformation.Interpolations.LINEAR),
@@ -509,8 +474,7 @@ public class DeerGodAnimations
 						new Keyframe(14.7F, AnimationHelper.createRotationalVector(-4.2764F, 5.8539F, 28.3899F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(-4.2764F, 5.8539F, 28.3899F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(-4.2764F, 5.8539F, 28.3899F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("leftFingerTip2", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("leftFingerTip2", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 82.5F), Transformation.Interpolations.LINEAR),
 						new Keyframe(12.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 75.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 75.0F), Transformation.Interpolations.LINEAR),
@@ -521,8 +485,7 @@ public class DeerGodAnimations
 						new Keyframe(14.7F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 82.5F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 82.5F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 82.5F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("leftFinger3", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("leftFinger3", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(9.5744F, 6.7089F, 32.3286F), Transformation.Interpolations.LINEAR),
 						new Keyframe(12.2F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 20.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.2F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 20.0F), Transformation.Interpolations.LINEAR),
@@ -533,14 +496,12 @@ public class DeerGodAnimations
 						new Keyframe(14.7F, AnimationHelper.createRotationalVector(9.5744F, 6.7089F, 32.3286F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(9.5744F, 6.7089F, 32.3286F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(9.5744F, 6.7089F, 32.3286F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("leftFinger3", new Transformation(Transformation.Targets.TRANSLATE,
+				)).addBoneAnimation("leftFinger3", new Transformation(Transformation.Targets.TRANSLATE,
 						new Keyframe(8.5F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.2F), Transformation.Interpolations.LINEAR),
 						new Keyframe(14.7F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.2F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.2F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.2F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("leftFingerTip3", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("leftFingerTip3", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 82.5F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.25F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 82.5F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.9F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 40.0F), Transformation.Interpolations.LINEAR),
@@ -550,8 +511,7 @@ public class DeerGodAnimations
 						new Keyframe(14.7F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 82.5F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 82.5F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 82.5F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("thumb", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("thumb", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(-17.776F, -1.0873F, 55.7603F), Transformation.Interpolations.LINEAR),
 						new Keyframe(12.0F, AnimationHelper.createRotationalVector(-60.2444F, -31.8956F, 79.1775F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createRotationalVector(-60.2444F, -31.8956F, 79.1775F), Transformation.Interpolations.LINEAR),
@@ -562,8 +522,7 @@ public class DeerGodAnimations
 						new Keyframe(14.7F, AnimationHelper.createRotationalVector(-17.776F, -1.0873F, 55.7603F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(-17.776F, -1.0873F, 55.7603F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(-17.776F, -1.0873F, 55.7603F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("thumb", new Transformation(Transformation.Targets.TRANSLATE,
+				)).addBoneAnimation("thumb", new Transformation(Transformation.Targets.TRANSLATE,
 						new Keyframe(8.5F, AnimationHelper.createTranslationalVector(0.0F, 1.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(12.0F, AnimationHelper.createTranslationalVector(0.5942F, 0.9772F, 0.0667F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createTranslationalVector(0.5942F, 0.9772F, 0.0667F), Transformation.Interpolations.LINEAR),
@@ -571,8 +530,7 @@ public class DeerGodAnimations
 						new Keyframe(14.7F, AnimationHelper.createTranslationalVector(0.0F, 1.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createTranslationalVector(0.0F, 1.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createTranslationalVector(0.0F, 1.0F, 0.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("thumbTip", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("thumbTip", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(0.0F, 0.0F, -52.5F), Transformation.Interpolations.LINEAR),
 						new Keyframe(12.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, -45.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, -45.0F), Transformation.Interpolations.LINEAR),
@@ -583,22 +541,19 @@ public class DeerGodAnimations
 						new Keyframe(14.7F, AnimationHelper.createRotationalVector(0.0F, 0.0F, -52.5F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(0.0F, 0.0F, -52.5F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, -52.5F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("lantern", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("lantern", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(-7.9691F, 78.8825F, 94.5937F), Transformation.Interpolations.LINEAR),
 						new Keyframe(12.0F, AnimationHelper.createRotationalVector(-7.9691F, 78.8825F, 94.5937F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createRotationalVector(-7.9691F, 78.8825F, 94.5937F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(-7.9691F, 78.8825F, 94.5937F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(-7.9691F, 78.8825F, 94.5937F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("lantern", new Transformation(Transformation.Targets.TRANSLATE,
+				)).addBoneAnimation("lantern", new Transformation(Transformation.Targets.TRANSLATE,
 						new Keyframe(8.5F, AnimationHelper.createTranslationalVector(-7.75F, -7.7F, -2.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(12.0F, AnimationHelper.createTranslationalVector(-7.75F, -7.7F, -2.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createTranslationalVector(-7.75F, -7.7F, -2.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createTranslationalVector(-7.75F, -7.7F, -2.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createTranslationalVector(-7.75F, -7.7F, -2.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("lantern", new Transformation(Transformation.Targets.SCALE,
+				)).addBoneAnimation("lantern", new Transformation(Transformation.Targets.SCALE,
 						new Keyframe(12.0F, AnimationHelper.createScalingVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(12.999F, AnimationHelper.createScalingVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createScalingVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
@@ -607,12 +562,10 @@ public class DeerGodAnimations
 						new Keyframe(14.8F, AnimationHelper.createScalingVector(1.0F, 1.0F, 1.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createScalingVector(1.0F, 1.0F, 1.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createScalingVector(1.0F, 1.0F, 1.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("handle", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("handle", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(-5.0F, 2.5F, 5.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(-5.0F, 2.5F, 5.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("chainStart", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("chainStart", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(2.4976F, -0.109F, 2.4976F), Transformation.Interpolations.LINEAR),
 						new Keyframe(12.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
@@ -627,8 +580,7 @@ public class DeerGodAnimations
 						new Keyframe(17.0F, AnimationHelper.createRotationalVector(-15.6256F, -15.074F, 7.689F), Transformation.Interpolations.LINEAR),
 						new Keyframe(17.5F, AnimationHelper.createRotationalVector(3.8789F, -10.2164F, -5.6478F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(2.0278F, -10.733F, 4.5085F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("brokenArm", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("brokenArm", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.8F, AnimationHelper.createRotationalVector(28.4327F, 28.2176F, 54.0908F), Transformation.Interpolations.LINEAR),
 						new Keyframe(9.15F, AnimationHelper.createRotationalVector(-20.7742F, -18.1453F, 19.59F), Transformation.Interpolations.LINEAR),
 						new Keyframe(9.25F, AnimationHelper.createRotationalVector(-21.9521F, -18.2166F, 19.6043F), Transformation.Interpolations.LINEAR),
@@ -640,15 +592,13 @@ public class DeerGodAnimations
 						new Keyframe(15.25F, AnimationHelper.createRotationalVector(41.8857F, -6.7853F, 20.7173F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.0F, AnimationHelper.createRotationalVector(39.3857F, -6.7853F, 20.7173F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.3F, AnimationHelper.createRotationalVector(23.86F, -4.56F, 16.1F), Transformation.Interpolations.LINEAR),
-						new Keyframe(18.0F, AnimationHelper.createRotationalVector(7.5F, 0.0F, 7.5F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("brokenArm", new Transformation(Transformation.Targets.TRANSLATE,
+						new Keyframe(18.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR)
+				)).addBoneAnimation("brokenArm", new Transformation(Transformation.Targets.TRANSLATE,
 						new Keyframe(8.8F, AnimationHelper.createTranslationalVector(0.0F, 0.1736F, -0.9848F), Transformation.Interpolations.LINEAR),
 						new Keyframe(12.0F, AnimationHelper.createTranslationalVector(0.4966F, -0.9829F, -0.193F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createTranslationalVector(0.4966F, -0.9829F, -0.193F), Transformation.Interpolations.LINEAR),
-						new Keyframe(18.0F, AnimationHelper.createTranslationalVector(0.5107F, -0.9928F, 0.06F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("brokenArmLower", new Transformation(Transformation.Targets.ROTATE,
+						new Keyframe(18.0F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR)
+				)).addBoneAnimation("brokenArmLower", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.8F, AnimationHelper.createRotationalVector(-69.3012F, -23.4908F, -16.702F), Transformation.Interpolations.LINEAR),
 						new Keyframe(9.15F, AnimationHelper.createRotationalVector(-30.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(9.3F, AnimationHelper.createRotationalVector(-30.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
@@ -660,59 +610,48 @@ public class DeerGodAnimations
 						new Keyframe(15.35F, AnimationHelper.createRotationalVector(-60.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.0F, AnimationHelper.createRotationalVector(-57.5F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(-57.5F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
-						new Keyframe(18.0F, AnimationHelper.createRotationalVector(-30.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("claw", new Transformation(Transformation.Targets.ROTATE,
+						new Keyframe(18.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR)
+				)).addBoneAnimation("claw", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(-33.6404F, 37.2028F, 8.1506F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(-33.6404F, 37.2028F, 8.1506F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(-33.6404F, 37.2028F, 8.1506F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("claw", new Transformation(Transformation.Targets.TRANSLATE,
+				)).addBoneAnimation("claw", new Transformation(Transformation.Targets.TRANSLATE,
 						new Keyframe(8.5F, AnimationHelper.createTranslationalVector(0.4673F, -1.3712F, -0.605F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createTranslationalVector(0.4673F, -1.3712F, -0.605F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createTranslationalVector(0.4673F, -1.3712F, -0.605F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("finger1", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("finger1", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(23.224F, -7.5832F, 10.0906F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(23.224F, -7.5832F, 10.0906F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(23.224F, -7.5832F, 10.0906F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("finger1tip", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("finger1tip", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(57.679F, -4.1157F, -2.1768F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(57.679F, -4.1157F, -2.1768F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(57.679F, -4.1157F, -2.1768F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("finger2", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("finger2", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(17.5157F, -2.3842F, -3.2522F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(17.5157F, -2.3842F, -3.2522F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(17.5157F, -2.3842F, -3.2522F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("finger2tip", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("finger2tip", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(55.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(55.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(55.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("finger3", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("finger3", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(46.282F, 3.5796F, -8.6772F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(46.282F, 3.5796F, -8.6772F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(46.282F, 3.5796F, -8.6772F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("finger3tip", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("finger3tip", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(47.5F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(47.5F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(47.5F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("knife3", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("knife3", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(8.5F, AnimationHelper.createRotationalVector(-5.0F, -2.5F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createRotationalVector(-5.0F, -2.5F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(-5.0F, -2.5F, 0.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("flame", new Transformation(Transformation.Targets.TRANSLATE,
+				)).addBoneAnimation("flame", new Transformation(Transformation.Targets.TRANSLATE,
 						new Keyframe(12.0F, AnimationHelper.createTranslationalVector(0.0F, 12.0F, -11.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createTranslationalVector(0.0F, 12.0F, -11.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(14.5F, AnimationHelper.createTranslationalVector(0.0F, 17.75F, -11.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("flame", new Transformation(Transformation.Targets.SCALE,
+				)).addBoneAnimation("flame", new Transformation(Transformation.Targets.SCALE,
 						new Keyframe(8.5F, AnimationHelper.createScalingVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(12.0F, AnimationHelper.createScalingVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createScalingVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
@@ -721,8 +660,7 @@ public class DeerGodAnimations
 						new Keyframe(14.8F, AnimationHelper.createScalingVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(16.2F, AnimationHelper.createScalingVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createScalingVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR)
-				))
-				.addBoneAnimation("chain1", new Transformation(Transformation.Targets.ROTATE,
+				)).addBoneAnimation("chain1", new Transformation(Transformation.Targets.ROTATE,
 						new Keyframe(12.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(13.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
 						new Keyframe(14.6F, AnimationHelper.createRotationalVector(8.1249F, -7.9813F, 26.4032F), Transformation.Interpolations.LINEAR),
@@ -732,8 +670,7 @@ public class DeerGodAnimations
 						new Keyframe(17.0F, AnimationHelper.createRotationalVector(112.0573F, -83.7235F, -108.8243F), Transformation.Interpolations.LINEAR),
 						new Keyframe(17.5F, AnimationHelper.createRotationalVector(17.7171F, -69.3934F, -42.7052F), Transformation.Interpolations.LINEAR),
 						new Keyframe(18.0F, AnimationHelper.createRotationalVector(-10.9113F, -69.7015F, 12.0549F), Transformation.Interpolations.LINEAR)
-				))
-				.build();
+				)).build();
 	}
 	
 	static Animation initSummonLanternAnim()

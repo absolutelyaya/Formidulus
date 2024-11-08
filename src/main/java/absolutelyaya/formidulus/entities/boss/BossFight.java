@@ -227,8 +227,10 @@ public abstract class BossFight
 				spawner.onFightEnded();
 		}
 		else
+		{
 			bossEntities.forEach(BossEntity::forceReset);
-		onMusicChange("cancel");
+			onMusicChange("cancel");
+		}
 		ended = true;
 	}
 	

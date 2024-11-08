@@ -80,11 +80,11 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add("block.formidulus.banner.eyes.yellow", "Gelbe Augen");
 		builder.add(BlockRegistry.BOSS_SPAWNER, "Boss Spawner");
 		
-		builder.add(ADVANCEMENT_ROOT_TITLE, "Absolute Spooky Month 24");
-		builder.add(ADVANCEMENT_ROOT_DESCRIPTION, "es ist ween");
+		builder.add(ADVANCEMENT_ROOT_TITLE, "Formidulus");
+		builder.add(ADVANCEMENT_ROOT_DESCRIPTION, "Unerzählte Legenden");
 		builder.add(ADVANCEMENT_CULTISTS_TITLE, "Kultisten ? In §omeinem§r Computer ?");
 		builder.add(ADVANCEMENT_CULTISTS_DESCRIPTION, "Es ist wahrscheinlicher als sie denken.");
-		builder.add(ADVANCEMENT_DEER_TITLE, "Ein Licht in der Dunkelheit");
+		builder.add(ADVANCEMENT_DEER_TITLE, "Ein Licht im Dunkel");
 		builder.add(ADVANCEMENT_DEER_DESCRIPTION, "Erschlage das Skelettbiest das der Kult verehrt.");
 		builder.add(ADVANCEMENT_WEEN_TITLE, "es ist ween");
 		builder.add(ADVANCEMENT_WEEN_DESCRIPTION, "ich hoffe du hast dich nicht zu sehr erschreckt-");
