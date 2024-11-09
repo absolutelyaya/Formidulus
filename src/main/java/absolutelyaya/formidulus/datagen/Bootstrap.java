@@ -1,18 +1,24 @@
 package absolutelyaya.formidulus.datagen;
 
 import absolutelyaya.formidulus.registries.FormidableBannerPatterns;
+import absolutelyaya.formidulus.registries.FormidableTunes;
+import absolutelyaya.formidulus.registries.SoundRegistry;
 import absolutelyaya.formidulus.structure.DeerCultHideoutStructure;
 import absolutelyaya.formidulus.structure.FormidableBiomeTags;
 import absolutelyaya.formidulus.structure.FormidableStructures;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.entity.BannerPattern;
+import net.minecraft.block.jukebox.JukeboxSong;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.registry.Registerable;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.structure.StructureSet;
 import net.minecraft.structure.pool.StructurePool;
 import net.minecraft.structure.pool.StructurePoolElement;
 import net.minecraft.structure.pool.StructurePools;
+import net.minecraft.text.Text;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.world.StructureSpawns;
 import net.minecraft.world.gen.GenerationStep;
@@ -51,5 +57,13 @@ public class Bootstrap
 				new StructurePool(registry.getRegistryLookup(RegistryKeys.TEMPLATE_POOL).getOrThrow(StructurePools.EMPTY),
 						List.of(new Pair<>(StructurePoolElement.ofSingle(
 								FormidableStructures.DEER_CULT_HIDEOUT.getValue().toString()).apply(StructurePool.Projection.RIGID), 1))));
+	}
+	
+	static void jukeboxSongs(Registerable<JukeboxSong> registry)
+	{
+		registry.register(FormidableTunes.DEER_PHASE1,
+				new JukeboxSong(RegistryEntry.of(SoundRegistry.MUSIC_DEER_PHASE1), Text.translatable(Lang.MUSIC_DEER_PHASE1), (float)133, 12));
+		registry.register(FormidableTunes.DEER_PHASE2,
+				new JukeboxSong(RegistryEntry.of(SoundRegistry.MUSIC_DEER_PHASE2), Text.translatable(Lang.MUSIC_DEER_PHASE2), (float)151, 12));
 	}
 }

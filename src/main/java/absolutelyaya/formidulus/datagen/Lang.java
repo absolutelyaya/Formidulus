@@ -25,4 +25,7 @@ public interface Lang
 	
 	String MESSAGE_DEER_WARNING = BaseTranslationProvider.modKey("message", "deer.warning");
 	String MESSAGE_OUT_OF_BOUNDS = BaseTranslationProvider.modKey("message", "out_of_bounds");
+	
+	String MUSIC_DEER_PHASE1 = BaseTranslationProvider.modKey("jukebox_song", "deer.phase1");
+	String MUSIC_DEER_PHASE2 = BaseTranslationProvider.modKey("jukebox_song", "deer.phase2");
 }

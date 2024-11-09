@@ -36,5 +36,6 @@ public class DataGenerator implements DataGeneratorEntrypoint
 		registryBuilder.addRegistry(RegistryKeys.STRUCTURE, Bootstrap::structures);
 		registryBuilder.addRegistry(RegistryKeys.STRUCTURE_SET, Bootstrap::structureSets);
 		registryBuilder.addRegistry(RegistryKeys.TEMPLATE_POOL, Bootstrap::templatePools);
+		registryBuilder.addRegistry(RegistryKeys.JUKEBOX_SONG, Bootstrap::jukeboxSongs);
 	}
 }

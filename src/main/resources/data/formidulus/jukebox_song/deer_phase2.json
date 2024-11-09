@@ -1,0 +1,8 @@
+{
+  "comparator_output": 15,
+  "description": {
+    "translate": "jukebox_song.formidulus.deer.phase2"
+  },
+  "length_in_seconds": 151.0,
+  "sound_event": "formidulus:music.deer.phase2"
+}
