@@ -485,7 +485,7 @@ public class DeerGodEntity extends BossEntity
 					setAnimation(IDLE_ANIM);
 			}
 			case SIMPLE_CLAW_ATTACK_ANIM -> {
-				if(!getAnimationFlag(1) && duration >= 0.25f)
+				if(!getAnimationFlag(1) && duration >= 0.5f)
 				{
 					setAnimationFlag(1, true);
 					playSound(SoundEvents.ENTITY_WITCH_THROW, 1f, 0.5f);
