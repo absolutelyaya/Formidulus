@@ -2003,7 +2003,7 @@ public class DeerGodEntity extends BossEntity
 			float yaw = MathHelper.lerpAngleDegrees(0.025f * mob.getWorld().getDifficulty().getId(), curYaw, targetYaw);
 			dir = dir.rotateY((float)-Math.toRadians(yaw - curYaw));
 			mob.setYaw(yaw);
-			mob.applyDamageInCylindricArea(mob.getWidth(), mob.getHeight(), DamageSources.get(mob.getWorld(), DamageSources.TRAMPLE, mob), 5f,
+			mob.applyDamageInCylindricArea(mob.getWidth(), mob.getHeight(), DamageSources.get(mob.getWorld(), DamageSources.TRAMPLE, mob), 4f,
 					(hit, success) -> {
 						if(success)
 							hit.setVelocity(mob.getRotationVector().multiply(1f, 0f, 1f).normalize().multiply(2.5f).add(0f, 0.2f, 0f));

@@ -26,6 +26,7 @@ public class DataGenerator implements DataGeneratorEntrypoint
 		pack.addProvider(BannerTagProvider::new);
 		pack.addProvider(StructureTagProvider::new);
 		pack.addProvider(ChestLootTableProvider::new);
+		pack.addProvider(DamageTypeTagProvider::new);
 	}
 	
 	@Override
@@ -37,5 +38,6 @@ public class DataGenerator implements DataGeneratorEntrypoint
 		registryBuilder.addRegistry(RegistryKeys.STRUCTURE_SET, Bootstrap::structureSets);
 		registryBuilder.addRegistry(RegistryKeys.TEMPLATE_POOL, Bootstrap::templatePools);
 		registryBuilder.addRegistry(RegistryKeys.JUKEBOX_SONG, Bootstrap::jukeboxSongs);
+		registryBuilder.addRegistry(RegistryKeys.DAMAGE_TYPE, Bootstrap::damageTypes);
 	}
 }

@@ -1,5 +1,7 @@
 package absolutelyaya.formidulus.datagen;
 
+import absolutelyaya.formidulus.Formidulus;
+import absolutelyaya.formidulus.damage.DamageSources;
 import absolutelyaya.formidulus.registries.FormidableBannerPatterns;
 import absolutelyaya.formidulus.registries.FormidableTunes;
 import absolutelyaya.formidulus.registries.SoundRegistry;
@@ -10,6 +12,8 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.entity.BannerPattern;
 import net.minecraft.block.jukebox.JukeboxSong;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.damage.DamageScaling;
+import net.minecraft.entity.damage.DamageType;
 import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -65,5 +69,15 @@ public class Bootstrap
 				new JukeboxSong(RegistryEntry.of(SoundRegistry.MUSIC_DEER_PHASE1), Text.translatable(Lang.MUSIC_DEER_PHASE1), (float)133, 12));
 		registry.register(FormidableTunes.DEER_PHASE2,
 				new JukeboxSong(RegistryEntry.of(SoundRegistry.MUSIC_DEER_PHASE2), Text.translatable(Lang.MUSIC_DEER_PHASE2), (float)151, 12));
+	}
+	
+	static void damageTypes(Registerable<DamageType> registry)
+	{
+		registry.register(DamageSources.SACRIFICE, new DamageType("sacrifice", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f));
+		registry.register(DamageSources.LANTERN, new DamageType("lantern", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f));
+		registry.register(DamageSources.CLAW, new DamageType("claw", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f));
+		registry.register(DamageSources.TRAMPLE, new DamageType("trample", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f));
+		registry.register(DamageSources.SOULSTEAL, new DamageType("soulsteal", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f));
+		registry.register(DamageSources.SCORCH, new DamageType("scorch", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f));
 	}
 }
