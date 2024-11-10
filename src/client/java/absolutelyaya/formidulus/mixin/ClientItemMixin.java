@@ -78,9 +78,9 @@ public abstract class ClientItemMixin
 	{
 		if(!otherStack.isEmpty() || clickType == ClickType.LEFT)
 			return;
-		cir.setReturnValue(true);
 		if(!stack.contains(DataComponentRegistry.ACCESSORY))
 			return;
+		cir.setReturnValue(true);
 		if(stack.get(DataComponentRegistry.ACCESSORY) instanceof AccessoryComponent component)
 			stack.set(DataComponentRegistry.ACCESSORY, component.cycle());
 		if(!player.getWorld().isClient && slot.id >= 5 && slot.id <= 8)
