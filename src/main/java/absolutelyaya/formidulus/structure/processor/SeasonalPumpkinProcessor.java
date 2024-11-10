@@ -33,7 +33,7 @@ public class SeasonalPumpkinProcessor extends StructureProcessor
 		this.preMargin = preMargin;
 		this.postMargin = postMargin;
 		int daysUntilHalloween = Formidulus.getDaysUntilHalloween();
-		keepAllPumpkins = daysUntilHalloween > preMargin && daysUntilHalloween < postMargin;
+		keepAllPumpkins = daysUntilHalloween < preMargin && -daysUntilHalloween < postMargin;
 	}
 	
 	@Override
