@@ -3,7 +3,7 @@
 	"id": "formidulus",
 	"version": "${version}",
 	"name": "Formidulus",
-	"description": "i like spooky month. here's a deer",
+	"description": "Legends Untold\n\nThis Release is more of a Proof of Concept, or let's call it Beta.\nIt only contains one Boss Currently; I plan on expanding on this Project a lot in the Future though. \nAll Feedback is greatly Appreciated",
 	"authors": [
 		"Absolutelyaya"
 	],
@@ -17,7 +17,7 @@
 	],
 	"contact": {
 		"homepage": "https://absolutelyaya.neocities.org/",
-		"sources": "soon"
+		"sources": "https://github.com/absolutelyaya/Formidulus"
 	},
 	"license": "MIT",
 	"icon": "assets/formidulus/icon.png",
@@ -43,6 +43,11 @@
 			"environment": "client"
 		}
 	],
+	"custom": {
+		"modmenu": {
+			"update_checker": true
+		}
+	},
 	"depends": {
 		"fabricloader": ">=0.16.7",
 		"minecraft": "~1.21.1",
