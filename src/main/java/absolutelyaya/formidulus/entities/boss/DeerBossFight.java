@@ -43,6 +43,5 @@ public class DeerBossFight extends BossFight
 		bossMusic.put("phase2", new BossMusicEntry(SoundRegistry.MUSIC_DEER_PHASE2, 0f, 2f)
 										.withIntro(SoundRegistry.MUSIC_DEER_PHASE2_INTRO, 14470 + 1500)
 										.withOutro(SoundRegistry.MUSIC_DEER_OUTRO, 15944).withOutroDelay(950));
-		System.out.println(bossMusic);
 	}
 }

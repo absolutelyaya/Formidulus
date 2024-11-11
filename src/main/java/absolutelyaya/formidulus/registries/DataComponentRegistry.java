@@ -13,17 +13,17 @@ import java.util.function.UnaryOperator;
 
 public class DataComponentRegistry
 {
-		public static final ComponentType<AccessoryComponent> ACCESSORY = register("accessory",
-						builder -> builder.codec(AccessoryComponent.CODEC).packetCodec(AccessoryComponent.PACKET_CODEC));
+	public static final ComponentType<AccessoryComponent> ACCESSORY = register("accessory",
+			builder -> builder.codec(AccessoryComponent.CODEC).packetCodec(AccessoryComponent.PACKET_CODEC));
 	public static final ComponentType<ExpandableLoreComponent> EXPANDABLE_LORE = register("expandable_lore",
 			builder -> builder.codec(ExpandableLoreComponent.CODEC).packetCodec(ExpandableLoreComponent.PACKET_CODEC));
-	public static final ComponentType<DamageTypeComponent> DAMAGE_TYPE = register("expandable_lore",
+	public static final ComponentType<DamageTypeComponent> DAMAGE_TYPE = register("damage_type",
 			builder -> builder.codec(DamageTypeComponent.CODEC).packetCodec(DamageTypeComponent.PACKET_CODEC));
 	public static final ComponentType<AbilityComponent> ABILITY = register("ability",
 			builder -> builder.codec(AbilityComponent.CODEC).packetCodec(AbilityComponent.PACKET_CODEC));
-		
-		static <T> ComponentType<T> register(String id, UnaryOperator<ComponentType.Builder<T>> builder)
-		{
-			return Registry.register(Registries.DATA_COMPONENT_TYPE, Formidulus.identifier(id), builder.apply(ComponentType.builder()).build());
-		}
+	
+	static <T> ComponentType<T> register(String id, UnaryOperator<ComponentType.Builder<T>> builder)
+	{
+		return Registry.register(Registries.DATA_COMPONENT_TYPE, Formidulus.identifier(id), builder.apply(ComponentType.builder()).build());
+	}
 }
