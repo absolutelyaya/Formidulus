@@ -79,13 +79,13 @@ public abstract class BossFight
 	void performParticipantCheck()
 	{
 		List<ServerPlayerEntity> validParticipants = world.getEntitiesByType(TypeFilter.instanceOf(ServerPlayerEntity.class), new Box(origin).expand(playerCheckRange),
-				i -> true);
+				i -> i.isAlive() && !i.isCreative() && !i.isSpectator());
 		List<ServerPlayerEntity> remove = new ArrayList<>();
 		participants.forEach(p -> {
 			if(!validParticipants.contains(p))
 			{
 				if(!outOfBoundsParticipants.containsKey(p))
-					outOfBoundsParticipants.put(p, 6);
+					outOfBoundsParticipants.put(p, 10);
 				int oob = outOfBoundsParticipants.get(p);
 				if(oob > 0)
 				{
@@ -95,7 +95,7 @@ public abstract class BossFight
 			}
 			else
 				outOfBoundsParticipants.remove(p);
-			if(outOfBoundsParticipants.getOrDefault(p, 5) <= 0 || !p.isPartOfGame() || p.isCreative())
+			if(outOfBoundsParticipants.getOrDefault(p, 9) <= 0 || !p.isPartOfGame() || p.isCreative())
 				remove.add(p);
 		});
 		remove.forEach(this::leaveFight);
@@ -160,7 +160,6 @@ public abstract class BossFight
 	{
 		if(!participants.contains(player))
 			return;
-		leaveFight(player);
 		performParticipantCheck();
 	}
 	
