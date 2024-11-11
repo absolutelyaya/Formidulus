@@ -94,9 +94,9 @@ public class DeerFollowerEntity extends ServantEntity
 		goalSelector.add(4, new LookAroundGoal(this));
 		goalSelector.add(4, new LookAtEntityGoal(this, DeerFollowerEntity.class, 6));
 		
-		targetSelector.add(0, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
-		targetSelector.add(0, new ServantTargetGoal(this));
-		targetSelector.add(1, new RevengeGoal(this, DeerGodEntity.class));
+		targetSelector.add(0, new RevengeGoal(this, DeerGodEntity.class));
+		targetSelector.add(1, new ActiveTargetGoal<>(this, PlayerEntity.class, true));
+		targetSelector.add(1, new ServantTargetGoal(this));
 	}
 	
 	@Override
