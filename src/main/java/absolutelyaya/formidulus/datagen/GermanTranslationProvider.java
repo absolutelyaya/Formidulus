@@ -51,8 +51,8 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(ItemRegistry.SOUL_DAGGER.getTranslationKey() + ".lore1", "Anstelle von dem Körper, blutet dieser Dolch direkt die Seele aus.");
 		builder.add(ItemRegistry.EYES_BANNER_PATTERN, "Bannervorlage");
 		builder.add(ItemRegistry.EYES_BANNER_PATTERN.getTranslationKey() + ".desc", "Augen");
-		builder.add(ItemRegistry.DEER_PHASE1_MUSIC_DISK, "Schallplatte");
-		builder.add(ItemRegistry.DEER_PHASE2_MUSIC_DISK, "Schallplatte");
+		builder.add(ItemRegistry.DEER_PHASE1_MUSIC_DISC, "Schallplatte");
+		builder.add(ItemRegistry.DEER_PHASE2_MUSIC_DISC, "Schallplatte");
 		
 		builder.add(Lang.MUSIC_DEER_PHASE1, "Efefski - Weisendes Licht");
 		builder.add(Lang.MUSIC_DEER_PHASE2, "Efefski - Laufendes Blut");

@@ -52,9 +52,9 @@ public class ItemRegistry
 	public static final BannerPatternItem EYES_BANNER_PATTERN = register(Formidulus.identifier("eyes_pattern"),
 			id -> new BannerPatternItem(FormidableBannerPatterns.EYES_TAG, new Item.Settings().rarity(Rarity.RARE).maxCount(1)));
 	
-	public static final Item DEER_PHASE1_MUSIC_DISK = register(Formidulus.identifier("deer_phase1_disk"),
+	public static final Item DEER_PHASE1_MUSIC_DISC = register(Formidulus.identifier("deer_phase1_disc"),
 			id -> new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).jukeboxPlayable(FormidableTunes.DEER_PHASE1)));
-	public static final Item DEER_PHASE2_MUSIC_DISK = register(Formidulus.identifier("deer_phase2_disk"),
+	public static final Item DEER_PHASE2_MUSIC_DISC = register(Formidulus.identifier("deer_phase2_disc"),
 			id -> new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).jukeboxPlayable(FormidableTunes.DEER_PHASE2)));
 	
 	public static final BlockItem BOSS_SPAWNER = register(Formidulus.identifier("boss_spawner"),
@@ -80,8 +80,8 @@ public class ItemRegistry
 			entries.add(EYES_BANNER_PATTERN);
 		});
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register((entries) -> {
-			entries.add(DEER_PHASE1_MUSIC_DISK);
-			entries.add(DEER_PHASE2_MUSIC_DISK);
+			entries.add(DEER_PHASE1_MUSIC_DISC);
+			entries.add(DEER_PHASE2_MUSIC_DISC);
 		});
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.OPERATOR).register((entries) -> {
 			entries.add(BOSS_SPAWNER);

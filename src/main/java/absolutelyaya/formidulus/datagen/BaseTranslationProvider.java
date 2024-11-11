@@ -49,8 +49,8 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(ItemRegistry.SOUL_DAGGER.getTranslationKey() + ".lore1", "Instead of the Body, it leeches directly off of the soul.");
 		builder.add(ItemRegistry.EYES_BANNER_PATTERN, "Banner Pattern");
 		builder.add(ItemRegistry.EYES_BANNER_PATTERN.getTranslationKey() + ".desc", "Eyes");
-		builder.add(ItemRegistry.DEER_PHASE1_MUSIC_DISK, "Music Disc");
-		builder.add(ItemRegistry.DEER_PHASE2_MUSIC_DISK, "Music Disc");
+		builder.add(ItemRegistry.DEER_PHASE1_MUSIC_DISC, "Music Disc");
+		builder.add(ItemRegistry.DEER_PHASE2_MUSIC_DISC, "Music Disc");
 		
 		builder.add(Lang.MUSIC_DEER_PHASE1, "Efefski - Guiding Light");
 		builder.add(Lang.MUSIC_DEER_PHASE2, "Efefski - Running Blood");

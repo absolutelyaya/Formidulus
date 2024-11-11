@@ -32,7 +32,7 @@ public class ModelProvider extends FabricModelProvider
 		builder.register(ItemRegistry.SACRIFICIAL_DAGGER, Models.HANDHELD);
 		builder.register(ItemRegistry.SOUL_DAGGER, Models.HANDHELD);
 		builder.register(ItemRegistry.EYES_BANNER_PATTERN, Items.SKULL_BANNER_PATTERN, Models.GENERATED);
-		builder.register(ItemRegistry.DEER_PHASE1_MUSIC_DISK, Items.MUSIC_DISC_CHIRP, Models.GENERATED);
-		builder.register(ItemRegistry.DEER_PHASE2_MUSIC_DISK, Items.MUSIC_DISC_CHIRP, Models.GENERATED);
+		builder.register(ItemRegistry.DEER_PHASE1_MUSIC_DISC, Models.GENERATED);
+		builder.register(ItemRegistry.DEER_PHASE2_MUSIC_DISC, Models.GENERATED);
 	}
 }
