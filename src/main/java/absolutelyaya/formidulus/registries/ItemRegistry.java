@@ -57,6 +57,13 @@ public class ItemRegistry
 	public static final Item DEER_PHASE2_MUSIC_DISC = register(Formidulus.identifier("deer_phase2_disc"),
 			id -> new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).jukeboxPlayable(FormidableTunes.DEER_PHASE2)));
 	
+	public static final SpawnEggItem CULTIST_SPAWN_EGG = register(Formidulus.identifier("cultist_spawn_egg"),
+			id -> new SpawnEggItem(EntityRegistry.DEER_FOLLOWER, 0x2f1840, 0xf8700f,
+					new Item.Settings()));
+	public static final SpawnEggItem CRUOR_SPAWN_EGG = register(Formidulus.identifier("deer_spawn_egg"),
+			id -> new SpawnEggItem(EntityRegistry.DEER_GOD, 0x6c0000, 0xd4000e,
+					new Item.Settings()));
+	
 	public static final BlockItem BOSS_SPAWNER = register(Formidulus.identifier("boss_spawner"),
 			id -> new BlockItem(BlockRegistry.BOSS_SPAWNER,
 					new Item.Settings().component(DataComponentTypes.RARITY, Rarity.EPIC)));
@@ -82,6 +89,10 @@ public class ItemRegistry
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register((entries) -> {
 			entries.add(DEER_PHASE1_MUSIC_DISC);
 			entries.add(DEER_PHASE2_MUSIC_DISC);
+		});
+		ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register((entries) -> {
+			entries.add(CULTIST_SPAWN_EGG);
+			entries.add(CRUOR_SPAWN_EGG);
 		});
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.OPERATOR).register((entries) -> {
 			entries.add(BOSS_SPAWNER);
