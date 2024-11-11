@@ -128,6 +128,7 @@ public abstract class BossFight
 	
 	public static BossMusicEntry getMusicEntry(String key)
 	{
+		System.out.println(bossMusic);
 		return bossMusic.get(key);
 	}
 	

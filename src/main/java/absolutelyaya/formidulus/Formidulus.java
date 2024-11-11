@@ -4,6 +4,7 @@ import absolutelyaya.formidulus.advancement.CriteriaRegistry;
 import absolutelyaya.formidulus.config.ServerConfig;
 import absolutelyaya.formidulus.datagen.Lang;
 import absolutelyaya.formidulus.entities.boss.BossFightManager;
+import absolutelyaya.formidulus.entities.boss.BossType;
 import absolutelyaya.formidulus.registries.*;
 import absolutelyaya.formidulus.structure.FormidableStructureProcessors;
 import net.fabricmc.api.ModInitializer;
@@ -46,6 +47,8 @@ public class Formidulus implements ModInitializer
 		StructureRegistry.register();
 		FormidableMapDecorations.register();
 		FormidableStructureProcessors.register();
+		
+		BossType.init();
 		
 		ServerTickEvents.END_SERVER_TICK.register((server) -> {
 			BossFightManager.INSTANCE.tick();
