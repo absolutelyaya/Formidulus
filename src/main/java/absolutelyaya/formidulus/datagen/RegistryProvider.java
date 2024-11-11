@@ -22,6 +22,7 @@ public class RegistryProvider extends FabricDynamicRegistryProvider
 		entries.addAll(registries.getWrapperOrThrow(RegistryKeys.TEMPLATE_POOL));
 		entries.addAll(registries.getWrapperOrThrow(RegistryKeys.STRUCTURE_SET));
 		entries.addAll(registries.getWrapperOrThrow(RegistryKeys.STRUCTURE));
+		entries.addAll(registries.getWrapperOrThrow(RegistryKeys.PROCESSOR_LIST));
 		
 		entries.addAll(registries.getWrapperOrThrow(RegistryKeys.JUKEBOX_SONG));
 		

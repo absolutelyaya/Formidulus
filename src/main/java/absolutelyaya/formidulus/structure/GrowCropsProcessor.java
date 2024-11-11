@@ -3,16 +3,20 @@ package absolutelyaya.formidulus.structure;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.CropBlock;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.structure.processor.StructureProcessor;
 import net.minecraft.structure.processor.StructureProcessorType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.world.WorldView;
+import net.minecraft.world.ServerWorldAccess;
+
+import java.util.List;
 
 public class GrowCropsProcessor extends StructureProcessor
 {
@@ -35,22 +39,24 @@ public class GrowCropsProcessor extends StructureProcessor
 	}
 	
 	@Override
-	protected StructureProcessorType<?> getType()
+	public List<StructureTemplate.StructureBlockInfo> reprocess(ServerWorldAccess world, BlockPos pos, BlockPos pivot, List<StructureTemplate.StructureBlockInfo> originalBlockInfos, List<StructureTemplate.StructureBlockInfo> currentBlockInfos, StructurePlacementData data)
 	{
-		return FormidableStructureProcessors.GROW_CROPS;
+		for (StructureTemplate.StructureBlockInfo cur : currentBlockInfos)
+		{
+			if (world.getBlockState(cur.pos().down()).isOf(Blocks.FARMLAND) && (cur.state().isAir() || cur.state().isIn(BlockTags.CROPS)))
+			{
+				BlockState state = crop;
+				if (randomlyAge)
+					state = state.with(CropBlock.AGE, random.nextInt(CropBlock.MAX_AGE));
+				world.setBlockState(cur.pos(), state, Block.NOTIFY_ALL);
+			}
+		}
+		return super.reprocess(world, pos, pivot, originalBlockInfos, currentBlockInfos, data);
 	}
 	
 	@Override
-	public StructureTemplate.StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pivot,
-														StructureTemplate.StructureBlockInfo originalBlockInfo,
-														StructureTemplate.StructureBlockInfo currentBlockInfo,
-														StructurePlacementData data)
+	protected StructureProcessorType<?> getType()
 	{
-		BlockState state = crop;
-		if(randomlyAge)
-			state = state.with(CropBlock.AGE, random.nextInt(CropBlock.MAX_AGE));
-		if(currentBlockInfo.state().isAir() && world.getBlockState(currentBlockInfo.pos().down()).isOf(Blocks.FARMLAND) && random.nextFloat() <= chance)
-			return new StructureTemplate.StructureBlockInfo(currentBlockInfo.pos(), state, currentBlockInfo.nbt());
-		return currentBlockInfo;
+		return FormidableStructureProcessors.GROW_CROPS;
 	}
 }

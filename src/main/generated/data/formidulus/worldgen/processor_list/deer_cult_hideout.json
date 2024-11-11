@@ -1,0 +1,20 @@
+{
+  "processors": [
+    {
+      "chance": 1.0,
+      "crop": {
+        "Name": "minecraft:wheat",
+        "Properties": {
+          "age": "0"
+        }
+      },
+      "processor_type": "formidulus:grow_crops",
+      "randomlyAge": true
+    },
+    {
+      "postMargin": 5,
+      "preMargin": 30,
+      "processor_type": "formidulus:seasonal_pumpkins"
+    }
+  ]
+}

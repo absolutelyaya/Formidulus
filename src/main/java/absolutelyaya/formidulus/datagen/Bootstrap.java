@@ -5,10 +5,9 @@ import absolutelyaya.formidulus.damage.DamageSources;
 import absolutelyaya.formidulus.registries.FormidableBannerPatterns;
 import absolutelyaya.formidulus.registries.FormidableTunes;
 import absolutelyaya.formidulus.registries.SoundRegistry;
-import absolutelyaya.formidulus.structure.DeerCultHideoutStructure;
-import absolutelyaya.formidulus.structure.FormidableBiomeTags;
-import absolutelyaya.formidulus.structure.FormidableStructures;
+import absolutelyaya.formidulus.structure.*;
 import com.mojang.datafixers.util.Pair;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BannerPattern;
 import net.minecraft.block.jukebox.JukeboxSong;
 import net.minecraft.entity.SpawnGroup;
@@ -22,6 +21,8 @@ import net.minecraft.structure.StructureSet;
 import net.minecraft.structure.pool.StructurePool;
 import net.minecraft.structure.pool.StructurePoolElement;
 import net.minecraft.structure.pool.StructurePools;
+import net.minecraft.structure.processor.StructureProcessor;
+import net.minecraft.structure.processor.StructureProcessorList;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.Pool;
 import net.minecraft.world.StructureSpawns;
@@ -59,8 +60,18 @@ public class Bootstrap
 	{
 		registry.register(FormidableStructures.DEER_CULT_HIDEOUT_POOL,
 				new StructurePool(registry.getRegistryLookup(RegistryKeys.TEMPLATE_POOL).getOrThrow(StructurePools.EMPTY),
-						List.of(new Pair<>(StructurePoolElement.ofSingle(
-								FormidableStructures.DEER_CULT_HIDEOUT.getValue().toString()).apply(StructurePool.Projection.RIGID), 1))));
+						List.of(new Pair<>(StructurePoolElement.ofProcessedSingle(
+								FormidableStructures.DEER_CULT_HIDEOUT.getValue().toString(),
+								registry.getRegistryLookup(RegistryKeys.PROCESSOR_LIST).getOrThrow(FormidableStructures.DEER_CULT_PROCESSORS)
+								).apply(StructurePool.Projection.RIGID), 1))));
+	}
+	
+	static void processorLists(Registerable<StructureProcessorList> registry)
+	{
+		registry.register(FormidableStructures.DEER_CULT_PROCESSORS,
+				new StructureProcessorList(
+						List.of(new GrowCropsProcessor(1f, Blocks.WHEAT.getDefaultState(), true),
+								new SeasonalPumpkinProcessor(30, 5))));
 	}
 	
 	static void jukeboxSongs(Registerable<JukeboxSong> registry)

@@ -4,9 +4,7 @@
       "element": {
         "element_type": "minecraft:single_pool_element",
         "location": "formidulus:deer_cult_hideout",
-        "processors": {
-          "processors": []
-        },
+        "processors": "formidulus:deer_cult_hideout",
         "projection": "rigid"
       },
       "weight": 1

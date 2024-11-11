@@ -24,6 +24,9 @@ import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
+import java.util.Calendar;
+
 public class Formidulus implements ModInitializer
 {
 	public static final Identifier FONT = Identifier.of("illageralt");
@@ -31,6 +34,7 @@ public class Formidulus implements ModInitializer
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static ServerConfig config;
 	public static boolean ENCHANCEMENT;
+	static int cachedDaysUntilSpookyMonthCelebration = Integer.MIN_VALUE;
 
 	@Override
 	public void onInitialize()
@@ -78,5 +82,28 @@ public class Formidulus implements ModInitializer
 	public static Identifier identifier(String path)
 	{
 		return Identifier.of(MOD_ID, path);
+	}
+	
+	public static int getDaysUntilHalloween()
+	{
+		if(cachedDaysUntilSpookyMonthCelebration != Integer.MIN_VALUE)
+			return cachedDaysUntilSpookyMonthCelebration;
+		LocalDateTime dateTime = LocalDateTime.now();
+		int currentDay = dateTime.getDayOfYear();
+		
+		Calendar calender = Calendar.getInstance();
+		calender.set(Calendar.MONTH, Calendar.OCTOBER);
+		calender.set(Calendar.DAY_OF_MONTH, 31);
+		int celebration = calender.get(Calendar.DAY_OF_YEAR);
+		
+		int delta = celebration - currentDay;
+		if(delta == 0)
+			LOGGER.info("It's Ween!");
+		else if(delta < 0)
+			LOGGER.info("Ween was {} days ago", -delta);
+		else
+			LOGGER.info("Ween is in {} days", delta);
+		
+		return cachedDaysUntilSpookyMonthCelebration = delta;
 	}
 }

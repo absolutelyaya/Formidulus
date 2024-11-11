@@ -9,6 +9,8 @@ public class FormidableStructureProcessors
 {
 	public static final StructureProcessorType<GrowCropsProcessor> GROW_CROPS =
 			Registry.register(Registries.STRUCTURE_PROCESSOR, Formidulus.identifier("grow_crops"), () -> GrowCropsProcessor.CODEC);
+	public static final StructureProcessorType<SeasonalPumpkinProcessor> SEASONAL_PUMPKINS =
+			Registry.register(Registries.STRUCTURE_PROCESSOR, Formidulus.identifier("seasonal_pumpkins"), () -> SeasonalPumpkinProcessor.CODEC);
 	
 	public static void register()
 	{
