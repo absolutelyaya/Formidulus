@@ -229,6 +229,7 @@ public class DeerGodEntity extends BossEntity
 		super.tick();
 		if(!dataTracker.get(SUMMONED))
 		{
+			age = 0;
 			if(Formidulus.config.deerWarning.getValue() && warnTimer-- <= 0 && !getWorld().isClient)
 			{
 				getWorld().getEntitiesByType(TypeFilter.instanceOf(ServerPlayerEntity.class), getBoundingBox().expand(48f, 32f, 48f),
@@ -237,7 +238,7 @@ public class DeerGodEntity extends BossEntity
 															.setStyle(Style.EMPTY.withColor(Formatting.RED)), true));
 				warnTimer = 500;
 			}
-			if(age % 20 != 0)
+			if(getWorld().getTime() % 20 != 0)
 				return;
 			if(!isAnyCultistNearby() && !getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class),
 					getBoundingBox().expand(12), p -> !p.isSpectator() && !p.isCreative()).isEmpty())
@@ -247,7 +248,7 @@ public class DeerGodEntity extends BossEntity
 				triggerMonologueSequence(SequenceTriggerPayload.SPAWN_SEQUENCE);
 				dataTracker.set(SUMMONED, true);
 			}
-			else if(age % 1200 == 0 && getAllNearbyCultists().size() < getMaxCultists())
+			else if(getWorld().getTime() % 1200 == 0 && getAllNearbyCultists().size() < getMaxCultists())
 				spawnCultist(new Vec2f(3f, 8f), true);
 			return;
 		}
