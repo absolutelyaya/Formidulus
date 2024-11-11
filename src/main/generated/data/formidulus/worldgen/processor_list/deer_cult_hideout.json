@@ -12,9 +12,16 @@
       "randomlyAge": true
     },
     {
-      "postMargin": 5,
+      "postMargin": 16,
       "preMargin": 30,
       "processor_type": "formidulus:seasonal_pumpkins"
+    },
+    {
+      "processor_type": "formidulus:dehydrator"
+    },
+    {
+      "processor_type": "formidulus:deleafer",
+      "removePersistent": false
     }
   ]
 }

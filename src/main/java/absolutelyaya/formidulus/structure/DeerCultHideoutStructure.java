@@ -2,6 +2,7 @@ package absolutelyaya.formidulus.structure;
 
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.registries.StructureRegistry;
+import absolutelyaya.formidulus.structure.processor.*;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Blocks;
 import net.minecraft.nbt.NbtCompound;
@@ -67,7 +68,9 @@ public class DeerCultHideoutStructure extends Structure
 			super(StructureRegistry.DEER_CULT_HIDEOUT_PIECE, nbt, context.structureTemplateManager(),
 					identifier -> new StructurePlacementData()
 										  .addProcessor(new GrowCropsProcessor(1f, Blocks.WHEAT.getDefaultState(), true))
-										  .addProcessor(new SeasonalPumpkinProcessor(30, 5)));
+										  .addProcessor(new SeasonalPumpkinProcessor(30, 16))
+										  .addProcessor(new DehydrationProcessor())
+										  .addProcessor(new DeLeaferProcessor(false)));
 		}
 		
 		@Override

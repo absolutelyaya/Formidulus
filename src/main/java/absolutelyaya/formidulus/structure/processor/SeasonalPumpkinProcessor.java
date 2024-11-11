@@ -1,19 +1,24 @@
-package absolutelyaya.formidulus.structure;
+package absolutelyaya.formidulus.structure.processor;
 
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.registries.TagRegistry;
+import absolutelyaya.formidulus.structure.FormidableStructureProcessors;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.CarvedPumpkinBlock;
+import net.minecraft.block.ObserverBlock;
+import net.minecraft.state.property.Properties;
 import net.minecraft.structure.StructurePlacementData;
 import net.minecraft.structure.StructureTemplate;
 import net.minecraft.structure.processor.StructureProcessor;
 import net.minecraft.structure.processor.StructureProcessorType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.ServerWorldAccess;
+import net.minecraft.world.WorldView;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -42,30 +47,24 @@ public class SeasonalPumpkinProcessor extends StructureProcessor
 		return FormidableStructureProcessors.SEASONAL_PUMPKINS;
 	}
 	
+	@Nullable
 	@Override
-	public List<StructureTemplate.StructureBlockInfo> reprocess(ServerWorldAccess world, BlockPos pos, BlockPos pivot, List<StructureTemplate.StructureBlockInfo> originalBlockInfos, List<StructureTemplate.StructureBlockInfo> currentBlockInfos, StructurePlacementData data)
+	public StructureTemplate.StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pivot, StructureTemplate.StructureBlockInfo originalBlockInfo, StructureTemplate.StructureBlockInfo cur, StructurePlacementData data)
 	{
 		if(keepAllPumpkins)
-			return currentBlockInfos;
-		for (StructureTemplate.StructureBlockInfo cur : currentBlockInfos)
-		{
-			if (cur.state().isOf(Blocks.PUMPKIN) && !hasStem(world, cur.pos()))
-				world.setBlockState(cur.pos(), Blocks.CAVE_AIR.getDefaultState(), Block.NOTIFY_ALL);
-			else if (cur.state().isOf(Blocks.CARVED_PUMPKIN) && !world.getBlockState(cur.pos().down()).isOf(Blocks.HAY_BLOCK))
-				world.setBlockState(cur.pos(), Blocks.CAVE_AIR.getDefaultState(), Block.NOTIFY_ALL);
-			else if (cur.state().isOf(Blocks.JACK_O_LANTERN))
-			{
-				BlockState neighbor = world.getBlockState(cur.pos().down());
-				world.setBlockState(cur.pos(), ((neighbor.isAir() || neighbor.isIn(TagRegistry.PUMPKIN)) ? Blocks.CAVE_AIR : Blocks.LANTERN).getDefaultState(),
-						Block.NOTIFY_ALL);
-			}
-		}
-		return currentBlockInfos;
-	}
-	
-	boolean hasStem(ServerWorldAccess world, BlockPos pos)
-	{
-		return world.getBlockState(pos.north()).isOf(Blocks.PUMPKIN_STEM) || world.getBlockState(pos.east()).isOf(Blocks.PUMPKIN_STEM) ||
-					   world.getBlockState(pos.south()).isOf(Blocks.PUMPKIN_STEM) || world.getBlockState(pos.west()).isOf(Blocks.PUMPKIN_STEM);
+			return cur;
+		BlockState state = cur.state();
+		if (state.isOf(Blocks.PUMPKIN))
+			return new StructureTemplate.StructureBlockInfo(cur.pos(), Blocks.CAVE_AIR.getDefaultState(), cur.nbt());
+		else if (state.isOf(Blocks.CARVED_PUMPKIN) && !world.getBlockState(cur.pos().down()).isOf(Blocks.HAY_BLOCK))
+			return new StructureTemplate.StructureBlockInfo(cur.pos(), Blocks.CAVE_AIR.getDefaultState(), cur.nbt());
+		else if (state.isOf(Blocks.JACK_O_LANTERN))
+			return new StructureTemplate.StructureBlockInfo(cur.pos(), Blocks.LANTERN.getDefaultState(), cur.nbt());
+		else if (state.isOf(Blocks.ORANGE_STAINED_GLASS))
+			return new StructureTemplate.StructureBlockInfo(cur.pos(), Blocks.PUMPKIN.getDefaultState(), cur.nbt());
+		else if(state.isOf(Blocks.OBSERVER))
+			return new StructureTemplate.StructureBlockInfo(cur.pos(),
+					Blocks.CARVED_PUMPKIN.getDefaultState().with(CarvedPumpkinBlock.FACING, state.get(ObserverBlock.FACING)), cur.nbt());
+		return cur;
 	}
 }
