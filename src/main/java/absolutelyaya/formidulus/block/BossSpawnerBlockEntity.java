@@ -70,7 +70,7 @@ public class BossSpawnerBlockEntity extends BlockEntity
 			onFightEnded();
 		if(world instanceof ServerWorld serverWorld && !wasBossfightActive)
 		{
-			if(bossEntities.isEmpty() && (serverWorld.getTime() > lastFightEnded + respawnDelay || lastFightEnded == 0))
+			if(bossEntities.isEmpty() && (System.currentTimeMillis() > lastFightEnded + respawnDelay * 50L || lastFightEnded == 0))
 				trySpawnBoss();
 			bossEntities.removeIf(i -> {
 				Entity entity = serverWorld.getEntity(i);
@@ -161,7 +161,7 @@ public class BossSpawnerBlockEntity extends BlockEntity
 	{
 		if(world != null)
 		{
-			lastFightEnded = world.getTime();
+			lastFightEnded = System.currentTimeMillis();
 			markDirty();
 			world.updateListeners(pos, getCachedState(), getCachedState(), Block.NOTIFY_LISTENERS);
 		}
