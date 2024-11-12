@@ -1,16 +1,17 @@
 package absolutelyaya.formidulus.rendering.block;
 
+import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.block.BossSpawnerBlockEntity;
+import absolutelyaya.formidulus.entities.boss.BossType;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.render.Camera;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.BlockRenderManager;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.BakedModelManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
@@ -19,11 +20,16 @@ import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.random.Random;
 import org.joml.Matrix4f;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class BossSpawnerRenderer implements BlockEntityRenderer<BossSpawnerBlockEntity>
 {
 	static final Random random = Random.create();
 	BlockRenderManager blockRenderer;
 	TextRenderer textRenderer;
+	static final Map<BossType, BakedModel> spawnerModels = new HashMap<>();
+	static boolean modelsInitialized;
 	
 	public BossSpawnerRenderer(BlockEntityRendererFactory.Context ctx)
 	{
@@ -34,6 +40,8 @@ public class BossSpawnerRenderer implements BlockEntityRenderer<BossSpawnerBlock
 	@Override
 	public void render(BossSpawnerBlockEntity spawner, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay)
 	{
+		if(!modelsInitialized)
+			initSpawnerModels();
 		if(MinecraftClient.getInstance().player instanceof PlayerEntity player && player.isCreative())
 		{
 			float distance = (float)MinecraftClient.getInstance().gameRenderer.getCamera().getPos().distanceTo(spawner.getPos().toCenterPos());
@@ -56,5 +64,20 @@ public class BossSpawnerRenderer implements BlockEntityRenderer<BossSpawnerBlock
 			}
 			RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 		}
+		if(spawnerModels.containsKey(spawner.getBossType()) && spawnerModels.get(spawner.getBossType()) instanceof BakedModel model)
+		{
+			blockRenderer.getModelRenderer().render(spawner.getWorld(), model,
+					spawner.getCachedState(), spawner.getPos(), matrices, vertexConsumers.getBuffer(RenderLayer.getSolid()), false, random, 0,
+					OverlayTexture.DEFAULT_UV);
+		}
+	}
+	
+	public static void initSpawnerModels()
+	{
+		BakedModelManager manager = MinecraftClient.getInstance().getBakedModelManager();
+		BossType.getAllTypes().forEach((id, type) -> {
+			if(!type.spawnerModel().isEmpty())
+				spawnerModels.put(BossType.DEER, manager.getModel(Formidulus.identifier("block/" + type.spawnerModel())));
+		});
 	}
 }

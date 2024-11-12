@@ -1,5 +1,6 @@
 package absolutelyaya.formidulus;
 
+import absolutelyaya.formidulus.entities.boss.BossType;
 import absolutelyaya.formidulus.gui.TitleHUD;
 import absolutelyaya.formidulus.item.components.AccessoryComponent;
 import absolutelyaya.formidulus.network.ClientPacketHandler;
@@ -14,6 +15,7 @@ import absolutelyaya.formidulus.rendering.entity.*;
 import absolutelyaya.formidulus.sound.BossMusicHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
@@ -72,6 +74,13 @@ public class FormidulusClient implements ClientModInitializer
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			if(!client.isPaused())
 				bossMusicHandler.tick();
+		});
+		
+		ModelLoadingPlugin.register(pluginContext -> {
+			BossType.getAllTypes().forEach((id, type) -> {
+				if(!type.spawnerModel().isEmpty())
+					pluginContext.addModels(Formidulus.identifier("block/" + type.spawnerModel()));
+			});
 		});
 		
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> bossMusicHandler.stopAll());
