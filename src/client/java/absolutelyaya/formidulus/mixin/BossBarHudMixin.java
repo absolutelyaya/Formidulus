@@ -37,7 +37,7 @@ public abstract class BossBarHudMixin
 	@Inject(method = "render", at = @At("HEAD"), cancellable = true)
 	void onRenderBossBar(DrawContext context, CallbackInfo ci)
 	{
-		BossBar.Style deerStyle = ClassTinkerers.getEnum(BossBar.Style.class, "DEER");
+		BossBar.Style deerStyle = ClassTinkerers.getEnum(BossBar.Style.class, "FORMIDULUS_DEER");
 		if(bossBars.values().stream().noneMatch(i -> i.getStyle().equals(deerStyle)))
 			return;
 		

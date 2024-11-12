@@ -33,6 +33,47 @@
       "formidulus:deer/knife"
     ]
   },
+  "deer.bubbling": {
+    "sounds": [
+      "minecraft:ambient/underwater/additions/bubbles1",
+      "minecraft:ambient/underwater/additions/bubbles2",
+      "minecraft:ambient/underwater/additions/bubbles3",
+      "minecraft:ambient/underwater/additions/bubbles4",
+      "minecraft:ambient/underwater/additions/bubbles5",
+      "minecraft:ambient/underwater/additions/bubbles6"
+    ]
+  },
+
+  "damage.lantern": {
+    "sounds": [
+      {
+        "name": "minecraft:block/vault/break1",
+        "weight": 25
+      },
+      {
+        "name": "minecraft:block/vault/break2",
+        "weight": 25
+      },
+      {
+        "name": "minecraft:block/vault/break3",
+        "weight": 25
+      },
+      {
+        "name": "minecraft:block/vault/break4",
+        "weight": 24
+      },
+      {
+        "name": "formidulus:damage/lantern_funi",
+        "weight": 1
+      }
+    ]
+  },
+  "damage.claw": {
+    "sounds": [
+      "formidulus:damage/claw1",
+      "formidulus:damage/claw2"
+    ]
+  },
 
   "music.deer.intro": {
     "category": "music",

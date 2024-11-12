@@ -184,7 +184,7 @@ public class DeerGodEntity extends BossEntity
 	@Override
 	BossBar.Style getBossBarStyle()
 	{
-		return ClassTinkerers.getEnum(BossBar.Style.class, "DEER");
+		return ClassTinkerers.getEnum(BossBar.Style.class, "FORMIDULUS_DEER");
 	}
 	
 	@Override
@@ -450,21 +450,31 @@ public class DeerGodEntity extends BossEntity
 					playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 0.6f, 1f);
 					setYaw(prevYaw = headYaw = prevHeadYaw = bodyYaw = prevBodyYaw = 0);
 				}
-				if(getWorld().isClient && !getAnimationFlag(3) && duration >= 5.5f)
+				if(!getAnimationFlag(3) && duration >= 5.5f)
 				{
 					setAnimationFlag(3, true);
-					playSound(SoundEvents.ENTITY_EVOKER_PREPARE_SUMMON, 5f, 1f);
-					Vec3d dest = getPos().add((float)getRotationVector().x, getHeight() / 2f, (float)getRotationVector().z);
-					for (int i = 0; i < 111; i++)
+					playSound(SoundEvents.ENTITY_EVOKER_PREPARE_SUMMON, 0.5f, 0.75f);
+					if(getWorld().isClient)
+					{
+						Vec3d dest = getPos().add((float)getRotationVector().x, getHeight() / 2f, (float)getRotationVector().z);
+						for (int i = 0; i < 111; i++)
+						{
+							Vec3d dir = Vec3d.ZERO.addRandom(random, 1f).multiply(1f, 0f, 1f);
+							Vec3d pos = getPos().add(dir.normalize().multiply((getRandom().nextFloat() - 0.5f) * 2f * 16f));
+							BlockHitResult bHit = getWorld().raycast(new RaycastContext(pos.add(0f, 2f, 0f), pos.subtract(0f, 2f, 0f),
+									RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this));
+							if(bHit.getType().equals(HitResult.Type.MISS))
+								continue;
+							getWorld().addParticle(new BloodDropParticleEffect(dest.toVector3f()),
+									(float)pos.x, (float)bHit.getPos().y, (float)pos.z, 0f, 0f, 0f);
+						}
+					}
+					for (int i = 0; i < 6; i++)
 					{
 						Vec3d dir = Vec3d.ZERO.addRandom(random, 1f).multiply(1f, 0f, 1f);
 						Vec3d pos = getPos().add(dir.normalize().multiply((getRandom().nextFloat() - 0.5f) * 2f * 16f));
-						BlockHitResult bHit = getWorld().raycast(new RaycastContext(pos.add(0f, 2f, 0f), pos.subtract(0f, 2f, 0f),
-								RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this));
-						if(bHit.getType().equals(HitResult.Type.MISS))
-							continue;
-						getWorld().addParticle(new BloodDropParticleEffect(dest.toVector3f()),
-								(float)pos.x, (float)bHit.getPos().y, (float)pos.z, 0f, 0f, 0f);
+						getWorld().playSound(this, BlockPos.ofFloored(pos), SoundRegistry.BUBBLING, SoundCategory.HOSTILE, 1,
+								0.95f + random.nextFloat() * 0.1f);
 					}
 				}
 				if(!getAnimationFlag(4) && duration >= 13f)

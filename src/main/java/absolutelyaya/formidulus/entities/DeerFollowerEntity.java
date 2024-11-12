@@ -64,6 +64,7 @@ public class DeerFollowerEntity extends ServantEntity
 	public static final byte ACTIVITY_READING = 1;
 	public static final byte ACTIVITY_WORSHIP = 2;
 	public static final byte ACTIVITY_HUMMING = 3;
+	public static final byte STATUS_HUM_PARTICLES = -1;
 	
 	boolean hasAltar;
 	byte activity;
@@ -176,9 +177,7 @@ public class DeerFollowerEntity extends ServantEntity
 	{
 		Stream.Builder<RegistryEntry<Enchantment>> builder = Stream.builder();
 		for (RegistryKey<Enchantment> key : keys)
-		{
 			builder.add(reg.getEntry(reg.get(key)));
-		}
 		return builder.build();
 	}
 	
@@ -207,10 +206,15 @@ public class DeerFollowerEntity extends ServantEntity
 		return SoundEvents.INTENTIONALLY_EMPTY;
 	}
 	
+	boolean isFemale()
+	{
+		return getVariant() < 2;
+	}
+	
 	@Override
 	protected void playHurtSound(DamageSource damageSource)
 	{
-		if(getVariant() < 2)
+		if(isFemale())
 			playSound(SoundEvents.ENTITY_WITCH_HURT, 1f, 0.95f + random.nextFloat() * 0.1f);
 		else
 			playSound(SoundEvents.ENTITY_VINDICATOR_HURT, 1f, 0.8f + random.nextFloat() * 0.1f);
@@ -220,7 +224,7 @@ public class DeerFollowerEntity extends ServantEntity
 	@Override
 	protected SoundEvent getDeathSound()
 	{
-		if(getVariant() < 2)
+		if(isFemale())
 			return SoundEvents.ENTITY_WITCH_DEATH;
 		else
 			return SoundEvents.ENTITY_VINDICATOR_DEATH;
@@ -230,12 +234,18 @@ public class DeerFollowerEntity extends ServantEntity
 	public void tickMovement()
 	{
 		super.tickMovement();
-		if(age % 40 == 0 && random.nextFloat() < 0.33f)
+		if(!getWorld().isClient && age % 40 == 0 && random.nextFloat() < 0.33f)
 		{
 			if(isReading())
+			{
 				swingHand(Hand.OFF_HAND);
+				playSound(SoundEvents.ITEM_BOOK_PAGE_TURN);
+			}
 			if(isHumming())
-				addHeadParticles(ParticleTypes.NOTE, 1f, (int)(2 + random.nextFloat() * 2.5f));
+			{
+				playSound(SoundEvents.BLOCK_NOTE_BLOCK_FLUTE.value(), 1f, (isFemale() ? 0.9f : 0.6f) + random.nextFloat() * 0.1f);
+				getWorld().sendEntityStatus(this, STATUS_HUM_PARTICLES);
+			}
 		}
 		if(getPose().equals(EntityPose.SITTING) && moveControl.isMoving())
 			setPose(EntityPose.STANDING);
@@ -322,7 +332,10 @@ public class DeerFollowerEntity extends ServantEntity
 	public void handleStatus(byte status)
 	{
 		if(status == EntityStatuses.ADD_VILLAGER_HAPPY_PARTICLES)
+		{
 			addHeadParticles(ParticleTypes.HAPPY_VILLAGER, 0.8f, 8);
+			return;
+		}
 		else if(status == EntityStatuses.PLAY_SPAWN_EFFECTS)
 		{
 			for (int i = 0; i < 16; i++)
@@ -331,6 +344,11 @@ public class DeerFollowerEntity extends ServantEntity
 				getWorld().addParticle(ParticleRegistry.DARKNESS, pos.x, pos.y, pos.z,
 						0, 0, 0);
 			}
+			return;
+		}
+		else if(status == STATUS_HUM_PARTICLES)
+		{
+			addHeadParticles(ParticleTypes.NOTE, 1f, (int)(2 + random.nextFloat() * 2.5f));
 			return;
 		}
 		super.handleStatus(status);
@@ -598,9 +616,15 @@ public class DeerFollowerEntity extends ServantEntity
 			if(time <= 0)
 			{
 				if(!mob.isHasMask())
+				{
 					mob.dataTracker.set(MASK, true);
+					mob.playSound(SoundEvents.BLOCK_RESPAWN_ANCHOR_SET_SPAWN);
+				}
 				else
+				{
 					mob.getWorld().sendEntityStatus(mob, EntityStatuses.ADD_VILLAGER_HAPPY_PARTICLES);
+					mob.playSound(SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE);
+				}
 				mob.heal(15f);
 			}
 			if(mob.isWorshipping())

@@ -6,11 +6,13 @@ import absolutelyaya.formidulus.registries.FormidableTunes;
 import absolutelyaya.formidulus.registries.SoundRegistry;
 import absolutelyaya.formidulus.structure.*;
 import absolutelyaya.formidulus.structure.processor.*;
+import com.chocohead.mm.api.ClassTinkerers;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BannerPattern;
 import net.minecraft.block.jukebox.JukeboxSong;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.damage.DamageEffects;
 import net.minecraft.entity.damage.DamageScaling;
 import net.minecraft.entity.damage.DamageType;
 import net.minecraft.registry.Registerable;
@@ -85,10 +87,12 @@ public class Bootstrap
 	static void damageTypes(Registerable<DamageType> registry)
 	{
 		registry.register(DamageSources.SACRIFICE, new DamageType("sacrifice", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f));
-		registry.register(DamageSources.LANTERN, new DamageType("lantern", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f));
-		registry.register(DamageSources.CLAW, new DamageType("claw", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f));
+		registry.register(DamageSources.LANTERN, new DamageType("lantern", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f,
+				ClassTinkerers.getEnum(DamageEffects.class, "FORMIDULUS_LANTERN")));
+		registry.register(DamageSources.CLAW, new DamageType("claw", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f,
+				ClassTinkerers.getEnum(DamageEffects.class, "FORMIDULUS_CLAW")));
 		registry.register(DamageSources.TRAMPLE, new DamageType("trample", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f));
 		registry.register(DamageSources.SOULSTEAL, new DamageType("soulsteal", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f));
-		registry.register(DamageSources.SCORCH, new DamageType("scorch", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f));
+		registry.register(DamageSources.SCORCH, new DamageType("scorch", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f, DamageEffects.BURNING));
 	}
 }
