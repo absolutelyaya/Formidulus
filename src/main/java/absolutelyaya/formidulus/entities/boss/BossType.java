@@ -13,11 +13,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public record BossType(Identifier id, List<EntityType<? extends BossEntity>> bossEntities, Class<? extends BossFight> fight, String spawnerModel)
+public record BossType(Identifier id, List<EntityType<? extends BossEntity>> bossEntities, Class<? extends BossFight> fight, String spawnerModel, boolean requiresSolidFloor)
 {
 	static final Map<Identifier, BossType> types;
 	
 	public static final BossType DEER;
+	
+	public BossType(Identifier id, List<EntityType<? extends BossEntity>> bossEntities, Class<? extends BossFight> fight, String spawnerModel)
+	{
+		this(id, bossEntities, fight, spawnerModel, true);
+	}
 	
 	public static @Nullable BossType fromId(Identifier id)
 	{

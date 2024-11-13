@@ -21,6 +21,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -71,7 +72,12 @@ public class BossSpawnerBlockEntity extends BlockEntity
 		if(world instanceof ServerWorld serverWorld && !wasBossfightActive)
 		{
 			if(bossEntities.isEmpty() && (System.currentTimeMillis() > lastFightEnded + respawnDelay * 50L || lastFightEnded == 0))
-				trySpawnBoss();
+			{
+				if(isSpawnAreaValid())
+					trySpawnBoss();
+				else
+					lastFightEnded += 10000; //try again in 10 seconds
+			}
 			bossEntities.removeIf(i -> {
 				Entity entity = serverWorld.getEntity(i);
 				return entity == null || !entity.isAlive() || entity.isRemoved();
@@ -110,7 +116,15 @@ public class BossSpawnerBlockEntity extends BlockEntity
 			if(entity != null)
 				bossEntities.add(entity.getUuid());
 		}
-		
+	}
+	
+	boolean isSpawnAreaValid()
+	{
+		if(world == null)
+			return false;
+		if(bossType.requiresSolidFloor() && !world.getBlockState(pos.down()).isSideSolidFullSquare(world, pos.down(), Direction.UP))
+			return false;
+		return world.isSpaceEmpty(bossType.bossEntities().getFirst().getSpawnBox(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5));
 	}
 	
 	boolean isBossFightActive(UUID id)
