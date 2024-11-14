@@ -79,7 +79,7 @@ public abstract class BossFight
 	void performParticipantCheck()
 	{
 		List<ServerPlayerEntity> validParticipants = world.getEntitiesByType(TypeFilter.instanceOf(ServerPlayerEntity.class), new Box(origin).expand(playerCheckRange),
-				i -> i.isAlive() && !i.isCreative() && !i.isSpectator());
+				i -> true);
 		List<ServerPlayerEntity> remove = new ArrayList<>();
 		participants.forEach(p -> {
 			if(!validParticipants.contains(p))
@@ -160,6 +160,7 @@ public abstract class BossFight
 	{
 		if(!participants.contains(player))
 			return;
+		leaveFight(player);
 		performParticipantCheck();
 	}
 	
