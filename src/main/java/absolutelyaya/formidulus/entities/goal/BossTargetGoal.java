@@ -45,6 +45,7 @@ public class BossTargetGoal extends Goal
 		LivingEntity curTarget = mob.getTarget();
 		if(mob.getLastAttackedTime() != lastAttackedTime)
 		{
+			targetSwitchTimer -= switchInterval / 3;
 			lastAttackedTime = mob.getLastAttackTime();
 			LivingEntity lastAttacker = mob.getLastAttacker();
 			if(isTargetValid(lastAttacker))
@@ -54,7 +55,7 @@ public class BossTargetGoal extends Goal
 		if(mob.getLastTargetDamagedTime() != lastTargetDamagedTime)
 		{
 			lastTargetDamagedTime = mob.getLastTargetDamagedTime();
-			targetSwitchTimer = Math.min(targetSwitchTimer + switchInterval / 4, switchInterval);
+			targetSwitchTimer = Math.min(targetSwitchTimer + switchInterval / 6, switchInterval);
 		}
 		mob.getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class),
 						Box.from(mob.getPos().subtract(0.5, 0.5, 0.5)).expand(range), this::isTargetValid)
@@ -124,7 +125,7 @@ public class BossTargetGoal extends Goal
 		{
 			if(!isTargetValid(living))
 				continue;
-			float priority = knownTargets.get(living) - (mob.distanceTo(living) * 0.1f); //decrease targets priority based on distance
+			float priority = knownTargets.get(living) - (mob.distanceTo(living) * 0.25f); //decrease targets priority based on distance
 			if(priority > highestPriority)
 			{
 				highestPriority = priority;
