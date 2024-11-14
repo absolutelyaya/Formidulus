@@ -29,7 +29,8 @@ public class EntityRegistry
 																  .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1)
 																  .add(EntityAttributes.GENERIC_ARMOR, 10)
 																  .add(EntityAttributes.GENERIC_ARMOR_TOUGHNESS, 5)
-																  .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32));
+																  .add(EntityAttributes.GENERIC_FOLLOW_RANGE, 32)
+																  .add(EntityAttributes.GENERIC_WATER_MOVEMENT_EFFICIENCY, 0.666f));
 		FabricDefaultAttributeRegistry.register(IRRLICHT, IrrlichtEntity.createMobAttributes()
 																  .add(EntityAttributes.GENERIC_MAX_HEALTH, 1));
 		FabricDefaultAttributeRegistry.register(DEER_FOLLOWER, DeerFollowerEntity.createMobAttributes()
