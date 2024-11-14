@@ -3,10 +3,7 @@ package absolutelyaya.formidulus.datagen;
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.item.DeerSkullItem;
 import absolutelyaya.formidulus.item.abilities.ItemAbilities;
-import absolutelyaya.formidulus.registries.BlockRegistry;
-import absolutelyaya.formidulus.registries.EntityRegistry;
-import absolutelyaya.formidulus.registries.ItemRegistry;
-import absolutelyaya.formidulus.registries.StatusEffectRegistry;
+import absolutelyaya.formidulus.registries.*;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.registry.RegistryWrapper;
@@ -14,6 +11,7 @@ import net.minecraft.registry.RegistryWrapper;
 import java.util.concurrent.CompletableFuture;
 
 import static absolutelyaya.formidulus.datagen.BaseTranslationProvider.genericKey;
+import static absolutelyaya.formidulus.datagen.BaseTranslationProvider.subtitle;
 
 public class GermanTranslationProvider extends FabricLanguageProvider implements Lang
 {
@@ -54,7 +52,7 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(ItemRegistry.DEER_PHASE1_MUSIC_DISC, "Schallplatte");
 		builder.add(ItemRegistry.DEER_PHASE2_MUSIC_DISC, "Schallplatte");
 		builder.add(ItemRegistry.CULTIST_SPAWN_EGG, "Kultisten-Spawn-Ei");
-		builder.add(ItemRegistry.CRUOR_SPAWN_EGG, "Reh-Spawn-Ei");
+		builder.add(ItemRegistry.CRUOR_SPAWN_EGG, "Hirsch-Spawn-Ei");
 		
 		builder.add(Lang.MUSIC_DEER_PHASE1, "Efefski - Weisendes Licht");
 		builder.add(Lang.MUSIC_DEER_PHASE2, "Efefski - Laufendes Blut");
@@ -128,7 +126,7 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(StatusEffectRegistry.REVERENCE.value(), "Erzwungende Ehrfurcht");
 		builder.add(StatusEffectRegistry.DARKNESS.value(), "Zermürbendes Dunkel");
 		
-		builder.add(MAP_CULT_HIDEOUT, "Kult Versteck Karte");
+		builder.add(MAP_CULT_HIDEOUT, "Kultisten Versteck Karte");
 		
 		builder.add(MESSAGE_DEER_WARNING + "0", "Dieser Ort gibt dir eine ganz böse Vorahnung.");
 		builder.add(MESSAGE_DEER_WARNING + "1", "Es fühlt sich an als würde etwas dich nicht hier wollen.");
@@ -166,7 +164,7 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		String fightCheckInterval = Formidulus.config.fightCheckInterval.getTranslationKey(Formidulus.MOD_ID);
 		
 		builder.add(SCREEN_CONFIG_TITLE, "Formidulus Server Einstellungen");
-		builder.add(cultistMendingChance, "Cultist Reperatur Chance");
+		builder.add(cultistMendingChance, "Kultist Reperatur Chance");
 		builder.add(cultistMendingChance + ".description",
 				"Die Wahrscheinlichkeit dass ein Buch eines Kultisten mit Reperatur verzaubert ist; " +
 						"ACHTUNG: Die Wahrscheinlichkeit dass sie überhaupt ein Verzaubertes Buch tragen, ist an sich schon ziemlich gering.");
@@ -176,5 +174,42 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(fightCheckInterval, "Bosskampf Check Intervall");
 		builder.add(fightCheckInterval + ".description",
 				"Der Intervall zwischen den checks die ein Boss Spawner ausführt um zu testen ob sein Kampf läuft, oder ein Lebender Boss zu ihm gehört.");
+		
+		
+		builder.add(subtitle(SoundRegistry.ACCESSORY_CHANGE_MODE), "Accessoire modus geändert");
+		
+		builder.add(subtitle(SoundRegistry.WEEN), "es ist ween :D");
+		
+		builder.add(subtitle(SoundRegistry.DEER_STEP_LANTERN), "Kette rasselt");
+		builder.add(subtitle(SoundRegistry.DEER_HURT), "Hirsch nimmt Schaden");
+		builder.add(subtitle(SoundRegistry.DEER_SWING), "Großer Schwung");
+		builder.add(subtitle(SoundRegistry.DEER_LANTERN_IMPACT), "Laterne trifft den Boden");
+		builder.add(subtitle(SoundRegistry.DEER_LANTERN_BREAK), "Laterne Zerbricht");
+		builder.add(subtitle(SoundRegistry.DEER_LANTERN_CRUSH), "Laterne wird Zersört");
+		builder.add(subtitle(SoundRegistry.DEER_SCORCH), "Sengende Flammen");
+		builder.add(subtitle(SoundRegistry.DEER_SUMMON_CULTIST), "Kultist wird beschworen");
+		builder.add(subtitle(SoundRegistry.DEER_PREPARE_TELEPORT), "Hirsch bereitet Teleportation vor");
+		builder.add(subtitle(SoundRegistry.DEER_PERFORM_TELEPORT), "Hirsch teleportiert sich");
+		builder.add(subtitle(SoundRegistry.DEER_SUMMON_BLOOD), "Blut wird beschworen");
+		builder.add(subtitle(SoundRegistry.DEER_BUBBLING), "Blut blubbert");
+		builder.add(subtitle(SoundRegistry.DEER_SHAPE_FLESH), "Fleisch wird geformt");
+		builder.add(subtitle(SoundRegistry.DEER_ROAR), "Hirsch schreit");
+		builder.add(subtitle(SoundRegistry.DEER_GRIND), "Hirsch schleift Krallen über den Boden");
+		builder.add(subtitle(SoundRegistry.DEER_KNIFE), "Hirsch schneidet aufwärts");
+		builder.add(subtitle(SoundRegistry.CULTIST_IDLE_FLIP_PAGE), "Kultist liest");
+		builder.add(subtitle(SoundRegistry.CULTIST_IDLE_HUM), "Kultist summt");
+		builder.add(subtitle(SoundRegistry.CULTIST_MASK_BREAK), "Kultist Maske zerbricht");
+		builder.add(subtitle(SoundRegistry.CULTIST_MASK_RESTORE), "Kultist Maske wird wiederhergestellt");
+		builder.add(subtitle(SoundRegistry.CULTIST_WORSHIP_HEAL), "Kultist wird geheilt");
+		builder.add(subtitle(SoundRegistry.CULTIST_MALE_HURT), "Kultist nimmt Schaden");
+		builder.add(subtitle(SoundRegistry.CULTIST_MALE_DEATH), "Kultist stirbt");
+		builder.add(subtitle(SoundRegistry.CULTIST_FEMALE_HURT), "Kultist nimmt Schaden");
+		builder.add(subtitle(SoundRegistry.CULTIST_FEMALE_DEATH), "Kultist stirbt");
+		builder.add(subtitle(SoundRegistry.IRRLICHT_IDLE), "Irrlicht knistert");
+		builder.add(subtitle(SoundRegistry.IRRLICHT_DEATH), "Irrlicht wird gelöscht");
+		builder.add(subtitle(SoundRegistry.PUMPKIN_IMPACT), "Explosiver Kürbis schlägt ein");
+		
+		builder.add(subtitle(SoundRegistry.LANTERN_DAMAGE), "Spieler wird von Laterne getroffen");
+		builder.add(subtitle(SoundRegistry.CLAW_DAMAGE), "Spieler wird aufgeschlitzt");
 	}
 }

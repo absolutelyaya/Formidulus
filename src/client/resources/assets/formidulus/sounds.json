@@ -1,4 +1,15 @@
 {
+  "item.accessory.change_mode": {
+    "sounds": [
+      {
+        "name": "item.armor.equip_generic",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.item.accessory.change_mode"
+  },
+
+
   "ween": {
     "sounds": [
       "formidulus:ween/talonween-01",
@@ -26,14 +37,111 @@
       "formidulus:ween/marmaween-07",
       "formidulus:ween/marmaween-08",
       "formidulus:ween/marmaween-09"
-    ]
+    ],
+    "subtitle": "subtitles.formidulus.ween"
   },
-  "deer.knife": {
+
+
+  "entity.deer.step.lantern": {
     "sounds": [
-      "formidulus:deer/knife"
-    ]
+      {
+        "name": "block.chain.break",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.deer.step.lantern"
   },
-  "deer.bubbling": {
+  "entity.deer.hurt": {
+    "sounds": [
+      {
+        "name": "entity.skeleton.hurt",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.deer.hurt"
+  },
+  "entity.deer.swing": {
+    "sounds": [
+      {
+        "name": "entity.witch.throw",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.deer.swing"
+  },
+  "entity.deer.lantern.impact": {
+    "sounds": [
+      {
+        "name": "block.vault.break",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.deer.lantern.impact"
+  },
+  "entity.deer.lantern.break": {
+    "sounds": [
+      {
+        "name": "block.vault.open_shutter",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.deer.lantern.break"
+  },
+  "entity.deer.lantern.crush": {
+    "sounds": [
+      {
+        "name": "entity.dragon_fireball.explode",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.deer.lantern.crush"
+  },
+  "entity.deer.scorch": {
+    "sounds": [
+      {
+        "name": "item.firecharge.use",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.deer.scorch"
+  },
+  "entity.deer.summon.cultist": {
+    "sounds": [
+      {
+        "name": "entity.evoker.cast_spell",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.deer.summon.cultist"
+  },
+  "entity.deer.teleport.prepare": {
+    "sounds": [
+      {
+        "name": "entity.evoker.prepare_attack",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.deer.teleport.prepare"
+  },
+  "entity.deer.teleport.perform": {
+    "sounds": [
+      {
+        "name": "entity.evoker.cast_spell",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.deer.teleport.perform"
+  },
+  "entity.deer.summon.blood": {
+    "sounds": [
+      {
+        "name": "entity.evoker.prepare_summon",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.deer.summon.blood"
+  },
+  "entity.deer.bubbling": {
     "sounds": [
       "minecraft:ambient/underwater/additions/bubbles1",
       "minecraft:ambient/underwater/additions/bubbles2",
@@ -41,8 +149,154 @@
       "minecraft:ambient/underwater/additions/bubbles4",
       "minecraft:ambient/underwater/additions/bubbles5",
       "minecraft:ambient/underwater/additions/bubbles6"
-    ]
+    ],
+    "subtitle": "subtitles.formidulus.entity.deer.bubbling"
   },
+  "entity.deer.shape_flesh": {
+    "sounds": [
+      {
+        "name": "block.respawn_anchor.set_spawn",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.deer.shape_flesh"
+  },
+  "entity.deer.roar": {
+    "sounds": [
+      {
+        "name": "entity.polar_bear.warning",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.deer.roar"
+  },
+  "entity.deer.grind": {
+    "sounds": [
+      {
+        "name": "block.grindstone.use",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.deer.grind"
+  },
+  "entity.deer.knife": {
+    "sounds": [
+      "formidulus:deer/knife"
+    ],
+    "subtitle": "subtitles.formidulus.entity.deer.knife"
+  },
+
+  "entity.cultist.idle.flip_page": {
+    "sounds": [
+      {
+        "name": "item.book.page_turn",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.cultist.idle.flip_page"
+  },
+  "entity.cultist.idle.hum": {
+    "sounds": [
+      {
+        "name": "block.note_block.flute",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.cultist.idle.hum"
+  },
+  "entity.cultist.mask.break": {
+    "sounds": [
+      {
+        "name": "entity.item.break",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.cultist.mask.break"
+  },
+  "entity.cultist.mask.restore": {
+    "sounds": [
+      {
+        "name": "block.respawn_anchor.set_spawn",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.cultist.mask.restore"
+  },
+  "entity.cultist.worship.heal": {
+    "sounds": [
+      {
+        "name": "block.enchantment_table.use",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.cultist.worship.heal"
+  },
+  "entity.cultist.male.hurt": {
+    "sounds": [
+      {
+        "name": "entity.vindicator.hurt",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.cultist.male.hurt"
+  },
+  "entity.cultist.male.death": {
+    "sounds": [
+      {
+        "name": "entity.vindicator.death",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.cultist.male.death"
+  },
+  "entity.cultist.female.hurt": {
+    "sounds": [
+      {
+        "name": "entity.witch.hurt",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.cultist.female.hurt"
+  },
+  "entity.cultist.female.death": {
+    "sounds": [
+      {
+        "name": "entity.witch.death",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.cultist.female.death"
+  },
+
+  "entity.irrlicht.idle": {
+    "sounds": [
+      {
+        "name": "block.fire.ambient",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.irrlicht.idle"
+  },
+  "entity.irrlicht.death": {
+    "sounds": [
+      {
+        "name": "block.fire.extinguish",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.irrlicht.death"
+  },
+
+  "entity.pumpkin.impact": {
+    "sounds": [
+      {
+        "name": "item.firecharge.use",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.pumpkin.impact"
+  },
+
 
   "damage.lantern": {
     "sounds": [
@@ -66,14 +320,17 @@
         "name": "formidulus:damage/lantern_funi",
         "weight": 1
       }
-    ]
+    ],
+    "subtitle": "subtitles.formidulus.damage.lantern"
   },
   "damage.claw": {
     "sounds": [
       "formidulus:damage/claw1",
       "formidulus:damage/claw2"
-    ]
+    ],
+    "subtitle": "subtitles.formidulus.damage.claw"
   },
+
 
   "music.deer.intro": {
     "category": "music",

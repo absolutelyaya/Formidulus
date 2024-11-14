@@ -3,13 +3,11 @@ package absolutelyaya.formidulus.datagen;
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.item.DeerSkullItem;
 import absolutelyaya.formidulus.item.abilities.ItemAbilities;
-import absolutelyaya.formidulus.registries.BlockRegistry;
-import absolutelyaya.formidulus.registries.EntityRegistry;
-import absolutelyaya.formidulus.registries.ItemRegistry;
-import absolutelyaya.formidulus.registries.StatusEffectRegistry;
+import absolutelyaya.formidulus.registries.*;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.sound.SoundEvent;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -174,6 +172,43 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(fightCheckInterval, "Bossfight Check Interval");
 		builder.add(fightCheckInterval + ".description",
 				"The interval between checks a boss spawner performs to see if there's an active fight, or a spawned boss belonging to it.");
+		
+		
+		builder.add(subtitle(SoundRegistry.ACCESSORY_CHANGE_MODE), "Accessory mode changed");
+		
+		builder.add(subtitle(SoundRegistry.WEEN), "its ween :D");
+		
+		builder.add(subtitle(SoundRegistry.DEER_STEP_LANTERN), "Chain rattles");
+		builder.add(subtitle(SoundRegistry.DEER_HURT), "Deer hurts");
+		builder.add(subtitle(SoundRegistry.DEER_SWING), "Heavy swing");
+		builder.add(subtitle(SoundRegistry.DEER_LANTERN_IMPACT), "Lantern hits the ground");
+		builder.add(subtitle(SoundRegistry.DEER_LANTERN_BREAK), "Lantern breaks");
+		builder.add(subtitle(SoundRegistry.DEER_LANTERN_CRUSH), "Lantern gets crushed");
+		builder.add(subtitle(SoundRegistry.DEER_SCORCH), "Scorching Flames");
+		builder.add(subtitle(SoundRegistry.DEER_SUMMON_CULTIST), "Cultist is summoned");
+		builder.add(subtitle(SoundRegistry.DEER_PREPARE_TELEPORT), "Deer prepares teleport");
+		builder.add(subtitle(SoundRegistry.DEER_PERFORM_TELEPORT), "Deer teleports");
+		builder.add(subtitle(SoundRegistry.DEER_SUMMON_BLOOD), "Blood is summoned");
+		builder.add(subtitle(SoundRegistry.DEER_BUBBLING), "Blood bubbles");
+		builder.add(subtitle(SoundRegistry.DEER_SHAPE_FLESH), "Flesh is Shaped");
+		builder.add(subtitle(SoundRegistry.DEER_ROAR), "Deer screams");
+		builder.add(subtitle(SoundRegistry.DEER_GRIND), "Deer grinds claw on ground");
+		builder.add(subtitle(SoundRegistry.DEER_KNIFE), "Deer slashes upwards");
+		builder.add(subtitle(SoundRegistry.CULTIST_IDLE_FLIP_PAGE), "Cultist reads");
+		builder.add(subtitle(SoundRegistry.CULTIST_IDLE_HUM), "Cultist hums");
+		builder.add(subtitle(SoundRegistry.CULTIST_MASK_BREAK), "Cultist Mask breaks");
+		builder.add(subtitle(SoundRegistry.CULTIST_MASK_RESTORE), "Cultist Mask is restored");
+		builder.add(subtitle(SoundRegistry.CULTIST_WORSHIP_HEAL), "Cultist gets healed");
+		builder.add(subtitle(SoundRegistry.CULTIST_MALE_HURT), "Cultist hurts");
+		builder.add(subtitle(SoundRegistry.CULTIST_MALE_DEATH), "Cultist dies");
+		builder.add(subtitle(SoundRegistry.CULTIST_FEMALE_HURT), "Cultist hurts");
+		builder.add(subtitle(SoundRegistry.CULTIST_FEMALE_DEATH), "Cultist dies");
+		builder.add(subtitle(SoundRegistry.IRRLICHT_IDLE), "Irrlicht crackles");
+		builder.add(subtitle(SoundRegistry.IRRLICHT_DEATH), "Irrlicht extinguished");
+		builder.add(subtitle(SoundRegistry.PUMPKIN_IMPACT), "Volatile Pumpkin impact");
+		
+		builder.add(subtitle(SoundRegistry.LANTERN_DAMAGE), "Player gets hit by Lantern");
+		builder.add(subtitle(SoundRegistry.CLAW_DAMAGE), "Player gets slashed");
 	}
 	
 	public static String modKey(String category, String path)
@@ -184,5 +219,10 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 	public static String genericKey(String category, String path)
 	{
 		return category + "." + path;
+	}
+	
+	public static String subtitle(SoundEvent sound)
+	{
+		return "subtitles." + sound.getId().getNamespace() + "." + sound.getId().getPath();
 	}
 }

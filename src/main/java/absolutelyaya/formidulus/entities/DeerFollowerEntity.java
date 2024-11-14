@@ -4,6 +4,7 @@ import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.entities.goal.ServantTargetGoal;
 import absolutelyaya.formidulus.registries.ItemRegistry;
 import absolutelyaya.formidulus.registries.ParticleRegistry;
+import absolutelyaya.formidulus.registries.SoundRegistry;
 import net.minecraft.block.Blocks;
 import net.minecraft.command.argument.EntityAnchorArgumentType;
 import net.minecraft.component.DataComponentTypes;
@@ -195,7 +196,7 @@ public class DeerFollowerEntity extends ServantEntity
 		if(!getWorld().isClient && dataTracker.get(MASK) && random.nextFloat() < 0.01f * amount)
 		{
 			dataTracker.set(MASK, false);
-			playSound(SoundEvents.ENTITY_ITEM_BREAK);
+			playSound(SoundRegistry.CULTIST_MASK_BREAK);
 		}
 		return b;
 	}
@@ -215,9 +216,9 @@ public class DeerFollowerEntity extends ServantEntity
 	protected void playHurtSound(DamageSource damageSource)
 	{
 		if(isFemale())
-			playSound(SoundEvents.ENTITY_WITCH_HURT, 1f, 0.95f + random.nextFloat() * 0.1f);
+			playSound(SoundRegistry.CULTIST_MALE_HURT, 1f, 0.95f + random.nextFloat() * 0.1f);
 		else
-			playSound(SoundEvents.ENTITY_VINDICATOR_HURT, 1f, 0.8f + random.nextFloat() * 0.1f);
+			playSound(SoundRegistry.CULTIST_FEMALE_HURT, 1f, 0.8f + random.nextFloat() * 0.1f);
 		super.playHurtSound(damageSource);
 	}
 	
@@ -225,9 +226,9 @@ public class DeerFollowerEntity extends ServantEntity
 	protected SoundEvent getDeathSound()
 	{
 		if(isFemale())
-			return SoundEvents.ENTITY_WITCH_DEATH;
+			return SoundRegistry.CULTIST_MALE_DEATH;
 		else
-			return SoundEvents.ENTITY_VINDICATOR_DEATH;
+			return SoundRegistry.CULTIST_FEMALE_DEATH;
 	}
 	
 	@Override
@@ -239,11 +240,11 @@ public class DeerFollowerEntity extends ServantEntity
 			if(isReading())
 			{
 				swingHand(Hand.OFF_HAND);
-				playSound(SoundEvents.ITEM_BOOK_PAGE_TURN);
+				playSound(SoundRegistry.CULTIST_IDLE_FLIP_PAGE);
 			}
 			if(isHumming())
 			{
-				playSound(SoundEvents.BLOCK_NOTE_BLOCK_FLUTE.value(), 1f, (isFemale() ? 0.9f : 0.6f) + random.nextFloat() * 0.1f);
+				playSound(SoundRegistry.CULTIST_IDLE_HUM, 1f, (isFemale() ? 0.9f : 0.6f) + random.nextFloat() * 0.1f);
 				getWorld().sendEntityStatus(this, STATUS_HUM_PARTICLES);
 			}
 		}
@@ -618,12 +619,12 @@ public class DeerFollowerEntity extends ServantEntity
 				if(!mob.isHasMask())
 				{
 					mob.dataTracker.set(MASK, true);
-					mob.playSound(SoundEvents.BLOCK_RESPAWN_ANCHOR_SET_SPAWN);
+					mob.playSound(SoundRegistry.CULTIST_MASK_RESTORE);
 				}
 				else
 				{
 					mob.getWorld().sendEntityStatus(mob, EntityStatuses.ADD_VILLAGER_HAPPY_PARTICLES);
-					mob.playSound(SoundEvents.BLOCK_ENCHANTMENT_TABLE_USE);
+					mob.playSound(SoundRegistry.CULTIST_WORSHIP_HEAL);
 				}
 				mob.heal(15f);
 			}

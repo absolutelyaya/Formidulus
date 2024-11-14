@@ -1,6 +1,7 @@
 package absolutelyaya.formidulus.entities;
 
 import absolutelyaya.formidulus.registries.EntityRegistry;
+import absolutelyaya.formidulus.registries.SoundRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
@@ -14,7 +15,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -171,14 +171,14 @@ public class IrrlichtEntity extends MobEntity
 	@Override
 	protected SoundEvent getDeathSound()
 	{
-		return SoundEvents.BLOCK_FIRE_EXTINGUISH;
+		return SoundRegistry.IRRLICHT_DEATH;
 	}
 	
 	@Nullable
 	@Override
 	protected SoundEvent getAmbientSound()
 	{
-		return SoundEvents.BLOCK_FIRE_AMBIENT;
+		return SoundRegistry.IRRLICHT_IDLE;
 	}
 	
 	@Override

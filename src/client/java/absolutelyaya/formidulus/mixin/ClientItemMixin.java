@@ -5,6 +5,8 @@ import absolutelyaya.formidulus.item.components.AbilityComponent;
 import absolutelyaya.formidulus.item.components.AccessoryComponent;
 import absolutelyaya.formidulus.item.components.ExpandableLoreComponent;
 import absolutelyaya.formidulus.registries.DataComponentRegistry;
+import absolutelyaya.formidulus.registries.ItemRegistry;
+import absolutelyaya.formidulus.registries.SoundRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,11 +15,11 @@ import net.minecraft.item.Equipment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.ClickType;
@@ -85,7 +87,7 @@ public abstract class ClientItemMixin
 			stack.set(DataComponentRegistry.ACCESSORY, component.cycle());
 		if(!player.getWorld().isClient && slot.id >= 5 && slot.id <= 8)
 		{
-			RegistryEntry<SoundEvent> sound = SoundEvents.ITEM_ARMOR_EQUIP_GENERIC;
+			RegistryEntry<SoundEvent> sound = RegistryEntry.of(SoundRegistry.ACCESSORY_CHANGE_MODE);
 			if(stack.getItem() instanceof Equipment equipment)
 				sound = equipment.getEquipSound();
 			player.getWorld().playSound(null, player.getX(), player.getY(), player.getZ(), sound,

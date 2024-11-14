@@ -2,6 +2,7 @@ package absolutelyaya.formidulus.entities;
 
 import absolutelyaya.formidulus.damage.DamageSources;
 import absolutelyaya.formidulus.registries.ItemRegistry;
+import absolutelyaya.formidulus.registries.SoundRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
@@ -12,7 +13,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -82,7 +82,7 @@ public class PumpkinProjectile extends ThrownItemEntity
 				Vec3d vel = Vec3d.ZERO.addRandom(random, 0.2f);
 				getWorld().addParticle(ParticleTypes.LAVA, getX(), getY(), getZ(), vel.x, vel.y, vel.z);
 			}
-			getWorld().playSound(null, getBlockPos(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.HOSTILE, 1f, 1f);
+			getWorld().playSound(null, getBlockPos(), SoundRegistry.PUMPKIN_IMPACT, SoundCategory.HOSTILE, 1f, 1f);
 		}
 	}
 	
@@ -97,7 +97,7 @@ public class PumpkinProjectile extends ThrownItemEntity
 			discard();
 		}
 		getWorld().getEntitiesByType(TypeFilter.instanceOf(LivingEntity.class), getBoundingBox().expand(0.2f), i -> !i.equals(getOwner())).forEach(this::hitLiving);
-		getWorld().playSound(null, getBlockPos(), SoundEvents.ITEM_FIRECHARGE_USE, SoundCategory.HOSTILE, 0.4f, 1f);
+		getWorld().playSound(null, getBlockPos(), SoundRegistry.PUMPKIN_IMPACT, SoundCategory.HOSTILE, 0.4f, 1f);
 	}
 	
 	@Override

@@ -40,7 +40,6 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -254,15 +253,15 @@ public class DeerGodEntity extends BossEntity
 		}
 		int teleportTimer = getTeleportTimer();
 		if(teleportTimer == getTeleportFadeDuration() - 1)
-			playSound(SoundEvents.ENTITY_EVOKER_PREPARE_ATTACK, 1f, 1f + (1f - getTeleportFadeDuration() / 40f));
+			playSound(SoundRegistry.DEER_PREPARE_TELEPORT, 1f, 1f + (1f - getTeleportFadeDuration() / 40f));
 		if(teleportTimer == 0)
 		{
 			Vec3d dest = getNextTeleportDestination();
-			playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 0.6f, 1f);
+			playSound(SoundRegistry.DEER_PERFORM_TELEPORT, 0.6f, 1f);
 			setPosition(dest.x, dest.y, dest.z);
 			if(getTarget() != null && distanceTo(getTarget()) < 6f)
 				lookAt(EntityAnchorArgumentType.EntityAnchor.FEET, getTarget().getPos());
-			playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 0.6f, 1f);
+			playSound(SoundRegistry.DEER_PERFORM_TELEPORT, 0.6f, 1f);
 		}
 		if(getWorld().isClient)
 			return;
@@ -373,19 +372,19 @@ public class DeerGodEntity extends BossEntity
 				if(!getAnimationFlag(0) && duration >= 1.1f)
 				{
 					setAnimationFlag(0, true);
-					getWorld().playSound(null, getBlockPos(), SoundEvents.ENTITY_WITCH_THROW, SoundCategory.HOSTILE, 0.8f, 0.1f);
+					playSound(SoundRegistry.DEER_SWING, 0.8f, 0.6f);
 				}
 			}
 			case SLAM_ANIM -> {
 				if(!getAnimationFlag(0) && duration >= 1.25f)
 				{
 					setAnimationFlag(0, true);
-					playSound(SoundEvents.ENTITY_WITCH_THROW, 0.8f, 0.6f);
+					playSound(SoundRegistry.DEER_SWING, 0.8f, 0.6f);
 				}
 				if(!getAnimationFlag(1) && duration >= 2.65f)
 				{
 					setAnimationFlag(1, true);
-					playSound(SoundEvents.ENTITY_WITCH_THROW, 1f, 0.5f);
+					playSound(SoundRegistry.DEER_SWING, 1f, 0.5f);
 				}
 				if(!getAnimationFlag(2) && duration >= 2.9f)
 				{
@@ -436,7 +435,7 @@ public class DeerGodEntity extends BossEntity
 					if(!getAnimationFlag(1))
 					{
 						setAnimationFlag(1, true);
-						playSound(SoundEvents.ENTITY_EVOKER_PREPARE_ATTACK, 0.6f, 1f);
+						playSound(SoundRegistry.DEER_PREPARE_TELEPORT, 0.6f, 1f);
 					}
 					spawnVanishingParticles(12, getPos());
 					spawnVanishingParticles(12, getOriginBlock().toBottomCenterPos());
@@ -445,15 +444,15 @@ public class DeerGodEntity extends BossEntity
 				{
 					setAnimationFlag(2, true);
 					BlockPos pos = dataTracker.get(ORIGIN);
-					playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 0.6f, 1f);
+					playSound(SoundRegistry.DEER_PERFORM_TELEPORT, 0.6f, 1f);
 					setPosition(pos.getX() + 0.5f, pos.getY(), pos.getZ() + 0.5f);
-					playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 0.6f, 1f);
+					playSound(SoundRegistry.DEER_PERFORM_TELEPORT, 0.6f, 1f);
 					setYaw(prevYaw = headYaw = prevHeadYaw = bodyYaw = prevBodyYaw = 0);
 				}
 				if(!getAnimationFlag(3) && duration >= 5.5f)
 				{
 					setAnimationFlag(3, true);
-					playSound(SoundEvents.ENTITY_EVOKER_PREPARE_SUMMON, 0.5f, 0.75f);
+					playSound(SoundRegistry.DEER_SUMMON_BLOOD, 0.5f, 0.75f);
 					if(getWorld().isClient)
 					{
 						Vec3d dest = getPos().add((float)getRotationVector().x, getHeight() / 2f, (float)getRotationVector().z);
@@ -473,19 +472,19 @@ public class DeerGodEntity extends BossEntity
 					{
 						Vec3d dir = Vec3d.ZERO.addRandom(random, 1f).multiply(1f, 0f, 1f);
 						Vec3d pos = getPos().add(dir.normalize().multiply((getRandom().nextFloat() - 0.5f) * 2f * 16f));
-						getWorld().playSound(this, BlockPos.ofFloored(pos), SoundRegistry.BUBBLING, SoundCategory.HOSTILE, 1,
+						getWorld().playSound(this, BlockPos.ofFloored(pos), SoundRegistry.DEER_BUBBLING, SoundCategory.HOSTILE, 1,
 								0.95f + random.nextFloat() * 0.1f);
 					}
 				}
 				if(!getAnimationFlag(4) && duration >= 13f)
 				{
 					setAnimationFlag(4, true);
-					playSound(SoundEvents.BLOCK_RESPAWN_ANCHOR_SET_SPAWN, 5f, 0.6f);
+					playSound(SoundRegistry.DEER_SHAPE_FLESH, 5f, 0.6f);
 				}
 				if(!getAnimationFlag(5) && duration >= 16.25f)
 				{
 					setAnimationFlag(5, true);
-					playSound(SoundEvents.ENTITY_POLAR_BEAR_WARNING, 15f, 0.5f);
+					playSound(SoundRegistry.DEER_ROAR, 15f, 0.5f);
 					if(bossFight != null && !getWorld().isClient)
 						bossFight.getAllParticipants()
 								.forEach(i -> i.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 0, 2, false, false)));
@@ -499,7 +498,7 @@ public class DeerGodEntity extends BossEntity
 				if(!getAnimationFlag(1) && duration >= 0.5f)
 				{
 					setAnimationFlag(1, true);
-					playSound(SoundEvents.ENTITY_WITCH_THROW, 1f, 0.5f);
+					playSound(SoundRegistry.DEER_SWING, 1f, 0.5f);
 				}
 			}
 			case PREPARE_RUN_ATTACK_ANIM -> {
@@ -515,7 +514,7 @@ public class DeerGodEntity extends BossEntity
 				if(!getAnimationFlag(1) && duration >= 0f)
 				{
 					setAnimationFlag(1, true);
-					playSound(SoundRegistry.KNIFE, 1f, 1f);
+					playSound(SoundRegistry.DEER_KNIFE, 1f, 1f);
 				}
 				if(!getAnimationFlag(2) && duration >= 0.5f)
 				{
@@ -548,12 +547,12 @@ public class DeerGodEntity extends BossEntity
 				if(!getAnimationFlag(2) && duration >= 2.9f)
 				{
 					setAnimationFlag(2, true);
-					playSound(SoundEvents.BLOCK_VAULT_BREAK, 5f, 0.5f);
+					playSound(SoundRegistry.DEER_LANTERN_IMPACT, 5f, 0.5f);
 				}
 				if(!getAnimationFlag(3) && duration >= 4.20f)
 				{
 					setAnimationFlag(3, true);
-					playSound(SoundEvents.ENTITY_WITCH_THROW, 1f, 0.5f);
+					playSound(SoundRegistry.DEER_SWING, 1f, 0.5f);
 				}
 				if(duration >= 4.3f && duration <= 5.3f)
 				{
@@ -562,7 +561,7 @@ public class DeerGodEntity extends BossEntity
 					{
 						setAnimationFlag(4, true);
 						breakLanternEffect(impactOffset, false);
-						playSound(SoundEvents.ENTITY_DRAGON_FIREBALL_EXPLODE, 1f, 0.75f);
+						playSound(SoundRegistry.DEER_LANTERN_CRUSH, 1f, 0.75f);
 						BlockState state = getWorld().getBlockState(BlockPos.ofFloored(getPos().add(impactOffset).subtract(0f, 0.5f, 0f)));
 						for (int i = 0; i < 32; i++)
 						{
@@ -585,7 +584,7 @@ public class DeerGodEntity extends BossEntity
 						getWorld().addParticle(ParticleTypes.LAVA, true, pos.x, pos.y, pos.z, 0f, 0f, 0f);
 					}
 					if(age % 3 == 0)
-						playSound(SoundEvents.ITEM_FIRECHARGE_USE, 1.5f, 0.9f + random.nextFloat() * 0.2f);
+						playSound(SoundRegistry.DEER_SCORCH, 1.5f, 0.9f + random.nextFloat() * 0.2f);
 				}
 			}
 			case DEATH_SEQUENCE_ANIM -> {
@@ -600,7 +599,7 @@ public class DeerGodEntity extends BossEntity
 			}
 		}
 		if(dataTracker.get(RUN_ATTACK) == RUN_ATTACK_CLAW && dataTracker.get(ANIMATION) == IDLE_ANIM && age % 15 == 0)
-			playSound(SoundEvents.BLOCK_GRINDSTONE_USE,0.8f, 0.7f);
+			playSound(SoundRegistry.DEER_GRIND,0.8f, 0.7f);
 		
 		if(isInSequence() && dataTracker.get(SWARM_TRANSITION_TICKS) > 0)
 			dataTracker.set(SWARM_TRANSITION_TICKS, 0);
@@ -628,8 +627,8 @@ public class DeerGodEntity extends BossEntity
 			getWorld().addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.LANTERN.getDefaultState()),
 					pos.x, pos.y, pos.z, 0, 0, 0);
 		}
-		playSound(SoundEvents.BLOCK_VAULT_OPEN_SHUTTER, 0.8f, 0.6f);
-		playSound(SoundEvents.BLOCK_VAULT_BREAK, 5f, 0.5f);
+		playSound(SoundRegistry.DEER_LANTERN_BREAK, 0.8f, 0.6f);
+		playSound(SoundRegistry.DEER_LANTERN_IMPACT, 5f, 0.5f);
 	}
 	
 	void spawnVanishingParticles(int count, Vec3d origin)
@@ -652,14 +651,14 @@ public class DeerGodEntity extends BossEntity
 	{
 		super.playStepSound(pos, state);
 		if(hasLantern())
-			playSound(SoundEvents.BLOCK_CHAIN_BREAK, 0.1f, 0.6f);
+			playSound(SoundRegistry.DEER_STEP_LANTERN, 0.1f, 0.6f);
 	}
 	
 	@Override
 	protected void playHurtSound(DamageSource damageSource)
 	{
 		super.playHurtSound(damageSource);
-		playSound(SoundEvents.ENTITY_SKELETON_HURT, 0.5f, 0.6f);
+		playSound(SoundRegistry.DEER_HURT, 0.5f, 0.6f);
 	}
 	
 	/**
@@ -1749,7 +1748,7 @@ public class DeerGodEntity extends BossEntity
 				mob.setPosition(mob.getOriginBlock().toCenterPos());
 			mob.spawnCultist(new Vec2f(10, 15), false);
 			mob.setTarget(mob.getRandomTarget());
-			mob.playSound(SoundEvents.ENTITY_EVOKER_CAST_SPELL, 1f, 1f);
+			mob.playSound(SoundRegistry.DEER_SUMMON_CULTIST, 1f, 1f);
 			spawnCooldown = 80 * cultists - 10 * mob.getWorld().getDifficulty().getId();
 			mob.dataTracker.set(SCHEDULED_SPAWNS, mob.dataTracker.get(SCHEDULED_SPAWNS) - 1);
 		}
@@ -1938,7 +1937,7 @@ public class DeerGodEntity extends BossEntity
 			start = mob.getPos();
 			dir = null;
 			mob.setAnimation(PREPARE_RUN_ATTACK_ANIM);
-			mob.playSound(SoundEvents.ENTITY_POLAR_BEAR_WARNING, 10, 0.6f);
+			mob.playSound(SoundRegistry.DEER_ROAR, 10, 0.6f);
 			impactTicks = -1;
 			firstInChain = chain == 0;
 			if(firstInChain)
