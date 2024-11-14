@@ -152,7 +152,7 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		
 		builder.add("dialogue.deer.death1", "ENOUGH!");
 		builder.add("dialogue.deer.death2", "This Vessel is too fragile.");
-		builder.add("dialogue.deer.death3", "Good looking; but not fit for battle.");
+		builder.add("dialogue.deer.death3", "Good looking, but not fit for battle.");
 		builder.add("dialogue.deer.death4", "Once I find something more suitable,");
 		builder.add("dialogue.deer.death5", "I shall destroy you.");
 		
