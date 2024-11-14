@@ -92,7 +92,7 @@ public class Bootstrap
 		registry.register(DamageSources.CLAW, new DamageType("claw", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f,
 				ClassTinkerers.getEnum(DamageEffects.class, "FORMIDULUS_CLAW")));
 		registry.register(DamageSources.TRAMPLE, new DamageType("trample", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f));
-		registry.register(DamageSources.SOULSTEAL, new DamageType("soulsteal", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f));
+		registry.register(DamageSources.SOUL, new DamageType("soulsteal", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f));
 		registry.register(DamageSources.SCORCH, new DamageType("scorch", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1f, DamageEffects.BURNING));
 	}
 }

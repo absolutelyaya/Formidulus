@@ -85,7 +85,7 @@
   "item-ability.formidulus.soulsteal": "- SOUL STEAL -",
   "item-ability.formidulus.soulsteal.desc0": "Harm others to chip pieces off of their Soul.",
   "item-ability.formidulus.soulsteal.desc1": "Consuming them replenishes high amounts of Health.",
-  "item-ability.formidulus.soulsteal.desc2": "+2 §bsoulsteal§r damage; §6ignores Armor§r.",
+  "item-ability.formidulus.soulsteal.desc2": "+2 §bSoul§r Damage; §6ignores Armor§r.",
   "item-ability.formidulus.vampirism": "- VAMPIRISM -",
   "item-ability.formidulus.vampirism.desc0": "Harming others replenishes Health.",
   "item.accessory_mode.cap": "Cap",

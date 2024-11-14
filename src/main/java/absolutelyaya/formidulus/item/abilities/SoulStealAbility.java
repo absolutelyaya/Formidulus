@@ -30,11 +30,11 @@ public class SoulStealAbility extends VampirismAbility
 	@Override
 	public void onDamageEntity(ItemStack stack, LivingEntity attacker, DamageSource source, float damage, LivingEntity target)
 	{
-		if(source.isOf(DamageSources.SOULSTEAL))
+		if(source.isOf(DamageSources.SOUL))
 			return;
 		super.onDamageEntity(stack, attacker, source, damage, target);
 		target.timeUntilRegen = 0;
-		target.damage(DamageSources.get(attacker.getWorld(), DamageSources.SOULSTEAL, attacker), 2);
+		target.damage(DamageSources.get(attacker.getWorld(), DamageSources.SOUL, attacker), 2);
 	}
 	
 	@Override

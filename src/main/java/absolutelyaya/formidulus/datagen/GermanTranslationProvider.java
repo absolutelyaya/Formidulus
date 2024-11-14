@@ -65,7 +65,7 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey(), "- SEELEN BRECHER -");
 		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc0", "Schlage kleine Teile der Seele deines Feindes ab.");
 		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc1", "Der Konsum jener heilt den Nutzer erheblich.");
-		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc2", "+2 §bSeelen Brecher§r Schaden; §6ignoriert Rüstung§r.");
+		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc2", "+2 §bSeelen§r Schaden; §6ignoriert Rüstung§r.");
 		
 		builder.add(BlockRegistry.WEEN, "Ween");
 		builder.add(BlockRegistry.WEEN.getTranslationKey() + ".lore", "es ist ween");

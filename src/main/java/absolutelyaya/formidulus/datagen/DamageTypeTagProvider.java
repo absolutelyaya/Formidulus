@@ -21,5 +21,6 @@ public class DamageTypeTagProvider extends FabricTagProvider<DamageType>
 	protected void configure(RegistryWrapper.WrapperLookup wrapper)
 	{
 		getOrCreateTagBuilder(TagRegistry.BOSS_DAMAGE).add(DamageSources.CLAW, DamageSources.LANTERN);
+		getOrCreateTagBuilder(TagRegistry.SOUL_DAMAGE).add(DamageSources.SOUL);
 	}
 }

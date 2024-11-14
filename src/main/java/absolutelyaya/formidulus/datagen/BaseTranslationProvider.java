@@ -63,7 +63,7 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey(), "- SOUL STEAL -");
 		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc0", "Harm others to chip pieces off of their Soul.");
 		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc1", "Consuming them replenishes high amounts of Health.");
-		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc2", "+2 §bsoulsteal§r damage; §6ignores Armor§r.");
+		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc2", "+2 §bSoul§r Damage; §6ignores Armor§r.");
 		
 		builder.add(BlockRegistry.WEEN, "Ween");
 		builder.add(BlockRegistry.WEEN.getTranslationKey() + ".lore", "it's ween");
