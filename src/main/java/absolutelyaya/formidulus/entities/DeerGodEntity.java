@@ -1,7 +1,6 @@
 package absolutelyaya.formidulus.entities;
 
 import absolutelyaya.formidulus.Formidulus;
-import absolutelyaya.formidulus.block.BossSpawnerBlock;
 import absolutelyaya.formidulus.block.BossSpawnerBlockEntity;
 import absolutelyaya.formidulus.damage.DamageSources;
 import absolutelyaya.formidulus.datagen.Lang;
@@ -51,7 +50,6 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -534,7 +532,7 @@ public class DeerGodEntity extends BossEntity
 				}
 			}
 			case RUN_ATTACK_WALL_IMPACT_ANIM -> {
-				if(!getAnimationFlag(0))
+				if(!getAnimationFlag(0) && hasLantern())
 				{
 					setAnimationFlag(0, true);
 					breakLanternEffect(new Vec3d(1, 0, 0).rotateY((float)Math.toRadians(-getYaw())), true);
@@ -2002,15 +2000,6 @@ public class DeerGodEntity extends BossEntity
 				}
 				return;
 			}
-			if(arrived)
-			{
-				for (int i = 0; i < animSpeed; i++)
-				{
-					super.tick();
-					tickAttackAnim();
-				}
-				return;
-			}
 			
 			//slowly rotate towards target
 			Vec3d diff = mob.getTarget().getPos().subtract(mob.getPos());
@@ -2032,6 +2021,15 @@ public class DeerGodEntity extends BossEntity
 				impactTicks = 40;
 				mob.setAnimation(RUN_ATTACK_WALL_IMPACT_ANIM);
 				mob.getMoveControl().moveTo(mob.getX(), mob.getY(), mob.getZ(), 0f);
+				return;
+			}
+			if(arrived)
+			{
+				for (int i = 0; i < animSpeed; i++)
+				{
+					super.tick();
+					tickAttackAnim();
+				}
 				return;
 			}
 			if(mob.distanceTo(target) < 4f || mob.getPos().distanceTo(start) > 16f)
