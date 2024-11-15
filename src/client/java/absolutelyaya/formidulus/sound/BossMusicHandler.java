@@ -184,6 +184,12 @@ public class BossMusicHandler
 			startedOutro = false;
 		}
 	}
+	public void cancelAll()
+	{
+		stopCurrentTrackNoOutro();
+		next = null;
+		outroDelayTicks = 0;
+	}
 	
 	public void stopAll()
 	{

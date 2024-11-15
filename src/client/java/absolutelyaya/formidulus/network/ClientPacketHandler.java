@@ -80,6 +80,7 @@ public class ClientPacketHandler
 			switch (key)
 			{
 				case "cancel" -> FormidulusClient.bossMusicHandler.stopCurrentTrackNoOutro();
+				case "cancelAll" -> FormidulusClient.bossMusicHandler.cancelAll();
 				case "stopImmediately" -> FormidulusClient.bossMusicHandler.stopCurrentTrackNoFade();
 				case "end" -> FormidulusClient.bossMusicHandler.stopCurrentTrack();
 				default -> FormidulusClient.bossMusicHandler.startTrack(payload.bossId(), key, payload.late());

@@ -1,5 +1,7 @@
 package absolutelyaya.formidulus.entities.boss;
 
+import absolutelyaya.formidulus.network.BossMusicUpdatePayload;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,6 +50,7 @@ public class BossFightManager
 	public void onPlayerDeath(ServerPlayerEntity player)
 	{
 		activeFights.values().forEach(f -> f.onPlayerDeath(player));
+		ServerPlayNetworking.send(player, new BossMusicUpdatePayload(null, "cancelAll"));
 	}
 	
 	public boolean isActive(BossFight bossFight)

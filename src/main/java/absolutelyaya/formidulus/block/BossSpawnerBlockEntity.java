@@ -21,6 +21,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,7 +68,7 @@ public class BossSpawnerBlockEntity extends BlockEntity
 		if(fightCheckTimer-- > 0)
 			return;
 		boolean active = BossFightManager.INSTANCE.isActive(bossFightId);
-		if(!wasBossfightActive && active)
+		if(wasBossfightActive && !active)
 			onFightEnded();
 		if(world instanceof ServerWorld serverWorld && !wasBossfightActive)
 		{
@@ -81,6 +82,14 @@ public class BossSpawnerBlockEntity extends BlockEntity
 			bossEntities.removeIf(i -> {
 				Entity entity = serverWorld.getEntity(i);
 				return entity == null || !entity.isAlive() || entity.isRemoved();
+			});
+			
+			List<? extends BossEntity> list = serverWorld.getEntitiesByType(bossType.bossEntities().getFirst(), new Box(pos),
+					i -> !i.isActive() && !bossEntities.contains(i.getUuid()));
+			list.forEach(i -> {
+				i.discard();
+				lastFightEnded = 0;
+				Formidulus.LOGGER.warn("discarded duplicate boss at {}", pos);
 			});
 		}
 		fightCheckTimer = Formidulus.config.fightCheckInterval.getValue();
@@ -116,6 +125,12 @@ public class BossSpawnerBlockEntity extends BlockEntity
 			if(entity != null)
 				bossEntities.add(entity.getUuid());
 		}
+	}
+	
+	public void addBossEntity(BossEntity entity)
+	{
+		if(bossType.bossEntities().contains(entity.getType()))
+			bossEntities.add(entity.getUuid());
 	}
 	
 	boolean isSpawnAreaValid()

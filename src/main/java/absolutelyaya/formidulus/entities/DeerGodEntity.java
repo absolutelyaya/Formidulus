@@ -1,6 +1,8 @@
 package absolutelyaya.formidulus.entities;
 
 import absolutelyaya.formidulus.Formidulus;
+import absolutelyaya.formidulus.block.BossSpawnerBlock;
+import absolutelyaya.formidulus.block.BossSpawnerBlockEntity;
 import absolutelyaya.formidulus.damage.DamageSources;
 import absolutelyaya.formidulus.datagen.Lang;
 import absolutelyaya.formidulus.entities.boss.BossFightManager;
@@ -49,6 +51,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import org.apache.logging.log4j.core.jmx.Server;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
@@ -1060,6 +1063,8 @@ public class DeerGodEntity extends BossEntity
 		int count = getMaxCultists() - getAllNearbyCultists().size();
 		for (int i = 0; i < count; i++)
 			spawnCultist(range, true);
+		if(getWorld() instanceof ServerWorld serverWorld && serverWorld.getBlockEntity(getBlockPos()) instanceof BossSpawnerBlockEntity bossSpawner)
+			bossSpawner.addBossEntity(this);
 	}
 	
 	@Override

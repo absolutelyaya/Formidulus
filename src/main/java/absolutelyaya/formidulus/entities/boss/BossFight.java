@@ -23,7 +23,7 @@ public abstract class BossFight
 	protected final BossType type;
 	protected final BlockPos origin;
 	protected final UUID fightID;
-	protected final List<BossEntity> bossEntities = new ArrayList<>();
+	protected final List<BossEntity> activeBossEntities = new ArrayList<>();
 	
 	protected int phase;
 	protected List<ServerPlayerEntity> participants = new ArrayList<>();
@@ -31,7 +31,7 @@ public abstract class BossFight
 	protected int playerCheckIntervall = 20;
 	protected int playerCheckRange = 40;
 	
-	int playerCheckTimer, warmUp = 100;
+	int playerCheckTimer, warmUp = 20;
 	String lastMusicKey;
 	boolean playerWin, ended;
 	
@@ -43,7 +43,7 @@ public abstract class BossFight
 		
 		if(id == null) //if continuation, all players should be counted as late so music intros don't repeat
 			participants = world.getEntitiesByType(TypeFilter.instanceOf(ServerPlayerEntity.class), new Box(origin).expand(playerCheckRange),
-					i -> !i.isSpectator() && i.isPartOfGame());
+					this::isValidParticipant);
 		this.fightID = id == null ? UUID.randomUUID() : id;
 		
 		if(world.getBlockEntity(origin) instanceof BossSpawnerBlockEntity spawner)
@@ -54,7 +54,7 @@ public abstract class BossFight
 	
 	public void registerBossEntity(BossEntity boss)
 	{
-		bossEntities.add(boss);
+		activeBossEntities.add(boss);
 	}
 	
 	public void tick()
@@ -63,7 +63,7 @@ public abstract class BossFight
 			return;
 		if(playerCheckTimer-- <= 0)
 			performParticipantCheck();
-		bossEntities.removeIf(BossEntity::isDead);
+		activeBossEntities.removeIf(i -> i.isRemoved() || i.isDead() || !i.isActive());
 		String music = getCurMusicKey();
 		if(music != null && !music.equals(lastMusicKey))
 		{
@@ -79,7 +79,7 @@ public abstract class BossFight
 	void performParticipantCheck()
 	{
 		List<ServerPlayerEntity> validParticipants = world.getEntitiesByType(TypeFilter.instanceOf(ServerPlayerEntity.class), new Box(origin).expand(playerCheckRange),
-				i -> true);
+				this::isValidParticipant);
 		List<ServerPlayerEntity> remove = new ArrayList<>();
 		participants.forEach(p -> {
 			if(!validParticipants.contains(p))
@@ -100,7 +100,7 @@ public abstract class BossFight
 		});
 		remove.forEach(this::leaveFight);
 		validParticipants.forEach(p -> {
-			if(!participants.contains(p))
+			if(!participants.contains(p) && !activeBossEntities.isEmpty())
 				joinFight(p);
 		});
 		playerCheckTimer = playerCheckIntervall;
@@ -108,7 +108,7 @@ public abstract class BossFight
 	
 	protected boolean shouldEnd()
 	{
-		return bossEntities.isEmpty() || !hasAnyValidParticipants();
+		return activeBossEntities.isEmpty() || !hasAnyValidParticipants();
 	}
 	
 	public void setPhase(int phase)
@@ -171,7 +171,7 @@ public abstract class BossFight
 	
 	public boolean isValidParticipant(ServerPlayerEntity player)
 	{
-		return player.isPartOfGame() && !player.isCreative();
+		return player != null && player.isPartOfGame() && !player.isCreative();
 	}
 	
 	public boolean hasAnyValidParticipants()
@@ -202,7 +202,7 @@ public abstract class BossFight
 	public void interrupt(boolean removeRemainingBossEntities)
 	{
 		if(removeRemainingBossEntities)
-			bossEntities.forEach(BossEntity::forceReset);
+			activeBossEntities.forEach(BossEntity::forceReset);
 		onFightEnded();
 	}
 	
@@ -228,8 +228,9 @@ public abstract class BossFight
 		}
 		else
 		{
-			bossEntities.forEach(BossEntity::forceReset);
-			onMusicChange("cancel");
+			activeBossEntities.forEach(BossEntity::forceReset);
+			while(!participants.isEmpty())
+				leaveFight(participants.getFirst());
 		}
 		ended = true;
 	}
