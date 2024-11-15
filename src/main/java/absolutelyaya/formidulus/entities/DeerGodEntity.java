@@ -34,6 +34,8 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.SpawnEggItem;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.particle.BlockStateParticleEffect;
@@ -208,6 +210,14 @@ public class DeerGodEntity extends BossEntity
 	@Override
 	public boolean canHit()
 	{
+		List<PlayerEntity> closePlayers =
+				getWorld().getEntitiesByType(TypeFilter.instanceOf(PlayerEntity.class), getBoundingBox().expand(1f), PlayerEntity::isCreative);
+		if(!closePlayers.isEmpty())
+		{
+			ItemStack stack = closePlayers.getFirst().getMainHandStack();
+			if(stack.getItem() instanceof SpawnEggItem egg && getType().equals(egg.getEntityType(stack)))
+				return true;
+		}
 		return getVanishingPercent() < 0.5f && dataTracker.get(SUMMONED);
 	}
 	
