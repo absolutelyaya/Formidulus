@@ -186,6 +186,7 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(subtitle(SoundRegistry.DEER_LANTERN_CRUSH), "Lantern gets crushed");
 		builder.add(subtitle(SoundRegistry.DEER_SCORCH), "Scorching Flames");
 		builder.add(subtitle(SoundRegistry.DEER_SUMMON_CULTIST), "Cultist is summoned");
+		builder.add(subtitle(SoundRegistry.DEER_VANISH), "Deer Vanishes");
 		builder.add(subtitle(SoundRegistry.DEER_PREPARE_TELEPORT), "Deer prepares teleport");
 		builder.add(subtitle(SoundRegistry.DEER_PERFORM_TELEPORT), "Deer teleports");
 		builder.add(subtitle(SoundRegistry.DEER_SUMMON_BLOOD), "Blood is summoned");

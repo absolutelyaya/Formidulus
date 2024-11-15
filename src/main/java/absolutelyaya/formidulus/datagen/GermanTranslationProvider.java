@@ -188,6 +188,7 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(subtitle(SoundRegistry.DEER_LANTERN_CRUSH), "Laterne wird Zersört");
 		builder.add(subtitle(SoundRegistry.DEER_SCORCH), "Sengende Flammen");
 		builder.add(subtitle(SoundRegistry.DEER_SUMMON_CULTIST), "Kultist wird beschworen");
+		builder.add(subtitle(SoundRegistry.DEER_VANISH), "Hirsch verschwindet");
 		builder.add(subtitle(SoundRegistry.DEER_PREPARE_TELEPORT), "Hirsch bereitet Teleportation vor");
 		builder.add(subtitle(SoundRegistry.DEER_PERFORM_TELEPORT), "Hirsch teleportiert sich");
 		builder.add(subtitle(SoundRegistry.DEER_SUMMON_BLOOD), "Blut wird beschworen");

@@ -20,12 +20,15 @@ public class SoundRegistry
 	public static final SoundEvent DEER_LANTERN_CRUSH = register(Formidulus.identifier("entity.deer.lantern.crush"));
 	public static final SoundEvent DEER_SCORCH = register(Formidulus.identifier("entity.deer.scorch"));
 	public static final SoundEvent DEER_SUMMON_CULTIST = register(Formidulus.identifier("entity.deer.summon.cultist"));
+	public static final SoundEvent DEER_VANISH = register(Formidulus.identifier("entity.deer.vanish"));
 	public static final SoundEvent DEER_PREPARE_TELEPORT = register(Formidulus.identifier("entity.deer.teleport.prepare"));
 	public static final SoundEvent DEER_PERFORM_TELEPORT = register(Formidulus.identifier("entity.deer.teleport.perform"));
 	public static final SoundEvent DEER_SUMMON_BLOOD = register(Formidulus.identifier("entity.deer.summon.blood"));
 	public static final SoundEvent DEER_BUBBLING = register(Formidulus.identifier("entity.deer.bubbling"));
 	public static final SoundEvent DEER_SHAPE_FLESH = register(Formidulus.identifier("entity.deer.shape_flesh"));
 	public static final SoundEvent DEER_ROAR = register(Formidulus.identifier("entity.deer.roar"));
+	public static final SoundEvent DEER_DRAW_CLAWS = register(Formidulus.identifier("entity.deer.draw_claws"));
+	public static final SoundEvent DEER_ROAR_SHORT = register(Formidulus.identifier("entity.deer.roar_short"));
 	public static final SoundEvent DEER_GRIND = register(Formidulus.identifier("entity.deer.grind"));
 	public static final SoundEvent DEER_KNIFE = register(Formidulus.identifier("entity.deer.knife"));
 	public static final SoundEvent CULTIST_IDLE_FLIP_PAGE = register(Formidulus.identifier("entity.cultist.idle.flip_page"));

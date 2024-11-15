@@ -114,6 +114,12 @@
     ],
     "subtitle": "subtitles.formidulus.entity.deer.summon.cultist"
   },
+  "entity.deer.vanish": {
+    "sounds": [
+      "formidulus:deer/vanish"
+    ],
+    "subtitle": "subtitles.formidulus.entity.deer.vanish"
+  },
   "entity.deer.teleport.prepare": {
     "sounds": [
       {
@@ -163,10 +169,19 @@
   },
   "entity.deer.roar": {
     "sounds": [
-      {
-        "name": "entity.polar_bear.warning",
-        "type": "event"
-      }
+      "formidulus:deer/scream"
+    ],
+    "subtitle": "subtitles.formidulus.entity.deer.roar"
+  },
+  "entity.deer.draw_claws": {
+    "sounds": [
+      "formidulus:deer/draw_claws"
+    ],
+    "subtitle": "subtitles.formidulus.entity.deer.roar"
+  },
+  "entity.deer.roar_short": {
+    "sounds": [
+      "formidulus:deer/scream_short"
     ],
     "subtitle": "subtitles.formidulus.entity.deer.roar"
   },

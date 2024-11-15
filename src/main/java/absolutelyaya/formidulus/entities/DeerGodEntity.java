@@ -492,10 +492,15 @@ public class DeerGodEntity extends BossEntity
 					setAnimationFlag(4, true);
 					playSound(SoundRegistry.DEER_SHAPE_FLESH, 5f, 0.6f);
 				}
+				if(!getAnimationFlag(6) && duration >= 16f)
+				{
+					setAnimationFlag(6, true);
+					playSound(SoundRegistry.DEER_DRAW_CLAWS, 15f, 1f);
+				}
 				if(!getAnimationFlag(5) && duration >= 16.25f)
 				{
 					setAnimationFlag(5, true);
-					playSound(SoundRegistry.DEER_ROAR, 15f, 0.5f);
+					playSound(SoundRegistry.DEER_ROAR, 15f, 1f);
 					if(bossFight != null && !getWorld().isClient)
 						bossFight.getAllParticipants()
 								.forEach(i -> i.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, 0, 2, false, false)));
@@ -1728,6 +1733,7 @@ public class DeerGodEntity extends BossEntity
 			mob.dataTracker.set(SCHEDULED_SPAWNS, 4 + mob.getWorld().getDifficulty().getId() * mob.swarmAttack);
 			mob.navigation.stop();
 			mob.moveControl.moveTo(mob.getX(), mob.getY(), mob.getZ(), 0f);
+			mob.playSound(SoundRegistry.DEER_VANISH, 1f, 1f);
 		}
 		
 		@Override
@@ -1950,7 +1956,7 @@ public class DeerGodEntity extends BossEntity
 			start = mob.getPos();
 			dir = null;
 			mob.setAnimation(PREPARE_RUN_ATTACK_ANIM);
-			mob.playSound(SoundRegistry.DEER_ROAR, 10, 0.6f);
+			mob.playSound(SoundRegistry.DEER_ROAR_SHORT, 10, 1f);
 			impactTicks = -1;
 			firstInChain = chain == 0;
 			if(firstInChain)
@@ -2023,6 +2029,15 @@ public class DeerGodEntity extends BossEntity
 							hit.setVelocity(mob.getRotationVector().multiply(1f, 0f, 1f).normalize().multiply(2.5f).add(0f, 0.2f, 0f));
 					});
 			
+			if(arrived)
+			{
+				for (int i = 0; i < animSpeed; i++)
+				{
+					super.tick();
+					tickAttackAnim();
+				}
+				return;
+			}
 			Vec3d dest = mob.getPos().add(dir);
 			mob.getMoveControl().moveTo(dest.x, dest.y, dest.z, speed + mob.getWorld().getDifficulty().getId() * 0.05f);
 			if(mob.getWorld().raycast(new RaycastContext(mob.getPos().add(0f, 1.5f, 0f), dest.add(0f, 1.5f, 0f),
@@ -2031,15 +2046,6 @@ public class DeerGodEntity extends BossEntity
 				impactTicks = 40;
 				mob.setAnimation(RUN_ATTACK_WALL_IMPACT_ANIM);
 				mob.getMoveControl().moveTo(mob.getX(), mob.getY(), mob.getZ(), 0f);
-				return;
-			}
-			if(arrived)
-			{
-				for (int i = 0; i < animSpeed; i++)
-				{
-					super.tick();
-					tickAttackAnim();
-				}
 				return;
 			}
 			if(mob.distanceTo(target) < 4f || mob.getPos().distanceTo(start) > 16f)
