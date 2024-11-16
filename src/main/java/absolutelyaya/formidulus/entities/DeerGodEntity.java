@@ -1147,6 +1147,7 @@ public class DeerGodEntity extends BossEntity
 		{
 			getWorld().sendEntityStatus(cultist, EntityStatuses.PLAY_SPAWN_EFFECTS);
 			cultist.initialize(serverWorld, getWorld().getLocalDifficulty(getBlockPos()), SpawnReason.SPAWNER, null);
+			cultist.playSound(SoundRegistry.DEER_SUMMON_CULTIST, 1f, 1f);
 		}
 	}
 	
@@ -1767,7 +1768,6 @@ public class DeerGodEntity extends BossEntity
 				mob.setPosition(mob.getOriginBlock().toCenterPos());
 			mob.spawnCultist(new Vec2f(10, 15), false);
 			mob.setTarget(mob.getRandomTarget());
-			mob.playSound(SoundRegistry.DEER_SUMMON_CULTIST, 1f, 1f);
 			spawnCooldown = 80 * cultists - 10 * mob.getWorld().getDifficulty().getId();
 			mob.dataTracker.set(SCHEDULED_SPAWNS, mob.dataTracker.get(SCHEDULED_SPAWNS) - 1);
 		}
@@ -2011,7 +2011,8 @@ public class DeerGodEntity extends BossEntity
 					if(dir == null)
 						dir = dirNow;
 					else
-						dir = dir.lerp(dirNow.add(target.getVelocity().multiply(5f)), mob.getWorld().getDifficulty().getId() / 3f * animSpeed).normalize();
+						dir = dir.lerp(dirNow.add(target.getVelocity().multiply(5f)), mob.getWorld().getDifficulty().getId() / 3f * animSpeed)
+									  .multiply(1,0,1).normalize();
 					mob.lookAt(EntityAnchorArgumentType.EntityAnchor.FEET, mob.getPos().add(dir));
 				}
 				return;
@@ -2048,7 +2049,9 @@ public class DeerGodEntity extends BossEntity
 				mob.getMoveControl().moveTo(mob.getX(), mob.getY(), mob.getZ(), 0f);
 				return;
 			}
-			if(mob.distanceTo(target) < 4f || mob.getPos().distanceTo(start) > 16f)
+			boolean targetBehindBlock = mob.getWorld().raycast(new RaycastContext(mob.getPos().add(0f, 1.5f, 0f), target.getPos().add(0f, 1.5f, 0f),
+					RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, mob)).getType().equals(HitResult.Type.BLOCK);
+			if((mob.distanceTo(target) < 4f && !targetBehindBlock)|| mob.getPos().distanceTo(start) > 16f)
 			{
 				arrived = true;
 				mob.setAnimation(attackAnimationId);
