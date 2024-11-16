@@ -200,6 +200,15 @@
     ],
     "subtitle": "subtitles.formidulus.entity.deer.knife"
   },
+  "entity.deer.impact": {
+    "sounds": [
+      {
+        "name": "entity.iron_golem.damage",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.entity.deer.impact"
+  },
 
   "entity.cultist.idle.flip_page": {
     "sounds": [

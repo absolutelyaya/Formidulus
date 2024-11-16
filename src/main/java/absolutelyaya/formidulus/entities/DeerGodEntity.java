@@ -547,10 +547,12 @@ public class DeerGodEntity extends BossEntity
 				}
 			}
 			case RUN_ATTACK_WALL_IMPACT_ANIM -> {
-				if(!getAnimationFlag(0) && hasLantern())
+				if(!getAnimationFlag(0))
 				{
 					setAnimationFlag(0, true);
-					breakLanternEffect(new Vec3d(1, 0, 0).rotateY((float)Math.toRadians(-getYaw())), true);
+					if(hasLantern())
+						breakLanternEffect(new Vec3d(1, 0, 0).rotateY((float)Math.toRadians(-getYaw())), true);
+					playSound(SoundRegistry.DEER_WALL_IMPACT, 1f, 0.8f);
 				}
 				setHasLantern(false);
 			}

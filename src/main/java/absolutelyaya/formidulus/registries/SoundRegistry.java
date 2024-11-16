@@ -31,6 +31,7 @@ public class SoundRegistry
 	public static final SoundEvent DEER_ROAR_SHORT = register(Formidulus.identifier("entity.deer.roar_short"));
 	public static final SoundEvent DEER_GRIND = register(Formidulus.identifier("entity.deer.grind"));
 	public static final SoundEvent DEER_KNIFE = register(Formidulus.identifier("entity.deer.knife"));
+	public static final SoundEvent DEER_WALL_IMPACT = register(Formidulus.identifier("entity.deer.impact"));
 	public static final SoundEvent CULTIST_IDLE_FLIP_PAGE = register(Formidulus.identifier("entity.cultist.idle.flip_page"));
 	public static final SoundEvent CULTIST_IDLE_HUM = register(Formidulus.identifier("entity.cultist.idle.hum"));
 	public static final SoundEvent CULTIST_MASK_BREAK = register(Formidulus.identifier("entity.cultist.mask.break"));

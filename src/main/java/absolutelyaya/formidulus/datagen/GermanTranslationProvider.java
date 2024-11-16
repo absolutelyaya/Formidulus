@@ -197,6 +197,7 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(subtitle(SoundRegistry.DEER_ROAR), "Hirsch schreit");
 		builder.add(subtitle(SoundRegistry.DEER_GRIND), "Hirsch schleift Krallen über den Boden");
 		builder.add(subtitle(SoundRegistry.DEER_KNIFE), "Hirsch schneidet aufwärts");
+		builder.add(subtitle(SoundRegistry.DEER_WALL_IMPACT), "Hirsch rennt in eine Wand");
 		builder.add(subtitle(SoundRegistry.CULTIST_IDLE_FLIP_PAGE), "Kultist liest");
 		builder.add(subtitle(SoundRegistry.CULTIST_IDLE_HUM), "Kultist summt");
 		builder.add(subtitle(SoundRegistry.CULTIST_MASK_BREAK), "Kultist Maske zerbricht");
