@@ -28,4 +28,9 @@ public interface Lang
 	
 	String MUSIC_DEER_PHASE1 = BaseTranslationProvider.modKey("jukebox_song", "deer.phase1");
 	String MUSIC_DEER_PHASE2 = BaseTranslationProvider.modKey("jukebox_song", "deer.phase2");
+	
+	String EVENT_INFO_PAST = BaseTranslationProvider.modKey("event", "info.past");
+	String EVENT_INFO_PRESENT = BaseTranslationProvider.modKey("event", "info.present");
+	String EVENT_INFO_FUTURE = BaseTranslationProvider.modKey("event", "info.future");
+	String EVENT_INFO_ACTIVE_SUFFIX = BaseTranslationProvider.modKey("event", "info.active_suffix");
 }

@@ -3,6 +3,7 @@ package absolutelyaya.formidulus.datagen;
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.item.DeerSkullItem;
 import absolutelyaya.formidulus.item.abilities.ItemAbilities;
+import absolutelyaya.formidulus.realtime.TimedEvent;
 import absolutelyaya.formidulus.registries.*;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
@@ -155,6 +156,13 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add("dialogue.deer.death5", "I shall destroy you.");
 		
 		builder.add("dialogue.deer.what", "Have you no Maidens ?");
+		
+		builder.add(EVENT_INFO_PAST, "%1$s was %2$s days ago.");
+		builder.add(EVENT_INFO_PRESENT, "%s is today!");
+		builder.add(EVENT_INFO_FUTURE, "%1$s is in %2$s days.");
+		builder.add(EVENT_INFO_ACTIVE_SUFFIX, " (active)");
+		builder.add(TimedEvent.WEEN.getTitleKey(), "Ween");
+		builder.add(TimedEvent.WEEN.getDescriptionKey(), "A time where ghastly ghosts and ghouls are worshipped; the entire Month it takes place in is also known as 'Spooky Month' in some circles.");
 		
 		
 		String cultistMendingChance = Formidulus.config.cultistMendingChance.getTranslationKey(Formidulus.MOD_ID);

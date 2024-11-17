@@ -71,7 +71,7 @@ public class Bootstrap
 		registry.register(FormidableStructures.DEER_CULT_PROCESSORS,
 				new StructureProcessorList(
 						List.of(new GrowCropsProcessor(1f, Blocks.WHEAT.getDefaultState(), true),
-								new SeasonalPumpkinProcessor(30, 16),
+								new SeasonalPumpkinProcessor(),
 								new DehydrationProcessor(),
 								new DeLeaferProcessor(false))));
 	}

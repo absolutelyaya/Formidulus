@@ -1,6 +1,8 @@
 package absolutelyaya.formidulus.structure.processor;
 
 import absolutelyaya.formidulus.Formidulus;
+import absolutelyaya.formidulus.realtime.TimedEvent;
+import absolutelyaya.formidulus.realtime.TimedEventHandler;
 import absolutelyaya.formidulus.structure.FormidableStructureProcessors;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -20,22 +22,9 @@ import org.jetbrains.annotations.Nullable;
 public class SeasonalPumpkinProcessor extends StructureProcessor
 {
 	public static final MapCodec<SeasonalPumpkinProcessor> CODEC =
-			RecordCodecBuilder.mapCodec(instance -> instance.group(Codec.INT.fieldOf("preMargin").orElse(30).forGetter(i -> i.preMargin),
-					Codec.INT.fieldOf("postMargin").orElse(16).forGetter(i -> i.postMargin)
-			).apply(instance, SeasonalPumpkinProcessor::new));
-	
-	public final int preMargin, postMargin;
-	public final boolean keepAllPumpkins;
+			RecordCodecBuilder.mapCodec(instance -> instance.point(new SeasonalPumpkinProcessor()));
 	
 	//remove pumpkins from a structure if it's currently over a certain margin of days away from halloween
-	public SeasonalPumpkinProcessor(int preMargin, int postMargin)
-	{
-		this.preMargin = preMargin;
-		this.postMargin = postMargin;
-		int daysUntilHalloween = Formidulus.getDaysUntilHalloween();
-		keepAllPumpkins = daysUntilHalloween < preMargin && -daysUntilHalloween < postMargin;
-	}
-	
 	@Override
 	protected StructureProcessorType<?> getType()
 	{
@@ -47,7 +36,7 @@ public class SeasonalPumpkinProcessor extends StructureProcessor
 	public StructureTemplate.StructureBlockInfo process(WorldView world, BlockPos pos, BlockPos pivot, StructureTemplate.StructureBlockInfo originalBlockInfo, StructureTemplate.StructureBlockInfo cur, StructurePlacementData data)
 	{
 		BlockState state = cur.state();
-		if(!keepAllPumpkins)
+		if(!TimedEventHandler.isActive(TimedEvent.WEEN))
 		{
 			if (state.isOf(Blocks.PUMPKIN))
 				return new StructureTemplate.StructureBlockInfo(cur.pos(), Blocks.CAVE_AIR.getDefaultState(), cur.nbt());

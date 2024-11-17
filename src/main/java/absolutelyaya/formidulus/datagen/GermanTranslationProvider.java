@@ -3,6 +3,7 @@ package absolutelyaya.formidulus.datagen;
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.item.DeerSkullItem;
 import absolutelyaya.formidulus.item.abilities.ItemAbilities;
+import absolutelyaya.formidulus.realtime.TimedEvent;
 import absolutelyaya.formidulus.registries.*;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
@@ -157,6 +158,13 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add("dialogue.deer.death5", "werde ich dich vernichten.");
 		
 		builder.add("dialogue.deer.what", "Have you no Maidens ?"); //not gonna translate this meme
+		
+		builder.add(EVENT_INFO_PAST, "%1$s war vor %2$s Tagen.");
+		builder.add(EVENT_INFO_PRESENT, "Heute ist %s!");
+		builder.add(EVENT_INFO_FUTURE, "%1$s ist in %2$s Tagen.");
+		builder.add(EVENT_INFO_ACTIVE_SUFFIX, " (aktiv)");
+		builder.add(TimedEvent.WEEN.getTitleKey(), "Ween");
+		builder.add(TimedEvent.WEEN.getDescriptionKey(), "Ein Fest an dem schaurige Geister und Ghule gefeiert werden; der ganze Monat in dem es stattfindet, ist in manchen Kreisen als 'Spooky Month' bekannt.");
 		
 		
 		String cultistMendingChance = Formidulus.config.cultistMendingChance.getTranslationKey(Formidulus.MOD_ID);

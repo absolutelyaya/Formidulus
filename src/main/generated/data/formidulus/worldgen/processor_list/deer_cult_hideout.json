@@ -12,8 +12,6 @@
       "randomlyAge": true
     },
     {
-      "postMargin": 16,
-      "preMargin": 30,
       "processor_type": "formidulus:seasonal_pumpkins"
     },
     {

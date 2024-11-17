@@ -68,7 +68,7 @@ public class DeerCultHideoutStructure extends Structure
 			super(StructureRegistry.DEER_CULT_HIDEOUT_PIECE, nbt, context.structureTemplateManager(),
 					identifier -> new StructurePlacementData()
 										  .addProcessor(new GrowCropsProcessor(1f, Blocks.WHEAT.getDefaultState(), true))
-										  .addProcessor(new SeasonalPumpkinProcessor(30, 16))
+										  .addProcessor(new SeasonalPumpkinProcessor())
 										  .addProcessor(new DehydrationProcessor())
 										  .addProcessor(new DeLeaferProcessor(false)));
 		}

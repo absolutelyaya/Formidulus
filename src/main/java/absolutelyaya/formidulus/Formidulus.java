@@ -1,14 +1,17 @@
 package absolutelyaya.formidulus;
 
 import absolutelyaya.formidulus.advancement.CriteriaRegistry;
+import absolutelyaya.formidulus.commands.Commands;
 import absolutelyaya.formidulus.config.ServerConfig;
 import absolutelyaya.formidulus.datagen.Lang;
 import absolutelyaya.formidulus.entities.boss.BossFightManager;
 import absolutelyaya.formidulus.entities.boss.BossType;
+import absolutelyaya.formidulus.realtime.TimedEventHandler;
 import absolutelyaya.formidulus.registries.*;
 import absolutelyaya.formidulus.structure.FormidableStructureProcessors;
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.loader.api.FabricLoader;
@@ -24,7 +27,6 @@ import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
 import java.util.Calendar;
 
 public class Formidulus implements ModInitializer
@@ -34,7 +36,8 @@ public class Formidulus implements ModInitializer
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static ServerConfig config;
 	public static boolean ENCHANCEMENT;
-	static int cachedDaysUntilSpookyMonthCelebration = Integer.MIN_VALUE;
+	final int dateCheckInterval = 72000;
+	int lastDayOfYear, dateCheckTimer;
 
 	@Override
 	public void onInitialize()
@@ -51,11 +54,28 @@ public class Formidulus implements ModInitializer
 		StructureRegistry.register();
 		FormidableMapDecorations.register();
 		FormidableStructureProcessors.register();
+		Commands.register();
 		
 		BossType.init();
+		TimedEventHandler.update();
+		lastDayOfYear = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+		
+		ServerLifecycleEvents.SERVER_STARTING.register((server -> {
+			dateCheckTimer = dateCheckInterval - Calendar.getInstance().get(Calendar.MINUTE) * 60 * 20;
+		}));
 		
 		ServerTickEvents.END_SERVER_TICK.register((server) -> {
 			BossFightManager.INSTANCE.tick();
+			if(dateCheckTimer-- <= 0)
+			{
+				int day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+				if(lastDayOfYear != day)
+				{
+					TimedEventHandler.update();
+					lastDayOfYear = day;
+				}
+				dateCheckTimer = dateCheckInterval;
+			}
 		});
 		
 		config = new ServerConfig();
@@ -82,28 +102,5 @@ public class Formidulus implements ModInitializer
 	public static Identifier identifier(String path)
 	{
 		return Identifier.of(MOD_ID, path);
-	}
-	
-	public static int getDaysUntilHalloween()
-	{
-		if(cachedDaysUntilSpookyMonthCelebration != Integer.MIN_VALUE)
-			return cachedDaysUntilSpookyMonthCelebration;
-		LocalDateTime dateTime = LocalDateTime.now();
-		int currentDay = dateTime.getDayOfYear();
-		
-		Calendar calender = Calendar.getInstance();
-		calender.set(Calendar.MONTH, Calendar.OCTOBER);
-		calender.set(Calendar.DAY_OF_MONTH, 31);
-		int celebration = calender.get(Calendar.DAY_OF_YEAR);
-		
-		int delta = celebration - currentDay;
-		if(delta == 0)
-			LOGGER.info("It's Ween!");
-		else if(delta < 0)
-			LOGGER.info("Ween was {} days ago", -delta);
-		else
-			LOGGER.info("Ween is in {} days", delta);
-		
-		return cachedDaysUntilSpookyMonthCelebration = delta;
 	}
 }
