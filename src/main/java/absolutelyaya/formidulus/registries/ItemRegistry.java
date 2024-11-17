@@ -5,10 +5,7 @@ import absolutelyaya.formidulus.damage.DamageSources;
 import absolutelyaya.formidulus.item.DeerSkullItem;
 import absolutelyaya.formidulus.item.SacrificialDaggerItem;
 import absolutelyaya.formidulus.item.abilities.ItemAbilities;
-import absolutelyaya.formidulus.item.components.AbilityComponent;
-import absolutelyaya.formidulus.item.components.AccessoryComponent;
-import absolutelyaya.formidulus.item.components.DamageTypeComponent;
-import absolutelyaya.formidulus.item.components.ExpandableLoreComponent;
+import absolutelyaya.formidulus.item.components.*;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
@@ -51,6 +48,15 @@ public class ItemRegistry
 							.component(DataComponentRegistry.EXPANDABLE_LORE, ExpandableLoreComponent.makeGeneric(id, 2))));
 	public static final BannerPatternItem EYES_BANNER_PATTERN = register(Formidulus.identifier("eyes_pattern"),
 			id -> new BannerPatternItem(FormidableBannerPatterns.EYES_TAG, new Item.Settings().rarity(Rarity.RARE).maxCount(1)));
+	
+	public static final Item DEER_NECKLACE = register(Formidulus.identifier("deer_necklace"),
+			id -> {
+				Item.Settings settings = new Item.Settings().maxCount(1)
+												 .component(DataComponentRegistry.EXPANDABLE_LORE, ExpandableLoreComponent.makeGeneric(id, 1));
+				if(!Formidulus.TRINKETS)
+					settings.component(DataComponentRegistry.DEPENDENCY_INFO, new DependencyInfoComponent("trinkets"));
+				return new Item(settings);
+			});
 	
 	public static final Item DEER_PHASE1_MUSIC_DISC = register(Formidulus.identifier("deer_phase1_disc"),
 			id -> new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).jukeboxPlayable(FormidableTunes.DEER_PHASE1)));

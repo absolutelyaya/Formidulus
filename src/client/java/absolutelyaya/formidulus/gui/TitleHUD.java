@@ -1,5 +1,7 @@
 package absolutelyaya.formidulus.gui;
 
+import absolutelyaya.formidulus.compat.TrinketsUtil;
+import absolutelyaya.formidulus.registries.ItemRegistry;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -83,7 +85,7 @@ public class TitleHUD
 			matrices.scale(2f, 2f, 2f);
 			RenderSystem.enableBlend();
 			Text t = Text.of(curText);
-			if(activeTextObject.font() != null)
+			if(activeTextObject.font() != null && !TrinketsUtil.isHasTrinketEquipped(MinecraftClient.getInstance().player, ItemRegistry.DEER_NECKLACE))
 				t = t.getWithStyle(Style.EMPTY.withFont(activeTextObject.font())).getFirst();
 			context.drawText(renderer, t, -renderer.getWidth(t) / 2, 0, activeTextObject.color(), false);
 			if(activeTextObject.jitter())

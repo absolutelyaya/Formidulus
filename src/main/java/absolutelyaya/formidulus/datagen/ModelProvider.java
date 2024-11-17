@@ -41,5 +41,6 @@ public class ModelProvider extends FabricModelProvider
 		builder.register(ItemRegistry.DEER_PHASE2_MUSIC_DISC, Models.TEMPLATE_MUSIC_DISC);
 		builder.register(ItemRegistry.CULTIST_SPAWN_EGG, TEMPLATE_SPAWN_EGG);
 		builder.register(ItemRegistry.CRUOR_SPAWN_EGG, TEMPLATE_SPAWN_EGG);
+		builder.register(ItemRegistry.DEER_NECKLACE, Models.GENERATED);
 	}
 }

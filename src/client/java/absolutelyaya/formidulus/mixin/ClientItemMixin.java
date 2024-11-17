@@ -3,9 +3,9 @@ package absolutelyaya.formidulus.mixin;
 import absolutelyaya.formidulus.datagen.Lang;
 import absolutelyaya.formidulus.item.components.AbilityComponent;
 import absolutelyaya.formidulus.item.components.AccessoryComponent;
+import absolutelyaya.formidulus.item.components.DependencyInfoComponent;
 import absolutelyaya.formidulus.item.components.ExpandableLoreComponent;
 import absolutelyaya.formidulus.registries.DataComponentRegistry;
-import absolutelyaya.formidulus.registries.ItemRegistry;
 import absolutelyaya.formidulus.registries.SoundRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
@@ -15,7 +15,6 @@ import net.minecraft.item.Equipment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundCategory;
@@ -40,6 +39,13 @@ public abstract class ClientItemMixin
 	@Inject(method = "appendTooltip", at = @At("TAIL"))
 	void afterAppendToolTip(ItemStack stack, Item.TooltipContext context, List<Text> tooltip, TooltipType type, CallbackInfo ci)
 	{
+		if(stack.getComponents().contains(DataComponentRegistry.DEPENDENCY_INFO))
+		{
+			DependencyInfoComponent dependencyComponent = stack.getComponents().get(DataComponentRegistry.DEPENDENCY_INFO);
+			if(dependencyComponent != null)
+				dependencyComponent.appendTooltip(context, tooltip::add, type);
+			return;
+		}
 		boolean displayLore = (stack.contains(DataComponentRegistry.EXPANDABLE_LORE)) && shouldDisplayLore();
 		AbilityComponent abilityComponent = null;
 		

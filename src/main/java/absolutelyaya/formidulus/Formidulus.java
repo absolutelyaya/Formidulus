@@ -35,13 +35,16 @@ public class Formidulus implements ModInitializer
 	public static final String MOD_ID = "formidulus";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static ServerConfig config;
-	public static boolean ENCHANCEMENT;
+	public static boolean ENCHANCEMENT, TRINKETS;
 	final int dateCheckInterval = 72000;
 	int lastDayOfYear, dateCheckTimer;
 
 	@Override
 	public void onInitialize()
 	{
+		ENCHANCEMENT = FabricLoader.getInstance().getModContainer("enchancement").isPresent();
+		TRINKETS = FabricLoader.getInstance().getModContainer("trinkets").isPresent();
+		
 		BlockRegistry.register();
 		BlockEntityRegistry.register();
 		ItemRegistry.register();
@@ -95,8 +98,6 @@ public class Formidulus implements ModInitializer
 				tableBuilder.pool(poolBuilder);
 			}
 		});
-		
-		ENCHANCEMENT = FabricLoader.getInstance().getModContainer("enchancement").isPresent();
 	}
 	
 	public static Identifier identifier(String path)

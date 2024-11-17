@@ -1,10 +1,7 @@
 package absolutelyaya.formidulus.registries;
 
 import absolutelyaya.formidulus.Formidulus;
-import absolutelyaya.formidulus.item.components.AbilityComponent;
-import absolutelyaya.formidulus.item.components.AccessoryComponent;
-import absolutelyaya.formidulus.item.components.DamageTypeComponent;
-import absolutelyaya.formidulus.item.components.ExpandableLoreComponent;
+import absolutelyaya.formidulus.item.components.*;
 import net.minecraft.component.ComponentType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -21,6 +18,8 @@ public class DataComponentRegistry
 			builder -> builder.codec(DamageTypeComponent.CODEC).packetCodec(DamageTypeComponent.PACKET_CODEC));
 	public static final ComponentType<AbilityComponent> ABILITY = register("ability",
 			builder -> builder.codec(AbilityComponent.CODEC).packetCodec(AbilityComponent.PACKET_CODEC));
+	public static final ComponentType<DependencyInfoComponent> DEPENDENCY_INFO = register("dependency_info",
+			builder -> builder.codec(DependencyInfoComponent.CODEC).packetCodec(DependencyInfoComponent.PACKET_CODEC));
 	
 	static <T> ComponentType<T> register(String id, UnaryOperator<ComponentType.Builder<T>> builder)
 	{

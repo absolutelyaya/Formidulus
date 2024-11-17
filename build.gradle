@@ -17,6 +17,8 @@ repositories {
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
 	maven { url 'https://jitpack.io' }
+	maven { url "https://maven.terraformersmc.com/" }
+	maven { url 'https://maven.ladysnake.org/releases' }
 	mavenLocal()
 }
 
@@ -46,6 +48,9 @@ dependencies {
 
 	//yayConfig
 	modImplementation(include "com.github.absolutelyaya:YayConfig:1.0.1")
+
+	//Trinkets
+	modImplementation("dev.emi:trinkets:${trinkets_version}")
 }
 
 processResources {
