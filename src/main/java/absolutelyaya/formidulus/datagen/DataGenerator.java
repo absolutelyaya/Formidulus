@@ -27,6 +27,7 @@ public class DataGenerator implements DataGeneratorEntrypoint
 		pack.addProvider(StructureTagProvider::new);
 		pack.addProvider(ChestLootTableProvider::new);
 		pack.addProvider(DamageTypeTagProvider::new);
+		pack.addProvider(EntityTagProvider::new);
 	}
 	
 	@Override
