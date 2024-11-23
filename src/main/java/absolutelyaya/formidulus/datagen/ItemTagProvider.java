@@ -25,5 +25,7 @@ public class ItemTagProvider extends FabricTagProvider.ItemTagProvider
 		
 		getOrCreateTagBuilder(TagKey.of(RegistryKeys.ITEM, Identifier.of("trinkets", "chest/necklace")))
 				.add(ItemRegistry.DEER_NECKLACE);
+		getOrCreateTagBuilder(TagKey.of(RegistryKeys.ITEM, Identifier.of("trinkets", "head/hat")))
+				.add(ItemRegistry.DEER_SKULL);
 	}
 }
