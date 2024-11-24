@@ -78,6 +78,7 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(ItemRegistry.CRUOR_SPAWN_EGG, "Deer Spawn Egg");
 		builder.add(ItemRegistry.DEER_NECKLACE, "Strange Necklace");
 		builder.add(lore(ItemRegistry.DEER_NECKLACE, 0), "The Necklace of a High Ranking Cultist.");
+		builder.add(Lang.NOT_YET_IMPLEMENTED, "NOT YET IMPLEMENTED");
 		
 		builder.add(Lang.DEPENDENCY_INFO_DEFAULT, "This seems useless without '%s'...");
 		

@@ -100,6 +100,7 @@
   "item.formidulus.accessory_mode_hint": "[Right Click to cycle]",
   "item.formidulus.accessory_mode_prefix": "Accessory Mode: %s",
   "item.formidulus.cultist_spawn_egg": "Cultist Spawn Egg",
+  "item.formidulus.debug.not_yet_implemented": "NOT YET IMPLEMENTED",
   "item.formidulus.deer_necklace": "Strange Necklace",
   "item.formidulus.deer_necklace.lore0": "The Necklace of a High Ranking Cultist.",
   "item.formidulus.deer_phase1_disc": "Music Disc",

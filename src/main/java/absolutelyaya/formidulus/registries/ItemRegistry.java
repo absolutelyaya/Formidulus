@@ -2,17 +2,21 @@ package absolutelyaya.formidulus.registries;
 
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.damage.DamageSources;
+import absolutelyaya.formidulus.datagen.Lang;
 import absolutelyaya.formidulus.item.DeerSkullItem;
 import absolutelyaya.formidulus.item.SacrificialDaggerItem;
 import absolutelyaya.formidulus.item.abilities.ItemAbilities;
 import absolutelyaya.formidulus.item.components.*;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
 import net.minecraft.item.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.Colors;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 
@@ -51,8 +55,9 @@ public class ItemRegistry
 	
 	public static final Item DEER_NECKLACE = register(Formidulus.identifier("deer_necklace"),
 			id -> {
-				Item.Settings settings = new Item.Settings().maxCount(1)
-												 .component(DataComponentRegistry.EXPANDABLE_LORE, ExpandableLoreComponent.makeGeneric(id, 1));
+				Item.Settings settings = new Item.Settings();
+				if(!markNYI(settings))
+					settings.maxCount(1).component(DataComponentRegistry.EXPANDABLE_LORE, ExpandableLoreComponent.makeGeneric(id, 1));
 				if(!Formidulus.TRINKETS)
 					settings.component(DataComponentRegistry.DEPENDENCY_INFO, new DependencyInfoComponent("trinkets"));
 				return new Item(settings);
@@ -77,6 +82,15 @@ public class ItemRegistry
 	public static <T extends Item> T register(Identifier id, Function<Identifier, T> factory)
 	{
 		return Registry.register(Registries.ITEM, id, factory.apply(id));
+	}
+	
+	static boolean markNYI(Item.Settings settings)
+	{
+		if(FabricLoader.getInstance().isDevelopmentEnvironment())
+			return false;
+		settings.maxCount(0)
+				.component(DataComponentTypes.LORE, new LoreComponent(List.of(Text.translatable(Lang.NOT_YET_IMPLEMENTED).setStyle(Style.EMPTY.withColor(Colors.RED)))));
+		return true;
 	}
 	
 	public static void register()

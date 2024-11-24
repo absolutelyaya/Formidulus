@@ -77,6 +77,7 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(ItemRegistry.CRUOR_SPAWN_EGG, "Hirsch-Spawn-Ei");
 		builder.add(ItemRegistry.DEER_NECKLACE, "Seltsame Halskette");
 		builder.add(lore(ItemRegistry.DEER_NECKLACE, 0), "Die Halskette eines Hochrangigen Kultisten.");
+		builder.add(Lang.NOT_YET_IMPLEMENTED, "NOCH NICHT IMPLEMENTIERT");
 		
 		builder.add(Lang.DEPENDENCY_INFO_DEFAULT, "Scheint nutzlos zu sein ohne '%s'...");
 		

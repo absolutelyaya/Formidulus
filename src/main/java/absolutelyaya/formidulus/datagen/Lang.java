@@ -36,4 +36,6 @@ public interface Lang
 	String EVENT_INFO_PRESENT = modKey("event", "info.present");
 	String EVENT_INFO_FUTURE = modKey("event", "info.future");
 	String EVENT_INFO_ACTIVE_SUFFIX = modKey("event", "info.active_suffix");
+	
+	String NOT_YET_IMPLEMENTED = modKey("item", "debug.not_yet_implemented");
 }
