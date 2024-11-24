@@ -1935,19 +1935,20 @@ public class DeerGodEntity extends BossEntity
 		public void start()
 		{
 			super.start();
-			if(mob.targetGoal.getAllTargets().size() > 1)
+			boolean targetAccessible = false;
+			for (int i = 0; i < (mob.targetGoal.getAllTargets().size() > 1 ? 4 : 1); i++)
 			{
-				for (int i = 0; i < 4; i++)
+				mob.targetGoal.randomizeTarget();
+				//check if target is obstructed
+				if(mob.getTarget() != null &&
+						   mob.getWorld().raycast(new RaycastContext(mob.getPos(), mob.getTarget().getPos(),
+								   RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, mob)).getType().equals(HitResult.Type.MISS))
 				{
-					mob.targetGoal.randomizeTarget();
-					//check if target is obstructed
-					if(mob.getTarget() != null &&
-							   mob.getWorld().raycast(new RaycastContext(mob.getPos(), mob.getTarget().getPos(),
-									   RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, mob)).getType().equals(HitResult.Type.MISS))
-						break;
+					targetAccessible = true;
+					break;
 				}
 			}
-			if(mob.getTarget() == null)
+			if(mob.getTarget() == null || !targetAccessible)
 			{
 				interrupt();
 				return;
