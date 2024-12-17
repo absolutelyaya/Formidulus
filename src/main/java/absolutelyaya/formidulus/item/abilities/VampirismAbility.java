@@ -36,6 +36,6 @@ public class VampirismAbility extends ItemAbility
 	
 	protected float getHealMultiplier()
 	{
-		return 0.4f;
+		return 0.3f;
 	}
 }
