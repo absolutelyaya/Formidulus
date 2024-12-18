@@ -8,6 +8,7 @@ import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.advancement.criterion.OnKilledCriterion;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.recipe.ShapelessRecipeJsonBuilder;
 import net.minecraft.item.Items;
 import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.recipe.book.RecipeCategory;
@@ -35,6 +36,10 @@ public class RecipeProvider extends FabricRecipeProvider
 				.input('c', ItemRegistry.CHAINLINK).input('l', Items.LANTERN)
 				.pattern(" c ").pattern("clc").pattern(" c ")
 				.showNotification(false)
+				.criterion("deer", InventoryChangedCriterion.Conditions.items(ItemRegistry.CHAINLINK))
+				.offerTo(exporter);
+		ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, Items.CHAIN)
+				.input(ItemRegistry.CHAINLINK, 3)
 				.criterion("deer", InventoryChangedCriterion.Conditions.items(ItemRegistry.CHAINLINK))
 				.offerTo(exporter);
 	}
