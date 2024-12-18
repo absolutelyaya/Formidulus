@@ -14,7 +14,9 @@ import absolutelyaya.formidulus.registries.*;
 import absolutelyaya.formidulus.rendering.block.BossSpawnerRenderer;
 import absolutelyaya.formidulus.rendering.block.DeerSkullBlockEntityRenderer;
 import absolutelyaya.formidulus.rendering.entity.*;
+import absolutelyaya.formidulus.rendering.trinkets.DeerSkullTrinketRenderer;
 import absolutelyaya.formidulus.sound.BossMusicHandler;
+import dev.emi.trinkets.api.client.TrinketRendererRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -64,6 +66,9 @@ public class FormidulusClient implements ClientModInitializer
 		//Block Entities
 		BlockEntityRendererFactories.register(BlockEntityRegistry.DEER_SKULL, DeerSkullBlockEntityRenderer::new);
 		BlockEntityRendererFactories.register(BlockEntityRegistry.BOSS_SPAWNER, BossSpawnerRenderer::new);
+		
+		//Trinkets
+		TrinketRendererRegistry.registerRenderer(ItemRegistry.DEER_SKULL, new DeerSkullTrinketRenderer());
 		
 		BlockRenderLayerMap.INSTANCE.putBlock(BlockRegistry.BIG_LANTERN, RenderLayer.getCutout());
 		

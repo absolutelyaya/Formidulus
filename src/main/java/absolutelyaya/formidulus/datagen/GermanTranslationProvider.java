@@ -9,13 +9,34 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.registry.RegistryWrapper;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
-import static absolutelyaya.formidulus.datagen.BaseTranslationProvider.genericKey;
-import static absolutelyaya.formidulus.datagen.BaseTranslationProvider.subtitle;
+import static absolutelyaya.formidulus.datagen.BaseTranslationProvider.*;
 
 public class GermanTranslationProvider extends FabricLanguageProvider implements Lang
 {
+	static final Map<String, String> colors = new HashMap<>()
+	{{
+		put("white", "Weiß");
+		put("light_gray", "Hellgrau");
+		put("gray", "Grau");
+		put("black", "Schwarz");
+		put("purple", "Lila");
+		put("magenta", "Magenta");
+		put("blue", "Blau");
+		put("light_blue", "Hellblau");
+		put("cyan", "Türkis");
+		put("green", "Grün");
+		put("lime", "Hellgrün");
+		put("yellow", "Gelb");
+		put("orange", "Orange");
+		put("brown", "Braun");
+		put("red", "Rot");
+		put("pink", "Rosa");
+	}};
+	
 	protected GermanTranslationProvider(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup)
 	{
 		super(dataOutput, "de_de", registryLookup);
@@ -31,29 +52,34 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		
 		builder.add(EXPANDABLE_LORE_HINT, "[Drücke Shift für mehr Infos]");
 		builder.add(ItemRegistry.DEER_SKULL, "Hirsch Schädel");
-		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore0", "Der Schädel eines schrecklichen Skelettbiests,");
-		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore1", "in dessen Stirn ein drittes Auge geschnitzt wurde.");
-		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore2", "Zudem ist er in seltsamen Mustern mit Blut bemalt.");
-		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore3", " ");
-		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore4", "Es war als würde es mit uns reden..");
-		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore5", "..aber wir konnten nichts verstehen.");
+		builder.add(lore(ItemRegistry.DEER_SKULL, 0), "Der Schädel eines schrecklichen Skelettbiests,");
+		builder.add(lore(ItemRegistry.DEER_SKULL, 1), "in dessen Stirn ein drittes Auge geschnitzt wurde.");
+		builder.add(lore(ItemRegistry.DEER_SKULL, 2), "Zudem ist er in seltsamen Mustern mit Blut bemalt.");
+		builder.add(lore(ItemRegistry.DEER_SKULL, 3), " ");
+		builder.add(lore(ItemRegistry.DEER_SKULL, 4), "Es war als würde es mit uns reden..");
+		builder.add(lore(ItemRegistry.DEER_SKULL, 5), "..aber wir konnten nichts verstehen.");
 		builder.add(ACCESSORY_MODE_PREFIX, "Accessoire Modus: %s");
 		builder.add(genericKey("item.accessory_mode", "default"), "Standard");
 		builder.add(genericKey("item.accessory_mode", DeerSkullItem.ACCESSORY_MODE_CAP), "Kappe");
 		builder.add(genericKey("item.accessory_mode", DeerSkullItem.ACCESSORY_MODE_MASK), "Maske");
 		builder.add(ACCESSORY_MODE_HINT, "[Rechtsklick zum Modus wechseln]");
 		builder.add(ItemRegistry.SACRIFICIAL_DAGGER, "Opferdolch");
-		builder.add(ItemRegistry.SACRIFICIAL_DAGGER.getTranslationKey() + ".lore0", "Der Dolch eines Kultisten.");
-		builder.add(ItemRegistry.SACRIFICIAL_DAGGER.getTranslationKey() + ".lore1", "Zuvor wurde er benutzt um Blutopfer zu erbringen.");
+		builder.add(lore(ItemRegistry.SACRIFICIAL_DAGGER, 0), "Der Dolch eines Kultisten.");
+		builder.add(lore(ItemRegistry.SACRIFICIAL_DAGGER, 1), "Zuvor wurde er benutzt um Blutopfer zu erbringen.");
 		builder.add(ItemRegistry.SOUL_DAGGER, "Seelendolch");
-		builder.add(ItemRegistry.SOUL_DAGGER.getTranslationKey() + ".lore0", "Eine bessere Version der Dolche die diese Kultisten mit sich tragen.");
-		builder.add(ItemRegistry.SOUL_DAGGER.getTranslationKey() + ".lore1", "Anstelle von dem Körper, blutet dieser Dolch direkt die Seele aus.");
+		builder.add(lore(ItemRegistry.SOUL_DAGGER, 0), "Eine bessere Version der Dolche die diese Kultisten mit sich tragen.");
+		builder.add(lore(ItemRegistry.SOUL_DAGGER, 1), "Anstelle von dem Körper, blutet dieser Dolch direkt die Seele aus.");
 		builder.add(ItemRegistry.EYES_BANNER_PATTERN, "Bannervorlage");
-		builder.add(ItemRegistry.EYES_BANNER_PATTERN.getTranslationKey() + ".desc", "Augen");
+		builder.add(desc(ItemRegistry.EYES_BANNER_PATTERN), "Augen");
 		builder.add(ItemRegistry.DEER_PHASE1_MUSIC_DISC, "Schallplatte");
 		builder.add(ItemRegistry.DEER_PHASE2_MUSIC_DISC, "Schallplatte");
 		builder.add(ItemRegistry.CULTIST_SPAWN_EGG, "Kultisten-Spawn-Ei");
 		builder.add(ItemRegistry.CRUOR_SPAWN_EGG, "Hirsch-Spawn-Ei");
+		builder.add(ItemRegistry.DEER_NECKLACE, "Seltsame Halskette");
+		builder.add(lore(ItemRegistry.DEER_NECKLACE, 0), "Die Halskette eines Hochrangigen Kultisten.");
+		builder.add(Lang.NOT_YET_IMPLEMENTED, "NOCH NICHT IMPLEMENTIERT");
+		
+		builder.add(Lang.DEPENDENCY_INFO_DEFAULT, "Scheint nutzlos zu sein ohne '%s'...");
 		builder.add(ItemRegistry.CHAINLINK, "Kettenglied");
 		
 		builder.add(Lang.MUSIC_DEER_PHASE1, "Efefski - Weisendes Licht");
@@ -61,40 +87,25 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		
 		builder.add(ItemAbilities.NONE.getTranslationKey(), "mangelhaft");
 		builder.add(ItemAbilities.VAMPIRISM.getTranslationKey(), "- VAMPIRISMUS -");
-		builder.add(ItemAbilities.VAMPIRISM.getTranslationKey() + ".desc0", "Das Verletzen anderer heilt den Nutzer.");
+		builder.add(desc(ItemAbilities.VAMPIRISM, 0), "Das Verletzen anderer heilt den Nutzer.");
 		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey(), "- SEELEN BRECHER -");
-		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc0", "Splittere kleine Teile der Seele deines Feindes ab;");
-		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc1", "Der Konsum jener heilt den Nutzer.");
-		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc2", "+2 §bSeelen§r Schaden; §6ignoriert Rüstung§r.");
+		builder.add(desc(ItemAbilities.SOULSTEAL, 0), "Splittere kleine Teile der Seele deines Feindes ab;");
+		builder.add(desc(ItemAbilities.SOULSTEAL, 1), "Der Konsum jener heilt den Nutzer.");
+		builder.add(desc(ItemAbilities.SOULSTEAL, 2), "+2 §bSeelen§r Schaden; §6ignoriert Rüstung§r.");
 		builder.add(ItemAbilities.HEALWAVE.getTranslationKey(), "+ HEILUNGSWELLE +");
-		builder.add(ItemAbilities.HEALWAVE.getTranslationKey() + ".desc0", "Benutze dies um eine Heilungswelle abzugeben.");
-		builder.add(ItemAbilities.HEALWAVE.getTranslationKey() + ".desc1", "Gibt nicht-gegnerischen Wesen um dich herum Regeneration.");
+		builder.add(desc(ItemAbilities.HEALWAVE, 0), "Benutze dies um eine Heilungswelle abzugeben.");
+		builder.add(desc(ItemAbilities.HEALWAVE, 1), "Gibt nicht-gegnerischen Wesen um dich herum Regeneration.");
 		
 		builder.add(BlockRegistry.WEEN, "Ween");
 		builder.add(BlockRegistry.WEEN.getTranslationKey() + ".lore", "es ist ween");
-		builder.add("block.formidulus.banner.eyes.black", "Schwarze Augen");
-		builder.add("block.formidulus.banner.eyes.blue", "Blaue Augen");
-		builder.add("block.formidulus.banner.eyes.brown", "Braune Augen");
-		builder.add("block.formidulus.banner.eyes.cyan", "Türkise Augen");
-		builder.add("block.formidulus.banner.eyes.gray", "Graue Augen");
-		builder.add("block.formidulus.banner.eyes.green", "Grüne Augen");
-		builder.add("block.formidulus.banner.eyes.light_blue", "Hellblaue Augen");
-		builder.add("block.formidulus.banner.eyes.light_gray", "Hellgraue Augen");
-		builder.add("block.formidulus.banner.eyes.lime", "Hellgrüne Augen");
-		builder.add("block.formidulus.banner.eyes.magenta", "Magenta Augen");
-		builder.add("block.formidulus.banner.eyes.orange", "Orange Augen");
-		builder.add("block.formidulus.banner.eyes.pink", "Pinke Augen");
-		builder.add("block.formidulus.banner.eyes.purple", "Lilane Augen");
-		builder.add("block.formidulus.banner.eyes.red", "Rote Augen");
-		builder.add("block.formidulus.banner.eyes.white", "Weiße Augen");
-		builder.add("block.formidulus.banner.eyes.yellow", "Gelbe Augen");
+		registerWithColorVariants(builder, modKey("block", "banner.eyes"), "Augen", colors, false);
 		builder.add(BlockRegistry.BOSS_SPAWNER, "Boss Spawner");
 		builder.add(BlockRegistry.BIG_LANTERN, "Große Laterne");
-		builder.add(ItemRegistry.BIG_LANTERN.getTranslationKey() + ".lore0", "Eine riesige Metall Lanterne mit kunstvollen Gravierungen.");
-		builder.add(ItemRegistry.BIG_LANTERN.getTranslationKey() + ".lore1", "Lädt sich langsam auf während sie platziert ist.");
-		builder.add(ItemRegistry.BIG_LANTERN.getTranslationKey() + ".lore2", "");
-		builder.add(ItemRegistry.BIG_LANTERN.getTranslationKey() + ".lore3", "Wenn ich doch nur die Fähigkeit hätte Leben zu erschaffen...");
-		builder.add(ItemRegistry.BIG_LANTERN.getTranslationKey() + ".lore4", "Dann müsste ich mich nicht darauf verlassen dass die Natur sie für mich auflädt.");
+		builder.add(lore(ItemRegistry.BIG_LANTERN, 0), "Eine riesige Metall Lanterne mit kunstvollen Gravierungen.");
+		builder.add(lore(ItemRegistry.BIG_LANTERN, 1), "Lädt sich langsam auf während sie platziert ist.");
+		builder.add(lore(ItemRegistry.BIG_LANTERN, 2), "");
+		builder.add(lore(ItemRegistry.BIG_LANTERN, 3), "Wenn ich doch nur die Fähigkeit hätte Leben zu erschaffen...");
+		builder.add(lore(ItemRegistry.BIG_LANTERN, 4), "Dann müsste ich mich nicht darauf verlassen dass die Natur sie für mich auflädt.");
 		
 		builder.add(ADVANCEMENT_ROOT_TITLE, "Formidulus");
 		builder.add(ADVANCEMENT_ROOT_DESCRIPTION, "Unerzählte Legenden");
@@ -232,5 +243,25 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		
 		builder.add(subtitle(SoundRegistry.LANTERN_DAMAGE), "Spieler wird von Laterne getroffen");
 		builder.add(subtitle(SoundRegistry.CLAW_DAMAGE), "Spieler wird aufgeschlitzt");
+	}
+	
+	public static void registerWithColorVariants(TranslationBuilder builder, String baseKey, String baseValue, Map<String, String> colors, boolean singular)
+	{
+		for (String c : colors.keySet())
+		{
+			String color = colors.get(c);
+			if(c.equals("magenta"))
+			{
+				builder.add(String.format("%1$s.%2$s", baseKey, c), String.format("%1$s %2$s", colors.get(c), baseValue));
+				continue;
+			}
+			if(color.endsWith("a"))
+				color += "n";
+			if(!color.endsWith("e"))
+				color += "e";
+			if(singular && color.endsWith("e"))
+				color += "s";
+			builder.add(String.format("%1$s.%2$s", baseKey, c), String.format("%1$s %2$s", color, baseValue));
+		}
 	}
 }

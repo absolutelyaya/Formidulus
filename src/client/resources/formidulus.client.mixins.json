@@ -4,6 +4,7 @@
   "compatibilityLevel": "JAVA_21",
   "client": [
     "AbstractInventoryScreenMixin",
+    "ArmorFeatureRendererMixin",
     "BackgroundRendererMixin",
     "InGameHudMixin",
     "MouseMixin",

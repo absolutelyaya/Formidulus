@@ -20,6 +20,8 @@ public class DataComponentRegistry
 			builder -> builder.codec(AbilityComponent.CODEC).packetCodec(AbilityComponent.PACKET_CODEC));
 	public static final ComponentType<ChargeComponent> CHARGE = register("charge",
 			builder -> builder.codec(ChargeComponent.CODEC).packetCodec(ChargeComponent.PACKET_CODEC));
+	public static final ComponentType<DependencyInfoComponent> DEPENDENCY_INFO = register("dependency_info",
+			builder -> builder.codec(DependencyInfoComponent.CODEC).packetCodec(DependencyInfoComponent.PACKET_CODEC));
 	
 	static <T> ComponentType<T> register(String id, UnaryOperator<ComponentType.Builder<T>> builder)
 	{

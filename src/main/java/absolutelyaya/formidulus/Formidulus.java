@@ -13,6 +13,7 @@ import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.item.v1.FabricItem;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.Items;
@@ -35,13 +36,16 @@ public class Formidulus implements ModInitializer
 	public static final String MOD_ID = "formidulus";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static ServerConfig config;
-	public static boolean ENCHANCEMENT;
+	public static boolean ENCHANCEMENT, TRINKETS;
 	final int dateCheckInterval = 72000;
 	int lastDayOfYear, dateCheckTimer;
 
 	@Override
 	public void onInitialize()
 	{
+		ENCHANCEMENT = FabricLoader.getInstance().getModContainer("enchancement").isPresent();
+		TRINKETS = FabricLoader.getInstance().getModContainer("trinkets").isPresent();
+		
 		BlockRegistry.register();
 		BlockEntityRegistry.register();
 		ItemRegistry.register();
@@ -95,8 +99,6 @@ public class Formidulus implements ModInitializer
 				tableBuilder.pool(poolBuilder);
 			}
 		});
-		
-		ENCHANCEMENT = FabricLoader.getInstance().getModContainer("enchancement").isPresent();
 	}
 	
 	public static Identifier identifier(String path)

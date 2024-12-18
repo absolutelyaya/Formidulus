@@ -12,6 +12,7 @@ The Current Release of the mod contains
 
 ## Dependencies
 Only <u>Fabric API</u> is required to run Formidulus<br>
+<u>Trinkets</u> is required for some features, doesn't have to be installed tho<br>
 <u>ModMenu</u> is (as always) Recommended
 
 ## Note

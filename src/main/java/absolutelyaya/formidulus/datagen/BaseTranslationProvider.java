@@ -3,17 +3,41 @@ package absolutelyaya.formidulus.datagen;
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.item.DeerSkullItem;
 import absolutelyaya.formidulus.item.abilities.ItemAbilities;
+import absolutelyaya.formidulus.item.abilities.ItemAbility;
 import absolutelyaya.formidulus.realtime.TimedEvent;
 import absolutelyaya.formidulus.registries.*;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
+import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.sound.SoundEvent;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class BaseTranslationProvider extends FabricLanguageProvider implements Lang
 {
+	static final Map<String, String> colors = new HashMap<>()
+	{{
+		put("white", "White");
+		put("light_gray", "Light Gray");
+		put("gray", "Gray");
+		put("black", "Black");
+		put("purple", "Purple");
+		put("magenta", "Magenta");
+		put("blue", "Blue");
+		put("light_blue", "Light Blue");
+		put("cyan", "Cyan");
+		put("green", "Green");
+		put("lime", "Lime");
+		put("yellow", "Yellow");
+		put("orange", "Orange");
+		put("brown", "Brown");
+		put("red", "Red");
+		put("pink", "Pink");
+	}};
+	
 	protected BaseTranslationProvider(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup)
 	{
 		super(dataOutput, registryLookup);
@@ -29,29 +53,34 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		
 		builder.add(EXPANDABLE_LORE_HINT, "[Press Shift for more Info]");
 		builder.add(ItemRegistry.DEER_SKULL, "Deer Skull");
-		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore0", "The Skull of a horrid Skeletal Beast.");
-		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore1", "A third eye was carved into its forehead.");
-		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore2", "There's also strange patterns painted onto it using blood.");
-		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore3", " ");
-		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore4", "It was as though it spoke to us..");
-		builder.add(ItemRegistry.DEER_SKULL.getTranslationKey() + ".lore5", "..but we couldn't comprehend it.");
+		builder.add(lore(ItemRegistry.DEER_SKULL, 0), "The Skull of a horrid Skeletal Beast.");
+		builder.add(lore(ItemRegistry.DEER_SKULL, 1), "A third eye was carved into its forehead.");
+		builder.add(lore(ItemRegistry.DEER_SKULL, 2), "There's also strange patterns painted onto it using blood.");
+		builder.add(lore(ItemRegistry.DEER_SKULL, 3), " ");
+		builder.add(lore(ItemRegistry.DEER_SKULL, 4), "It was as though it spoke to us..");
+		builder.add(lore(ItemRegistry.DEER_SKULL, 5), "..but we couldn't comprehend it.");
 		builder.add(ACCESSORY_MODE_PREFIX, "Accessory Mode: %s");
 		builder.add(genericKey("item.accessory_mode", "default"), "Default");
 		builder.add(genericKey("item.accessory_mode", DeerSkullItem.ACCESSORY_MODE_CAP), "Cap");
 		builder.add(genericKey("item.accessory_mode", DeerSkullItem.ACCESSORY_MODE_MASK), "Mask");
 		builder.add(ACCESSORY_MODE_HINT, "[Right Click to cycle]");
 		builder.add(ItemRegistry.SACRIFICIAL_DAGGER, "Sacrificial Dagger");
-		builder.add(ItemRegistry.SACRIFICIAL_DAGGER.getTranslationKey() + ".lore0", "The Dagger of a Cultist.");
-		builder.add(ItemRegistry.SACRIFICIAL_DAGGER.getTranslationKey() + ".lore1", "Previously used to make Blood Sacrifices.");
+		builder.add(lore(ItemRegistry.SACRIFICIAL_DAGGER, 0), "The Dagger of a Cultist.");
+		builder.add(lore(ItemRegistry.SACRIFICIAL_DAGGER, 1), "Previously used to make Blood Sacrifices.");
 		builder.add(ItemRegistry.SOUL_DAGGER, "Soul Dagger");
-		builder.add(ItemRegistry.SOUL_DAGGER.getTranslationKey() + ".lore0", "A superior version of those Daggers the Cultists carry.");
-		builder.add(ItemRegistry.SOUL_DAGGER.getTranslationKey() + ".lore1", "Instead of the Body, it leeches directly off of the soul.");
+		builder.add(lore(ItemRegistry.SOUL_DAGGER, 0), "A superior version of those Daggers the Cultists carry.");
+		builder.add(lore(ItemRegistry.SOUL_DAGGER, 1), "Instead of the Body, it leeches directly off of the soul.");
 		builder.add(ItemRegistry.EYES_BANNER_PATTERN, "Banner Pattern");
-		builder.add(ItemRegistry.EYES_BANNER_PATTERN.getTranslationKey() + ".desc", "Eyes");
+		builder.add(desc(ItemRegistry.EYES_BANNER_PATTERN), "Eyes");
 		builder.add(ItemRegistry.DEER_PHASE1_MUSIC_DISC, "Music Disc");
 		builder.add(ItemRegistry.DEER_PHASE2_MUSIC_DISC, "Music Disc");
 		builder.add(ItemRegistry.CULTIST_SPAWN_EGG, "Cultist Spawn Egg");
 		builder.add(ItemRegistry.CRUOR_SPAWN_EGG, "Deer Spawn Egg");
+		builder.add(ItemRegistry.DEER_NECKLACE, "Strange Necklace");
+		builder.add(lore(ItemRegistry.DEER_NECKLACE, 0), "The Necklace of a High Ranking Cultist.");
+		builder.add(Lang.NOT_YET_IMPLEMENTED, "NOT YET IMPLEMENTED");
+		
+		builder.add(Lang.DEPENDENCY_INFO_DEFAULT, "This seems useless without '%s'...");
 		builder.add(ItemRegistry.CHAINLINK, "Chain Link");
 		
 		builder.add(Lang.MUSIC_DEER_PHASE1, "Efefski - Guiding Light");
@@ -59,40 +88,25 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		
 		builder.add(ItemAbilities.NONE.getTranslationKey(), "faulty");
 		builder.add(ItemAbilities.VAMPIRISM.getTranslationKey(), "- VAMPIRISM -");
-		builder.add(ItemAbilities.VAMPIRISM.getTranslationKey() + ".desc0", "Harming others replenishes Health.");
+		builder.add(desc(ItemAbilities.VAMPIRISM, 0), "Harming others replenishes Health.");
 		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey(), "- SOUL STEAL -");
-		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc0", "Harm others to chip pieces off of their Soul;");
-		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc1", "Consuming them replenishes Health.");
-		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc2", "+2 §bSoul§r Damage; §6ignores Armor§r.");
+		builder.add(desc(ItemAbilities.SOULSTEAL, 0), "Harm others to chip pieces off of their Soul;");
+		builder.add(desc(ItemAbilities.SOULSTEAL, 1), "Consuming them replenishes Health.");
+		builder.add(desc(ItemAbilities.SOULSTEAL, 2), "+2 §bSoul§r Damage; §6ignores Armor§r.");
 		builder.add(ItemAbilities.HEALWAVE.getTranslationKey(), "+ HEALWAVE +");
-		builder.add(ItemAbilities.HEALWAVE.getTranslationKey() + ".desc0", "Use when fully charged to emit a Healwave.");
-		builder.add(ItemAbilities.HEALWAVE.getTranslationKey() + ".desc1", "Applies Regeneration to Non-Hostile Entities around you.");
+		builder.add(desc(ItemAbilities.HEALWAVE, 0), "Use when fully charged to emit a Healwave.");
+		builder.add(desc(ItemAbilities.HEALWAVE, 1), "Applies Regeneration to Non-Hostile Entities around you.");
 		
 		builder.add(BlockRegistry.WEEN, "Ween");
 		builder.add(BlockRegistry.WEEN.getTranslationKey() + ".lore", "it's ween");
-		builder.add("block.formidulus.banner.eyes.black", "Black Eyes");
-		builder.add("block.formidulus.banner.eyes.blue", "Blue Eyes");
-		builder.add("block.formidulus.banner.eyes.brown", "Brown Eyes");
-		builder.add("block.formidulus.banner.eyes.cyan", "Cyan Eyes");
-		builder.add("block.formidulus.banner.eyes.gray", "Gray Eyes");
-		builder.add("block.formidulus.banner.eyes.green", "Green Eyes");
-		builder.add("block.formidulus.banner.eyes.light_blue", "Light Blue Eyes");
-		builder.add("block.formidulus.banner.eyes.light_gray", "Light Gray Eyes");
-		builder.add("block.formidulus.banner.eyes.lime", "Lime Eyes");
-		builder.add("block.formidulus.banner.eyes.magenta", "Magenta Eyes");
-		builder.add("block.formidulus.banner.eyes.orange", "Orange Eyes");
-		builder.add("block.formidulus.banner.eyes.pink", "Pink Eyes");
-		builder.add("block.formidulus.banner.eyes.purple", "Purple Eyes");
-		builder.add("block.formidulus.banner.eyes.red", "Red Eyes");
-		builder.add("block.formidulus.banner.eyes.white", "White Eyes");
-		builder.add("block.formidulus.banner.eyes.yellow", "Yellow Eyes");
+		registerWithColorVariants(builder, modKey("block", "banner.eyes"), "Eyes", colors);
 		builder.add(BlockRegistry.BOSS_SPAWNER, "Boss Spawner");
-		builder.add(BlockRegistry.BIG_LANTERN, "Big Lantern");
-		builder.add(ItemRegistry.BIG_LANTERN.getTranslationKey() + ".lore0", "A huge Metal Lantern with Ornate Engravings.");
-		builder.add(ItemRegistry.BIG_LANTERN.getTranslationKey() + ".lore1", "Slowly recharges energy while placed down.");
-		builder.add(ItemRegistry.BIG_LANTERN.getTranslationKey() + ".lore2", "");
-		builder.add(ItemRegistry.BIG_LANTERN.getTranslationKey() + ".lore3", "If only I had the Ability to create life...");
-		builder.add(ItemRegistry.BIG_LANTERN.getTranslationKey() + ".lore4", "Then I wouldn't need to rely on Nature to charge it for me.");
+		builder.add(BlockRegistry.BIG_LANTERN, "Great Lantern");
+		builder.add(lore(ItemRegistry.BIG_LANTERN, 0), "A huge Metal Lantern with Ornate Engravings.");
+		builder.add(lore(ItemRegistry.BIG_LANTERN, 1), "Slowly recharges energy while placed down.");
+		builder.add(lore(ItemRegistry.BIG_LANTERN, 2), "");
+		builder.add(lore(ItemRegistry.BIG_LANTERN, 3), "If only I had the Ability to create life...");
+		builder.add(lore(ItemRegistry.BIG_LANTERN, 4), "Then I wouldn't need to rely on Nature to charge it for me.");
 		
 		builder.add(ADVANCEMENT_ROOT_TITLE, "Formidulus");
 		builder.add(ADVANCEMENT_ROOT_DESCRIPTION, "Legends Untold");
@@ -245,5 +259,26 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 	public static String subtitle(SoundEvent sound)
 	{
 		return "subtitles." + sound.getId().getNamespace() + "." + sound.getId().getPath();
+	}
+	
+	public static String lore(Item item, int line)
+	{
+		return item.getTranslationKey() + ".lore" + line;
+	}
+	
+	public static String desc(Item item)
+	{
+		return item.getTranslationKey() + ".desc";
+	}
+	
+	public static String desc(ItemAbility item, int line)
+	{
+		return item.getTranslationKey() + ".desc" + line;
+	}
+	
+	public static void registerWithColorVariants(TranslationBuilder builder, String baseKey, String baseValue, Map<String, String> colors)
+	{
+		for (String color : colors.keySet())
+			builder.add(String.format("%1$s.%2$s", baseKey, color), String.format("%1$s %2$s", colors.get(color), baseValue));
 	}
 }
