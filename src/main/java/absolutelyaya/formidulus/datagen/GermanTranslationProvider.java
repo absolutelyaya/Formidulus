@@ -54,6 +54,7 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(ItemRegistry.DEER_PHASE2_MUSIC_DISC, "Schallplatte");
 		builder.add(ItemRegistry.CULTIST_SPAWN_EGG, "Kultisten-Spawn-Ei");
 		builder.add(ItemRegistry.CRUOR_SPAWN_EGG, "Hirsch-Spawn-Ei");
+		builder.add(ItemRegistry.CHAINLINK, "Kettenglied");
 		
 		builder.add(Lang.MUSIC_DEER_PHASE1, "Efefski - Weisendes Licht");
 		builder.add(Lang.MUSIC_DEER_PHASE2, "Efefski - Laufendes Blut");

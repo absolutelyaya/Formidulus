@@ -52,6 +52,7 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(ItemRegistry.DEER_PHASE2_MUSIC_DISC, "Music Disc");
 		builder.add(ItemRegistry.CULTIST_SPAWN_EGG, "Cultist Spawn Egg");
 		builder.add(ItemRegistry.CRUOR_SPAWN_EGG, "Deer Spawn Egg");
+		builder.add(ItemRegistry.CHAINLINK, "Chain Link");
 		
 		builder.add(Lang.MUSIC_DEER_PHASE1, "Efefski - Guiding Light");
 		builder.add(Lang.MUSIC_DEER_PHASE2, "Efefski - Running Blood");

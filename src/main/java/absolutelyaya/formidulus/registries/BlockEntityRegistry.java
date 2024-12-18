@@ -15,7 +15,7 @@ public class BlockEntityRegistry
 			BlockEntityType.Builder.create(DeerSkullBlockEntity::new, BlockRegistry.DEER_SKULL).build());
 	public static final BlockEntityType<BossSpawnerBlockEntity> BOSS_SPAWNER = Registry.register(Registries.BLOCK_ENTITY_TYPE, Formidulus.identifier("boss_spawner"),
 			BlockEntityType.Builder.create(BossSpawnerBlockEntity::new, BlockRegistry.BOSS_SPAWNER).build());
-	public static final BlockEntityType<BigLanternBlockEntity> BIG_LANTERN = Registry.register(Registries.BLOCK_ENTITY_TYPE, Formidulus.identifier("boss_spawner"),
+	public static final BlockEntityType<BigLanternBlockEntity> BIG_LANTERN = Registry.register(Registries.BLOCK_ENTITY_TYPE, Formidulus.identifier("big_lantern"),
 			BlockEntityType.Builder.create(BigLanternBlockEntity::new, BlockRegistry.BIG_LANTERN).build());
 	
 	public static void register()

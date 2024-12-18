@@ -12,7 +12,7 @@ public class DataGenerator implements DataGeneratorEntrypoint
 	{
 		FabricDataGenerator.Pack pack = generator.createPack();
 		pack.addProvider(BaseTranslationProvider::new);
-		pack.addProvider(GermanTranslationProvider::new); //there isn't too much to translate, so might as well
+		pack.addProvider(GermanTranslationProvider::new); //I regret this decision already
 		pack.addProvider(EntityLootTableProvider::new);
 		pack.addProvider(ModelProvider::new);
 		pack.addProvider(BlockLootTableProvider::new);

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "c": {
+      "item": "formidulus:chainlink"
+    },
+    "l": {
+      "item": "minecraft:lantern"
+    }
+  },
+  "pattern": [
+    " c ",
+    "clc",
+    " c "
+  ],
+  "result": {
+    "count": 1,
+    "id": "formidulus:big_lantern"
+  },
+  "show_notification": false
+}

@@ -55,6 +55,7 @@ public class ItemRegistry
 											 .component(DataComponentRegistry.EXPANDABLE_LORE, ExpandableLoreComponent.makeGenericBlock(id, 5))
 											 .component(DataComponentRegistry.CHARGE, new ChargeComponent(4, 4))
 											 .component(DataComponentTypes.MAX_STACK_SIZE, 1)));
+	public static final Item CHAINLINK = register(Formidulus.identifier("chainlink"), id -> new Item(new Item.Settings()));
 	
 	public static final Item DEER_PHASE1_MUSIC_DISC = register(Formidulus.identifier("deer_phase1_disc"),
 			id -> new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).jukeboxPlayable(FormidableTunes.DEER_PHASE1)));
@@ -93,6 +94,7 @@ public class ItemRegistry
 		});
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register((entries) -> {
 			entries.add(EYES_BANNER_PATTERN);
+			entries.add(CHAINLINK);
 		});
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register((entries) -> {
 			entries.add(DEER_PHASE1_MUSIC_DISC);

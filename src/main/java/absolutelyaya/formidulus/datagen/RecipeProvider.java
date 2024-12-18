@@ -4,6 +4,7 @@ import absolutelyaya.formidulus.registries.EntityRegistry;
 import absolutelyaya.formidulus.registries.ItemRegistry;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.advancement.criterion.OnKilledCriterion;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
@@ -29,6 +30,12 @@ public class RecipeProvider extends FabricRecipeProvider
 				.pattern(" e ").pattern("d*d").pattern(" b ")
 				.showNotification(false)
 				.criterion("deer", OnKilledCriterion.Conditions.createPlayerKilledEntity(EntityPredicate.Builder.create().type(EntityRegistry.DEER_GOD)))
+				.offerTo(exporter);
+		ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, ItemRegistry.BIG_LANTERN)
+				.input('c', ItemRegistry.CHAINLINK).input('l', Items.LANTERN)
+				.pattern(" c ").pattern("clc").pattern(" c ")
+				.showNotification(false)
+				.criterion("deer", InventoryChangedCriterion.Conditions.items(ItemRegistry.CHAINLINK))
 				.offerTo(exporter);
 	}
 }
