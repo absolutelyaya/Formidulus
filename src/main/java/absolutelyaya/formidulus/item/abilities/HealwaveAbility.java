@@ -46,13 +46,18 @@ public class HealwaveAbility extends ItemAbility
 	public Optional<TypedActionResult<ItemStack>> onUse(ItemStack stack, LivingEntity user, Hand hand, TypedActionResult<ItemStack> result)
 	{
 		super.onUse(stack, user, hand, result);
+		if(user.isSneaking())
+			return Optional.empty();
 		if(!(stack.get(DataComponentRegistry.CHARGE) instanceof ChargeComponent comp))
 			return Optional.empty();
 		Optional<ChargeComponent> newCharge = comp.tryConsumeCharge(1f);
 		if(newCharge.isEmpty())
 			return Optional.empty();
-		stack.set(DataComponentRegistry.CHARGE, newCharge.get());
-		castActiveAbility(user, stack, user.getPos());
+		if(!user.isInCreativeMode())
+			stack.set(DataComponentRegistry.CHARGE, newCharge.get());
+		else if(user instanceof PlayerEntity player)
+			player.getItemCooldownManager().set(stack.getItem(), 5);
+		castActiveAbility(user, stack, user.getPos().add(0f, 0.3f, 0f));
 		return Optional.of(TypedActionResult.success(stack));
 	}
 	
@@ -70,7 +75,7 @@ public class HealwaveAbility extends ItemAbility
 		{
 			world.getEntitiesByType(TypeFilter.instanceOf(LivingEntity.class),
 							Box.from(pos).expand(6f, 3f, 6f).offset(0, 1f, 0), i -> i.squaredDistanceTo(pos) < 6 * 6 && !(i instanceof HostileEntity))
-					.forEach(living -> living.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 300, 2)));
+					.forEach(living -> living.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, 60, 3)));
 			world.playSound(null, BlockPos.ofFloored(pos), SoundRegistry.BIG_LANTERN_HEALWAVE, SoundCategory.BLOCKS, 1f, 0.8f);
 			if(world instanceof ServerWorld serverWorld)
 				serverWorld.getPlayers().forEach(p -> ServerPlayNetworking.send(p,

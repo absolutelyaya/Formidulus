@@ -20,7 +20,8 @@
 	],
 	"contact": {
 		"homepage": "https://absolutelyaya.neocities.org/",
-		"sources": "https://github.com/absolutelyaya/Formidulus"
+		"sources": "https://github.com/absolutelyaya/Formidulus",
+		"issues": "https://github.com/absolutelyaya/Formidulus/issues"
 	},
 	"license": "MIT",
 	"icon": "assets/formidulus/icon.png",
