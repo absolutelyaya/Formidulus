@@ -1,8 +1,11 @@
 package absolutelyaya.formidulus.mixin;
 
+import absolutelyaya.formidulus.compat.TrinketsUtil;
 import absolutelyaya.formidulus.entities.BossEntity;
+import absolutelyaya.formidulus.item.JollyHatItem;
 import absolutelyaya.formidulus.item.components.AbilityComponent;
 import absolutelyaya.formidulus.registries.DataComponentRegistry;
+import absolutelyaya.formidulus.registries.ItemRegistry;
 import absolutelyaya.formidulus.registries.StatusEffectRegistry;
 import absolutelyaya.formidulus.registries.TagRegistry;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
@@ -10,9 +13,11 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
@@ -40,6 +45,8 @@ public abstract class LivingEntityMixin extends Entity
 	@Shadow public abstract boolean hasStatusEffect(RegistryEntry<StatusEffect> effect);
 	
 	@Shadow public abstract boolean isInvulnerableTo(DamageSource damageSource);
+	
+	@Shadow public abstract ItemStack getEquippedStack(EquipmentSlot slot);
 	
 	@ModifyReturnValue(method = "isInvulnerableTo", at = @At("RETURN"))
 	private boolean modifyIsInvulnerable(boolean original)
@@ -99,5 +106,17 @@ public abstract class LivingEntityMixin extends Entity
 		if(source.isIn(TagRegistry.SOUL_DAMAGE))
 			soulImmunity = 15;
 		return constant;
+	}
+	
+	@Inject(method = "tickMovement", at = @At("TAIL"))
+	void onTickMovement(CallbackInfo ci)
+	{
+		LivingEntity self = (LivingEntity)((Object)this);
+		if(getWorld().isClient)
+		{
+			ItemStack head = getEquippedStack(EquipmentSlot.HEAD);
+			if(!TrinketsUtil.performIfPresent(self, ItemRegistry.JOLLY_HAT, i -> JollyHatItem.tickSnowfall(self, i)) && head.isOf(ItemRegistry.JOLLY_HAT))
+				JollyHatItem.tickSnowfall(self, head); //only performed if no trinket was valid for causing the effect
+		}
 	}
 }

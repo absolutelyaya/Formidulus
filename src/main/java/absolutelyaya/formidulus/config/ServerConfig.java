@@ -12,6 +12,7 @@ public class ServerConfig extends Config
 	public final FloatEntry cultistMendingChance = new FloatEntry("cultist_mending_chance", 0.1f).setIcon(getIconPath("mending_chance"));
 	public final BooleanEntry deerWarning = new BooleanEntry("deer_warning", true).setIcon(getIconPath("deer_warning"));
 	public final IntegerEntry fightCheckInterval = new IntegerEntry("fightCheckInverval", 100);
+	public final FloatEntry jollyChance = new FloatEntry("jolly_chance", 0.01f);
 	
 	public ServerConfig()
 	{
@@ -22,6 +23,7 @@ public class ServerConfig extends Config
 		addEntry(cultistMendingChance);
 		addEntry(deerWarning);
 		addEntry(fightCheckInterval);
+		addEntry(jollyChance);
 	}
 	
 	@Override

@@ -69,7 +69,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "formidulus:big_lantern"
+          "name": "formidulus:great_lantern"
         }
       ],
       "rolls": 1.0

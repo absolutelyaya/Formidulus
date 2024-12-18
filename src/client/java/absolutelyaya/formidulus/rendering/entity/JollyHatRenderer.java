@@ -9,26 +9,19 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 
-public class DeerGodSkullRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer
+public class JollyHatRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer
 {
-	DeerGodSkullModel model;
-	
-	public DeerGodSkullRenderer()
-	{
-	
-	}
+	JollyHatModel model;
 	
 	@Override
 	public void render(ItemStack stack, ModelTransformationMode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay)
 	{
 		if(model == null)
-			model = new DeerGodSkullModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(FormidulusClient.DEER_GOD_SKULL_LAYER));
+			model = new JollyHatModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(FormidulusClient.JOLLY_HAT_LAYER));
 		matrices.push();
-		if(!mode.equals(ModelTransformationMode.GUI))
-			matrices.translate(0.5, 0f, 0.45);
-		matrices.translate(0, 1.5, 0);
+		matrices.translate(0.5, 1.475, 0.5);
 		matrices.scale(1, -1, 1);
-		model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(DeerGodSkullModel.TEXTURE)), light, overlay);
+		model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(JollyHatModel.TEXTURE)), light, overlay);
 		matrices.pop();
 	}
 }

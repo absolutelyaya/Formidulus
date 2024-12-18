@@ -3,16 +3,15 @@ package absolutelyaya.formidulus.item;
 import absolutelyaya.formidulus.item.components.ChargeComponent;
 import absolutelyaya.formidulus.registries.BlockRegistry;
 import absolutelyaya.formidulus.registries.DataComponentRegistry;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.util.ActionResult;
 
-public class BigLanternItem extends BlockItem
+public class GreatLanternItem extends BlockItem
 {
-	public BigLanternItem(Settings settings)
+	public GreatLanternItem(Settings settings)
 	{
-		super(BlockRegistry.BIG_LANTERN, settings);
+		super(BlockRegistry.GREAT_LANTERN, settings);
 	}
 	
 	@Override

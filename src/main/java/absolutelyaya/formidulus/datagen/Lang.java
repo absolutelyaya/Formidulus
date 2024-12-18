@@ -7,7 +7,8 @@ public interface Lang
 	String EXPANDABLE_LORE_HINT = modKey("item", "expandable_lore_hint");
 	String ACCESSORY_MODE_PREFIX = modKey("item", "accessory_mode_prefix");
 	String ACCESSORY_MODE_HINT = modKey("item", "accessory_mode_hint");
-	String DEPENDENCY_INFO_DEFAULT = modKey("item", "dependency_info.default");
+	String DEPENDENCY_INFO_REQUIRED = modKey("item", "dependency_info.required");
+	String DEPENDENCY_INFO_ENHANCEMENT = modKey("item", "dependency_info.enhancement");
 	
 	String ADVANCEMENT_ROOT_TITLE = modKey("advancement", "root.title");
 	String ADVANCEMENT_ROOT_DESCRIPTION = modKey("advancement", "root.description");

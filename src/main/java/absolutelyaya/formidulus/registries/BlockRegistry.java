@@ -18,7 +18,7 @@ public class BlockRegistry
 			new DeerSkullBlock(AbstractBlock.Settings.copy(Blocks.SPRUCE_PLANKS).nonOpaque()));
 	public static final Block BOSS_SPAWNER = Registry.register(Registries.BLOCK, Formidulus.identifier("boss_spawner"),
 			new BossSpawnerBlock(AbstractBlock.Settings.copy(Blocks.COMMAND_BLOCK).nonOpaque()));
-	public static final Block BIG_LANTERN = Registry.register(Registries.BLOCK, Formidulus.identifier("big_lantern"),
+	public static final Block GREAT_LANTERN = Registry.register(Registries.BLOCK, Formidulus.identifier("great_lantern"),
 			new BigLanternBlock(AbstractBlock.Settings.copy(Blocks.LANTERN).nonOpaque().luminance(BigLanternBlock::getLuminance).sounds(BlockSoundGroup.LANTERN)
 										 .strength(6f, 10f).requiresTool()));
 	

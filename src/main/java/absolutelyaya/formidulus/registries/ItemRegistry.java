@@ -2,9 +2,10 @@ package absolutelyaya.formidulus.registries;
 
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.damage.DamageSources;
-import absolutelyaya.formidulus.item.BigLanternItem;
+import absolutelyaya.formidulus.item.GreatLanternItem;
 import absolutelyaya.formidulus.datagen.Lang;
 import absolutelyaya.formidulus.item.DeerSkullItem;
+import absolutelyaya.formidulus.item.JollyHatItem;
 import absolutelyaya.formidulus.item.SacrificialDaggerItem;
 import absolutelyaya.formidulus.item.abilities.ItemAbilities;
 import absolutelyaya.formidulus.item.components.*;
@@ -53,8 +54,8 @@ public class ItemRegistry
 							.component(DataComponentRegistry.EXPANDABLE_LORE, ExpandableLoreComponent.makeGeneric(id, 2))));
 	public static final BannerPatternItem EYES_BANNER_PATTERN = register(Formidulus.identifier("eyes_pattern"),
 			id -> new BannerPatternItem(FormidableBannerPatterns.EYES_TAG, new Item.Settings().rarity(Rarity.RARE).maxCount(1)));
-	public static final BigLanternItem BIG_LANTERN = register(Formidulus.identifier("big_lantern"),
-			id -> new BigLanternItem(new Item.Settings().component(DataComponentTypes.RARITY, Rarity.RARE)
+	public static final GreatLanternItem GREAT_LANTERN = register(Formidulus.identifier("great_lantern"),
+			id -> new GreatLanternItem(new Item.Settings().component(DataComponentTypes.RARITY, Rarity.RARE)
 											 .component(DataComponentRegistry.ABILITY, new AbilityComponent(ItemAbilities.HEALWAVE))
 											 .component(DataComponentRegistry.EXPANDABLE_LORE, ExpandableLoreComponent.makeGenericBlock(id, 5))
 											 .component(DataComponentRegistry.CHARGE, new ChargeComponent(4, 4))
@@ -69,6 +70,15 @@ public class ItemRegistry
 				if(!Formidulus.TRINKETS)
 					settings.component(DataComponentRegistry.DEPENDENCY_INFO, new DependencyInfoComponent("trinkets"));
 				return new Item(settings);
+			});
+	public static final JollyHatItem JOLLY_HAT = register(Formidulus.identifier("jolly_hat"),
+			id -> {
+				Item.Settings settings = new Item.Settings().maxCount(1);
+				settings.component(DataComponentRegistry.ACCESSORY,
+						new AccessoryComponent(List.of(JollyHatItem.ACCESSORY_MODE_INACTIVE, JollyHatItem.ACCESSORY_MODE_ACTIVE), 0));
+				if(!Formidulus.TRINKETS)
+					settings.component(DataComponentRegistry.DEPENDENCY_INFO, new DependencyInfoComponent("trinkets", false));
+				return new JollyHatItem(settings);
 			});
 	
 	public static final Item DEER_PHASE1_MUSIC_DISC = register(Formidulus.identifier("deer_phase1_disc"),
@@ -107,13 +117,14 @@ public class ItemRegistry
 			entries.add(WEEN);
 		});
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register((entries) -> {
-			entries.add(BIG_LANTERN);
+			entries.add(GREAT_LANTERN);
 		});
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register((entries) -> {
 			entries.add(DEER_SKULL);
 			entries.add(SACRIFICIAL_DAGGER);
 			entries.add(SOUL_DAGGER);
-			entries.add(BIG_LANTERN);
+			entries.add(GREAT_LANTERN);
+			entries.add(JOLLY_HAT);
 		});
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register((entries) -> {
 			entries.add(EYES_BANNER_PATTERN);

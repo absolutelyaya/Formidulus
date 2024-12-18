@@ -77,10 +77,11 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(ItemRegistry.CRUOR_SPAWN_EGG, "Hirsch-Spawn-Ei");
 		builder.add(ItemRegistry.DEER_NECKLACE, "Seltsame Halskette");
 		builder.add(lore(ItemRegistry.DEER_NECKLACE, 0), "Die Halskette eines Hochrangigen Kultisten.");
-		builder.add(Lang.NOT_YET_IMPLEMENTED, "NOCH NICHT IMPLEMENTIERT");
-		
-		builder.add(Lang.DEPENDENCY_INFO_DEFAULT, "Scheint nutzlos zu sein ohne '%s'...");
 		builder.add(ItemRegistry.CHAINLINK, "Kettenglied");
+		
+		builder.add(Lang.NOT_YET_IMPLEMENTED, "NOCH NICHT IMPLEMENTIERT");
+		builder.add(Lang.DEPENDENCY_INFO_REQUIRED, "Scheint nutzlos zu sein ohne '%s'...");
+		builder.add(Lang.DEPENDENCY_INFO_ENHANCEMENT, "Scheint so als würde '%s' sein wahres potential offenbaren...");
 		
 		builder.add(Lang.MUSIC_DEER_PHASE1, "Efefski - Weisendes Licht");
 		builder.add(Lang.MUSIC_DEER_PHASE2, "Efefski - Laufendes Blut");
@@ -100,12 +101,12 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(BlockRegistry.WEEN.getTranslationKey() + ".lore", "es ist ween");
 		registerWithColorVariants(builder, modKey("block", "banner.eyes"), "Augen", colors, false);
 		builder.add(BlockRegistry.BOSS_SPAWNER, "Boss Spawner");
-		builder.add(BlockRegistry.BIG_LANTERN, "Große Laterne");
-		builder.add(lore(ItemRegistry.BIG_LANTERN, 0), "Eine riesige Metall Lanterne mit kunstvollen Gravierungen.");
-		builder.add(lore(ItemRegistry.BIG_LANTERN, 1), "Lädt sich langsam auf während sie platziert ist.");
-		builder.add(lore(ItemRegistry.BIG_LANTERN, 2), "");
-		builder.add(lore(ItemRegistry.BIG_LANTERN, 3), "Wenn ich doch nur die Fähigkeit hätte Leben zu erschaffen...");
-		builder.add(lore(ItemRegistry.BIG_LANTERN, 4), "Dann müsste ich mich nicht darauf verlassen dass die Natur sie für mich auflädt.");
+		builder.add(BlockRegistry.GREAT_LANTERN, "Große Laterne");
+		builder.add(lore(ItemRegistry.GREAT_LANTERN, 0), "Eine riesige Metall Lanterne mit kunstvollen Gravierungen.");
+		builder.add(lore(ItemRegistry.GREAT_LANTERN, 1), "Lädt sich langsam auf während sie platziert ist.");
+		builder.add(lore(ItemRegistry.GREAT_LANTERN, 2), "");
+		builder.add(lore(ItemRegistry.GREAT_LANTERN, 3), "Wenn ich doch nur die Fähigkeit hätte Leben zu erschaffen...");
+		builder.add(lore(ItemRegistry.GREAT_LANTERN, 4), "Dann müsste ich mich nicht darauf verlassen dass die Natur sie für mich auflädt.");
 		
 		builder.add(ADVANCEMENT_ROOT_TITLE, "Formidulus");
 		builder.add(ADVANCEMENT_ROOT_DESCRIPTION, "Unerzählte Legenden");

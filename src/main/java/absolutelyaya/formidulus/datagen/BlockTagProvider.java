@@ -30,7 +30,7 @@ public class BlockTagProvider extends FabricTagProvider.BlockTagProvider
 				.add(BlockRegistry.WEEN)
 				.add(BlockRegistry.DEER_SKULL);
 		getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
-				.add(BlockRegistry.BIG_LANTERN);
+				.add(BlockRegistry.GREAT_LANTERN);
 		getOrCreateTagBuilder(BlockTags.ENDERMAN_HOLDABLE)
 				.add(BlockRegistry.WEEN);
 	}

@@ -14,6 +14,7 @@ import java.util.Calendar;
 public record TimedEvent(Identifier id, int month, int day, int preMargin, int postMargin)
 {
 	public static final TimedEvent WEEN = new TimedEvent(Formidulus.identifier("ween"), Calendar.OCTOBER, 31, 30, 20);
+	public static final TimedEvent SOLSTICE_FESTIVAL = new TimedEvent(Formidulus.identifier("solstice_feast"), Calendar.DECEMBER, 24, 6, 6);
 	
 	public int getDaysUntil()
 	{

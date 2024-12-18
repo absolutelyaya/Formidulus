@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "chained=false,charge=0": {
+      "model": "formidulus:block/great_lantern_charge0"
+    },
+    "chained=true,charge=0": {
+      "model": "formidulus:block/great_lantern_charge0_chained"
+    },
+    "chained=false,charge=1": {
+      "model": "formidulus:block/great_lantern_charge1"
+    },
+    "chained=true,charge=1": {
+      "model": "formidulus:block/great_lantern_charge1_chained"
+    },
+    "chained=false,charge=2": {
+      "model": "formidulus:block/great_lantern_charge2"
+    },
+    "chained=true,charge=2": {
+      "model": "formidulus:block/great_lantern_charge2_chained"
+    },
+    "chained=false,charge=3": {
+      "model": "formidulus:block/great_lantern_charge3"
+    },
+    "chained=true,charge=3": {
+      "model": "formidulus:block/great_lantern_charge3_chained"
+    },
+    "chained=false,charge=4": {
+      "model": "formidulus:block/great_lantern"
+    },
+    "chained=true,charge=4": {
+      "model": "formidulus:block/great_lantern_chained"
+    }
+  }
+}

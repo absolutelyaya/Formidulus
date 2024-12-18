@@ -2,6 +2,7 @@ package absolutelyaya.formidulus.datagen;
 
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.item.DeerSkullItem;
+import absolutelyaya.formidulus.item.JollyHatItem;
 import absolutelyaya.formidulus.item.abilities.ItemAbilities;
 import absolutelyaya.formidulus.item.abilities.ItemAbility;
 import absolutelyaya.formidulus.realtime.TimedEvent;
@@ -78,10 +79,14 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(ItemRegistry.CRUOR_SPAWN_EGG, "Deer Spawn Egg");
 		builder.add(ItemRegistry.DEER_NECKLACE, "Strange Necklace");
 		builder.add(lore(ItemRegistry.DEER_NECKLACE, 0), "The Necklace of a High Ranking Cultist.");
-		builder.add(Lang.NOT_YET_IMPLEMENTED, "NOT YET IMPLEMENTED");
-		
-		builder.add(Lang.DEPENDENCY_INFO_DEFAULT, "This seems useless without '%s'...");
 		builder.add(ItemRegistry.CHAINLINK, "Chain Link");
+		builder.add(ItemRegistry.JOLLY_HAT, "Jolly Hat");
+		builder.add(accessory(JollyHatItem.ACCESSORY_MODE_INACTIVE), "Inactive");
+		builder.add(accessory(JollyHatItem.ACCESSORY_MODE_ACTIVE), "Active");
+		
+		builder.add(Lang.NOT_YET_IMPLEMENTED, "NOT YET IMPLEMENTED");
+		builder.add(Lang.DEPENDENCY_INFO_REQUIRED, "Seems useless without '%s'...");
+		builder.add(Lang.DEPENDENCY_INFO_ENHANCEMENT, "Seems like '%s' could unlock its true potential...");
 		
 		builder.add(Lang.MUSIC_DEER_PHASE1, "Efefski - Guiding Light");
 		builder.add(Lang.MUSIC_DEER_PHASE2, "Efefski - Running Blood");
@@ -101,12 +106,12 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(BlockRegistry.WEEN.getTranslationKey() + ".lore", "it's ween");
 		registerWithColorVariants(builder, modKey("block", "banner.eyes"), "Eyes", colors);
 		builder.add(BlockRegistry.BOSS_SPAWNER, "Boss Spawner");
-		builder.add(BlockRegistry.BIG_LANTERN, "Great Lantern");
-		builder.add(lore(ItemRegistry.BIG_LANTERN, 0), "A huge Metal Lantern with Ornate Engravings.");
-		builder.add(lore(ItemRegistry.BIG_LANTERN, 1), "Slowly recharges energy while placed down.");
-		builder.add(lore(ItemRegistry.BIG_LANTERN, 2), "");
-		builder.add(lore(ItemRegistry.BIG_LANTERN, 3), "If only I had the Ability to create life...");
-		builder.add(lore(ItemRegistry.BIG_LANTERN, 4), "Then I wouldn't need to rely on Nature to charge it for me.");
+		builder.add(BlockRegistry.GREAT_LANTERN, "Great Lantern");
+		builder.add(lore(ItemRegistry.GREAT_LANTERN, 0), "A huge Metal Lantern with Ornate Engravings.");
+		builder.add(lore(ItemRegistry.GREAT_LANTERN, 1), "Slowly recharges energy while placed down.");
+		builder.add(lore(ItemRegistry.GREAT_LANTERN, 2), "");
+		builder.add(lore(ItemRegistry.GREAT_LANTERN, 3), "If only I had the Ability to create life...");
+		builder.add(lore(ItemRegistry.GREAT_LANTERN, 4), "Then I wouldn't need to rely on Nature to charge it for me.");
 		
 		builder.add(ADVANCEMENT_ROOT_TITLE, "Formidulus");
 		builder.add(ADVANCEMENT_ROOT_DESCRIPTION, "Legends Untold");
@@ -187,6 +192,8 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(EVENT_INFO_ACTIVE_SUFFIX, " (active)");
 		builder.add(TimedEvent.WEEN.getTitleKey(), "Ween");
 		builder.add(TimedEvent.WEEN.getDescriptionKey(), "A time where ghastly ghosts and ghouls are worshipped; the entire Month it takes place in is also known as 'Spooky Month' in some circles.");
+		builder.add(TimedEvent.SOLSTICE_FESTIVAL.getTitleKey(), "Solstice Festival");
+		builder.add(TimedEvent.SOLSTICE_FESTIVAL.getDescriptionKey(), "In a world as unforgiving as this, holding onto hope is important. In the depth of winter, when Days are short, Nights long and some regions near uninhabitable, the Solstice is celebrated; for we've passed the hardest challenges of Winter.");
 		
 		
 		String cultistMendingChance = Formidulus.config.cultistMendingChance.getTranslationKey(Formidulus.MOD_ID);
@@ -280,5 +287,10 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 	{
 		for (String color : colors.keySet())
 			builder.add(String.format("%1$s.%2$s", baseKey, color), String.format("%1$s %2$s", colors.get(color), baseValue));
+	}
+	
+	public static String accessory(String mode)
+	{
+		return genericKey("item.accessory_mode", mode);
 	}
 }

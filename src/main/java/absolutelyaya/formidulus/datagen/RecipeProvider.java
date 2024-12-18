@@ -32,7 +32,7 @@ public class RecipeProvider extends FabricRecipeProvider
 				.showNotification(false)
 				.criterion("deer", OnKilledCriterion.Conditions.createPlayerKilledEntity(EntityPredicate.Builder.create().type(EntityRegistry.DEER_GOD)))
 				.offerTo(exporter);
-		ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, ItemRegistry.BIG_LANTERN)
+		ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, ItemRegistry.GREAT_LANTERN)
 				.input('c', ItemRegistry.CHAINLINK).input('l', Items.LANTERN)
 				.pattern(" c ").pattern("clc").pattern(" c ")
 				.showNotification(false)

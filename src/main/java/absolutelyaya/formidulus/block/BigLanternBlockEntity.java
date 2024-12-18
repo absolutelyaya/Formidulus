@@ -45,7 +45,7 @@ public class BigLanternBlockEntity extends BlockEntity
 	{
 		if(world == null)
 			return;
-		if(!getCachedState().isOf(BlockRegistry.BIG_LANTERN))
+		if(!getCachedState().isOf(BlockRegistry.GREAT_LANTERN))
 			return;
 		if(rechargeTimer > 0 && getCachedState().get(BigLanternBlock.CHARGE) < 4)
 		{

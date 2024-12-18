@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "formidulus:big_lantern"
+        "recipe": "formidulus:great_lantern"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "formidulus:big_lantern"
+      "formidulus:great_lantern"
     ]
   }
 }

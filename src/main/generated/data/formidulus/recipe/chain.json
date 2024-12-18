@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "formidulus:chainlink"
+    },
+    {
+      "item": "formidulus:chainlink"
+    },
+    {
+      "item": "formidulus:chainlink"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:chain"
+  }
+}

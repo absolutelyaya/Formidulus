@@ -119,7 +119,7 @@ public class BigLanternBlock extends BlockWithEntity
 				return ActionResult.SUCCESS;
 			world.addSyncedBlockEvent(pos, this, 0, 0);
 			world.setBlockState(pos, state.with(CHARGE, 0));
-			HealwaveAbility.castHealwave(player, ItemRegistry.BIG_LANTERN.getDefaultStack(), pos.toBottomCenterPos());
+			HealwaveAbility.castHealwave(player, ItemRegistry.GREAT_LANTERN.getDefaultStack(), pos.toBottomCenterPos());
 			if(world.getBlockEntity(pos) instanceof BigLanternBlockEntity lantern)
 				lantern.startRechargeTimer();
 			world.emitGameEvent(player, GameEvent.BLOCK_CHANGE, pos);
