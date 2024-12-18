@@ -1,0 +1,8 @@
+{
+	"credit": "Made by Absolutelyaya",
+	"parent": "formidulus:block/big_lantern_chained",
+	"textures": {
+		"1": "formidulus:block/lantern2",
+		"particle": "formidulus:block/lantern_particle2"
+	}
+}

@@ -2,13 +2,11 @@ package absolutelyaya.formidulus.registries;
 
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.damage.DamageSources;
+import absolutelyaya.formidulus.item.BigLanternItem;
 import absolutelyaya.formidulus.item.DeerSkullItem;
 import absolutelyaya.formidulus.item.SacrificialDaggerItem;
 import absolutelyaya.formidulus.item.abilities.ItemAbilities;
-import absolutelyaya.formidulus.item.components.AbilityComponent;
-import absolutelyaya.formidulus.item.components.AccessoryComponent;
-import absolutelyaya.formidulus.item.components.DamageTypeComponent;
-import absolutelyaya.formidulus.item.components.ExpandableLoreComponent;
+import absolutelyaya.formidulus.item.components.*;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.LoreComponent;
@@ -51,6 +49,12 @@ public class ItemRegistry
 							.component(DataComponentRegistry.EXPANDABLE_LORE, ExpandableLoreComponent.makeGeneric(id, 2))));
 	public static final BannerPatternItem EYES_BANNER_PATTERN = register(Formidulus.identifier("eyes_pattern"),
 			id -> new BannerPatternItem(FormidableBannerPatterns.EYES_TAG, new Item.Settings().rarity(Rarity.RARE).maxCount(1)));
+	public static final BigLanternItem BIG_LANTERN = register(Formidulus.identifier("big_lantern"),
+			id -> new BigLanternItem(new Item.Settings().component(DataComponentTypes.RARITY, Rarity.RARE)
+											 .component(DataComponentRegistry.ABILITY, new AbilityComponent(ItemAbilities.HEALWAVE))
+											 .component(DataComponentRegistry.EXPANDABLE_LORE, ExpandableLoreComponent.makeGenericBlock(id, 5))
+											 .component(DataComponentRegistry.CHARGE, new ChargeComponent(4, 4))
+											 .component(DataComponentTypes.MAX_STACK_SIZE, 1)));
 	
 	public static final Item DEER_PHASE1_MUSIC_DISC = register(Formidulus.identifier("deer_phase1_disc"),
 			id -> new Item(new Item.Settings().maxCount(1).rarity(Rarity.RARE).jukeboxPlayable(FormidableTunes.DEER_PHASE1)));
@@ -78,10 +82,14 @@ public class ItemRegistry
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL).register((entries) -> {
 			entries.add(WEEN);
 		});
+		ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register((entries) -> {
+			entries.add(BIG_LANTERN);
+		});
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register((entries) -> {
 			entries.add(DEER_SKULL);
 			entries.add(SACRIFICIAL_DAGGER);
 			entries.add(SOUL_DAGGER);
+			entries.add(BIG_LANTERN);
 		});
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register((entries) -> {
 			entries.add(EYES_BANNER_PATTERN);

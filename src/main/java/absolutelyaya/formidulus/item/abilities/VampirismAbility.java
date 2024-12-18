@@ -6,13 +6,13 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 
 public class VampirismAbility extends ItemAbility
 {
-	@Override
-	public String getName()
+	public VampirismAbility(Identifier id)
 	{
-		return "vampirism";
+		super(id);
 	}
 	
 	@Override

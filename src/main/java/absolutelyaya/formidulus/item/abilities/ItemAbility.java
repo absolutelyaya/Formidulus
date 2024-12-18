@@ -1,6 +1,5 @@
 package absolutelyaya.formidulus.item.abilities;
 
-import absolutelyaya.formidulus.Formidulus;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
@@ -9,23 +8,26 @@ import net.minecraft.item.ItemUsageContext;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.*;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public abstract class ItemAbility
+public class ItemAbility
 {
 	protected static final Style STYLE = Style.EMPTY.withItalic(false).withColor(Formatting.GRAY);
+	public final Identifier id;
 	
-	public abstract String getName();
+	public ItemAbility(Identifier id)
+	{
+		this.id = id;
+	}
 	
 	public String getTranslationKey()
 	{
-		return "item-ability." + Formidulus.MOD_ID + "." + getName();
+		return "item-ability." + id.getNamespace() + "." + id.getPath();
 	}
 	
 	public int getDescriptionLines()
@@ -53,17 +55,22 @@ public abstract class ItemAbility
 	
 	}
 	
-	public void onUse(ItemStack stack, LivingEntity user, Hand hand, TypedActionResult<ItemStack> result)
+	public Optional<TypedActionResult<ItemStack>> onUse(ItemStack stack, LivingEntity user, Hand hand, TypedActionResult<ItemStack> result)
 	{
-	
+		return Optional.empty();
 	}
 	
-	public void onUseOnBlock(ItemStack stack, ItemUsageContext context, ActionResult result)
+	public Optional<ActionResult> onUseOnBlock(ItemStack stack, ItemUsageContext context, ActionResult result)
 	{
-	
+		return Optional.empty();
 	}
 	
-	public void onUseOnEntity(ItemStack stack, PlayerEntity user, LivingEntity target, Hand hand, ActionResult result)
+	public Optional<ActionResult> onUseOnEntity(ItemStack stack, PlayerEntity user, LivingEntity target, Hand hand, ActionResult result)
+	{
+		return Optional.empty();
+	}
+	
+	public void castActiveAbility(LivingEntity caster, ItemStack stack, Vec3d pos)
 	{
 	
 	}

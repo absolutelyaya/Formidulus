@@ -31,5 +31,6 @@ public class EntityLootTableProvider extends SimpleFabricLootTableProvider
 						.pool(LootPool.builder().conditionally(RandomChanceLootCondition.builder(0.5f))
 									  .with(ItemEntry.builder(ItemRegistry.DEER_PHASE1_MUSIC_DISC))
 									  .with(ItemEntry.builder(ItemRegistry.DEER_PHASE2_MUSIC_DISC)).build()));
+		//TODO: add Big Lantern Drop and make Chainlink Item
 	}
 }

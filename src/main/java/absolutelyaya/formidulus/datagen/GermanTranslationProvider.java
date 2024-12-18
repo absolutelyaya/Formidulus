@@ -62,9 +62,12 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(ItemAbilities.VAMPIRISM.getTranslationKey(), "- VAMPIRISMUS -");
 		builder.add(ItemAbilities.VAMPIRISM.getTranslationKey() + ".desc0", "Das Verletzen anderer heilt den Nutzer.");
 		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey(), "- SEELEN BRECHER -");
-		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc0", "Schlage kleine Teile der Seele deines Feindes ab.");
-		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc1", "Der Konsum jener heilt den Nutzer erheblich.");
+		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc0", "Splittere kleine Teile der Seele deines Feindes ab;");
+		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc1", "Der Konsum jener heilt den Nutzer.");
 		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc2", "+2 §bSeelen§r Schaden; §6ignoriert Rüstung§r.");
+		builder.add(ItemAbilities.HEALWAVE.getTranslationKey(), "+ HEILUNGSWELLE +");
+		builder.add(ItemAbilities.HEALWAVE.getTranslationKey() + ".desc0", "Benutze dies um eine Heilungswelle abzugeben.");
+		builder.add(ItemAbilities.HEALWAVE.getTranslationKey() + ".desc1", "Gibt nicht-gegnerischen Wesen um dich herum Regeneration.");
 		
 		builder.add(BlockRegistry.WEEN, "Ween");
 		builder.add(BlockRegistry.WEEN.getTranslationKey() + ".lore", "es ist ween");
@@ -85,6 +88,12 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add("block.formidulus.banner.eyes.white", "Weiße Augen");
 		builder.add("block.formidulus.banner.eyes.yellow", "Gelbe Augen");
 		builder.add(BlockRegistry.BOSS_SPAWNER, "Boss Spawner");
+		builder.add(BlockRegistry.BIG_LANTERN, "Große Laterne");
+		builder.add(ItemRegistry.BIG_LANTERN.getTranslationKey() + ".lore0", "Eine riesige Metall Lanterne mit kunstvollen Gravierungen.");
+		builder.add(ItemRegistry.BIG_LANTERN.getTranslationKey() + ".lore1", "Lädt sich langsam auf während sie platziert ist.");
+		builder.add(ItemRegistry.BIG_LANTERN.getTranslationKey() + ".lore2", "");
+		builder.add(ItemRegistry.BIG_LANTERN.getTranslationKey() + ".lore3", "Wenn ich doch nur die Fähigkeit hätte Leben zu erschaffen...");
+		builder.add(ItemRegistry.BIG_LANTERN.getTranslationKey() + ".lore4", "Dann müsste ich mich nicht darauf verlassen dass die Natur sie für mich auflädt.");
 		
 		builder.add(ADVANCEMENT_ROOT_TITLE, "Formidulus");
 		builder.add(ADVANCEMENT_ROOT_DESCRIPTION, "Unerzählte Legenden");
@@ -187,6 +196,7 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(subtitle(SoundRegistry.ACCESSORY_CHANGE_MODE), "Accessoire modus geändert");
 		
 		builder.add(subtitle(SoundRegistry.WEEN), "es ist ween :D");
+		builder.add(subtitle(SoundRegistry.BIG_LANTERN_HEALWAVE), "Laterne gibt Heilwelle ab");
 		
 		builder.add(subtitle(SoundRegistry.DEER_STEP_LANTERN), "Kette rasselt");
 		builder.add(subtitle(SoundRegistry.DEER_HURT), "Hirsch nimmt Schaden");

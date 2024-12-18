@@ -23,7 +23,7 @@ public record AbilityComponent(ItemAbility ability)
 
 	public Identifier getTypeId()
 	{
-		return Formidulus.identifier(ability.getName());
+		return ability.id;
 	}
 	
 	public static AbilityComponent fromIdentifier(Identifier id)

@@ -5,7 +5,12 @@ import absolutelyaya.formidulus.FormidulusClient;
 import absolutelyaya.formidulus.block.BossSpawnerBlockEntity;
 import absolutelyaya.formidulus.gui.TitleHUD;
 import absolutelyaya.formidulus.gui.screen.BossSpawnerScreen;
+import absolutelyaya.formidulus.item.abilities.ItemAbilities;
+import absolutelyaya.formidulus.item.abilities.ItemAbility;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 public class ClientPacketHandler
 {
@@ -91,5 +96,13 @@ public class ClientPacketHandler
 				return;
 			context.client().setScreen(new BossSpawnerScreen(spawner));
 		});
+		ClientPlayNetworking.registerGlobalReceiver(CastActiveAbilityPayload.ID, ((payload, context) -> {
+			World world = context.client().world;
+			if(world == null || !(world.getEntityById(payload.caster()) instanceof LivingEntity caster))
+				return;
+			ItemAbility ability = ItemAbilities.getFromId(payload.ability());
+			if(ability != null)
+				ability.castActiveAbility(caster, payload.stack(), new Vec3d(payload.pos()));
+		}));
 	}
 }

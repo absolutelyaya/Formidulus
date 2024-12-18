@@ -1,0 +1,35 @@
+{
+  "parent": "formidulus:block/big_lantern",
+  "overrides": [
+    {
+      "predicate": {
+        "formidulus:charge": 0
+      },
+      "model": "formidulus:block/big_lantern_charge0"
+    },
+    {
+      "predicate": {
+        "formidulus:charge": 0.2
+      },
+      "model": "formidulus:block/big_lantern_charge1"
+    },
+    {
+      "predicate": {
+        "formidulus:charge": 0.4
+      },
+      "model": "formidulus:block/big_lantern_charge2"
+    },
+    {
+      "predicate": {
+        "formidulus:charge": 0.6
+      },
+      "model": "formidulus:block/big_lantern_charge3"
+    },
+    {
+      "predicate": {
+        "formidulus:charge": 0.8
+      },
+      "model": "formidulus:block/big_lantern"
+    }
+  ]
+}

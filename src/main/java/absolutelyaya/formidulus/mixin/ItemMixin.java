@@ -19,24 +19,24 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Item.class)
 public class ItemMixin
 {
-	@Inject(method = "use", at = @At("TAIL"))
+	@Inject(method = "use", at = @At("TAIL"), cancellable = true)
 	void onUse(World world, PlayerEntity user, Hand hand, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir)
 	{
 		if(user.getStackInHand(hand).get(DataComponentRegistry.ABILITY) instanceof AbilityComponent component)
-			component.ability().onUse(user.getStackInHand(hand), user, hand, cir.getReturnValue());
+			component.ability().onUse(user.getStackInHand(hand), user, hand, cir.getReturnValue()).ifPresent(cir::setReturnValue);
 	}
 	
-	@Inject(method = "useOnBlock", at = @At("TAIL"))
+	@Inject(method = "useOnBlock", at = @At("TAIL"), cancellable = true)
 	void onUseOnBlock(ItemUsageContext context, CallbackInfoReturnable<ActionResult> cir)
 	{
 		if(context.getStack().get(DataComponentRegistry.ABILITY) instanceof AbilityComponent component)
-			component.ability().onUseOnBlock(context.getStack(), context, cir.getReturnValue());
+			component.ability().onUseOnBlock(context.getStack(), context, cir.getReturnValue()).ifPresent(cir::setReturnValue);
 	}
 	
-	@Inject(method = "useOnEntity", at = @At("TAIL"))
+	@Inject(method = "useOnEntity", at = @At("TAIL"), cancellable = true)
 	void onUseOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand, CallbackInfoReturnable<ActionResult> cir)
 	{
 		if(stack.get(DataComponentRegistry.ABILITY) instanceof AbilityComponent component)
-			component.ability().onUseOnEntity(stack, user, entity, hand, cir.getReturnValue());
+			component.ability().onUseOnEntity(stack, user, entity, hand, cir.getReturnValue()).ifPresent(cir::setReturnValue);
 	}
 }

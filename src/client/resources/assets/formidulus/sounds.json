@@ -40,6 +40,15 @@
     ],
     "subtitle": "subtitles.formidulus.ween"
   },
+  "block.big_lantern.burst": {
+    "sounds": [
+      {
+        "name": "item.firecharge.use",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.block.big_lantern.burst"
+  },
 
 
   "entity.deer.step.lantern": {

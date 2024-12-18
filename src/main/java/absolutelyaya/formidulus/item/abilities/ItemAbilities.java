@@ -11,20 +11,14 @@ public class ItemAbilities
 {
 	public static final Map<Identifier, ItemAbility> map = new HashMap<>();
 	
-	public static final ItemAbility NONE = register(Formidulus.identifier("none"), new ItemAbility()
-	{
-		@Override
-		public String getName()
-		{
-			return "none";
-		}
-	});
-	public static final ItemAbility VAMPIRISM = register(Formidulus.identifier("vampirism"), new VampirismAbility());
-	public static final ItemAbility SOULSTEAL = register(Formidulus.identifier("soulsteal"), new SoulStealAbility());
+	public static final ItemAbility NONE = register(new ItemAbility(Formidulus.identifier("none")));
+	public static final ItemAbility VAMPIRISM = register(new VampirismAbility(Formidulus.identifier("vampirism")));
+	public static final ItemAbility SOULSTEAL = register(new SoulStealAbility(Formidulus.identifier("soulsteal")));
+	public static final ItemAbility HEALWAVE = register(new HealwaveAbility(Formidulus.identifier("healwave")));
 	
-	public static ItemAbility register(Identifier id, ItemAbility ability)
+	public static ItemAbility register(ItemAbility ability)
 	{
-		map.put(id, ability);
+		map.put(ability.id, ability);
 		return ability;
 	}
 	

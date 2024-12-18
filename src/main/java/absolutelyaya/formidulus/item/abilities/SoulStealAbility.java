@@ -6,13 +6,13 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.MutableText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 
 public class SoulStealAbility extends VampirismAbility
 {
-	@Override
-	public String getName()
+	public SoulStealAbility(Identifier id)
 	{
-		return "soulsteal";
+		super(id);
 	}
 	
 	@Override

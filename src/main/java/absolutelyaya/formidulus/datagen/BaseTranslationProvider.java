@@ -63,6 +63,9 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc0", "Harm others to chip pieces off of their Soul;");
 		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc1", "Consuming them replenishes Health.");
 		builder.add(ItemAbilities.SOULSTEAL.getTranslationKey() + ".desc2", "+2 §bSoul§r Damage; §6ignores Armor§r.");
+		builder.add(ItemAbilities.HEALWAVE.getTranslationKey(), "+ HEALWAVE +");
+		builder.add(ItemAbilities.HEALWAVE.getTranslationKey() + ".desc0", "Use when fully charged to emit a Healwave.");
+		builder.add(ItemAbilities.HEALWAVE.getTranslationKey() + ".desc1", "Applies Regeneration to Non-Hostile Entities around you.");
 		
 		builder.add(BlockRegistry.WEEN, "Ween");
 		builder.add(BlockRegistry.WEEN.getTranslationKey() + ".lore", "it's ween");
@@ -83,6 +86,12 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add("block.formidulus.banner.eyes.white", "White Eyes");
 		builder.add("block.formidulus.banner.eyes.yellow", "Yellow Eyes");
 		builder.add(BlockRegistry.BOSS_SPAWNER, "Boss Spawner");
+		builder.add(BlockRegistry.BIG_LANTERN, "Big Lantern");
+		builder.add(ItemRegistry.BIG_LANTERN.getTranslationKey() + ".lore0", "A huge Metal Lantern with Ornate Engravings.");
+		builder.add(ItemRegistry.BIG_LANTERN.getTranslationKey() + ".lore1", "Slowly recharges energy while placed down.");
+		builder.add(ItemRegistry.BIG_LANTERN.getTranslationKey() + ".lore2", "");
+		builder.add(ItemRegistry.BIG_LANTERN.getTranslationKey() + ".lore3", "If only I had the Ability to create life...");
+		builder.add(ItemRegistry.BIG_LANTERN.getTranslationKey() + ".lore4", "Then I wouldn't need to rely on Nature to charge it for me.");
 		
 		builder.add(ADVANCEMENT_ROOT_TITLE, "Formidulus");
 		builder.add(ADVANCEMENT_ROOT_DESCRIPTION, "Legends Untold");
@@ -185,6 +194,7 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(subtitle(SoundRegistry.ACCESSORY_CHANGE_MODE), "Accessory mode changed");
 		
 		builder.add(subtitle(SoundRegistry.WEEN), "its ween :D");
+		builder.add(subtitle(SoundRegistry.BIG_LANTERN_HEALWAVE), "Lantern emits Healwave");
 		
 		builder.add(subtitle(SoundRegistry.DEER_STEP_LANTERN), "Chain rattles");
 		builder.add(subtitle(SoundRegistry.DEER_HURT), "Deer hurts");
