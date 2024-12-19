@@ -11,8 +11,8 @@ public class ServerConfig extends Config
 	static final Identifier BG_TEX = Identifier.of("textures/block/stone_bricks.png");
 	public final FloatEntry cultistMendingChance = new FloatEntry("cultist_mending_chance", 0.1f).setIcon(getIconPath("mending_chance"));
 	public final BooleanEntry deerWarning = new BooleanEntry("deer_warning", true).setIcon(getIconPath("deer_warning"));
-	public final IntegerEntry fightCheckInterval = new IntegerEntry("fightCheckInverval", 100);
-	public final FloatEntry jollyChance = new FloatEntry("jolly_chance", 0.01f);
+	public final IntegerEntry fightCheckInterval = new IntegerEntry("fight_check_inverval", 100).setIcon(getIconPath("fight_check_interval"));
+	public final FloatEntry jollyChance = new FloatEntry("jolly_chance", 0.01f).setIcon(getIconPath("jolly_mobs"));
 	
 	public ServerConfig()
 	{
