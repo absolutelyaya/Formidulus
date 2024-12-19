@@ -199,6 +199,7 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		String cultistMendingChance = Formidulus.config.cultistMendingChance.getTranslationKey(Formidulus.MOD_ID);
 		String deerWarning = Formidulus.config.deerWarning.getTranslationKey(Formidulus.MOD_ID);
 		String fightCheckInterval = Formidulus.config.fightCheckInterval.getTranslationKey(Formidulus.MOD_ID);
+		String jollyChance = Formidulus.config.jollyChance.getTranslationKey(Formidulus.MOD_ID);
 		
 		builder.add(SCREEN_CONFIG_TITLE, "Formidulus Server Config Screen");
 		builder.add(cultistMendingChance, "Cultist Mending Chance");
@@ -211,6 +212,9 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(fightCheckInterval, "Bossfight Check Interval");
 		builder.add(fightCheckInterval + ".description",
 				"The interval between checks a boss spawner performs to see if there's an active fight, or a spawned boss belonging to it.");
+		builder.add(jollyChance, "Jolly Chance");
+		builder.add(jollyChance + ".description",
+				"Chance 'Jolly Mobs' spawn with Jolly Hats around the Solstice Festival (24th Dec).");
 		
 		
 		builder.add(subtitle(SoundRegistry.ACCESSORY_CHANGE_MODE), "Accessory mode changed");

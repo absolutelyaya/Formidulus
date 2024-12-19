@@ -14,6 +14,7 @@ import absolutelyaya.formidulus.registries.*;
 import absolutelyaya.formidulus.rendering.block.BossSpawnerRenderer;
 import absolutelyaya.formidulus.rendering.block.DeerSkullBlockEntityRenderer;
 import absolutelyaya.formidulus.rendering.entity.*;
+import absolutelyaya.formidulus.rendering.entity.feature.CreeperHeadFeatureRenderer;
 import absolutelyaya.formidulus.sound.BossMusicHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -25,7 +26,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.minecraft.client.item.ModelPredicateProviderRegistry;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
+import net.minecraft.client.render.entity.CreeperEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
+import net.minecraft.entity.EntityType;
 
 public class FormidulusClient implements ClientModInitializer
 {
@@ -99,6 +102,11 @@ public class FormidulusClient implements ClientModInitializer
 				if(!type.spawnerModel().isEmpty())
 					pluginContext.addModels(Formidulus.identifier("block/" + type.spawnerModel()));
 			});
+		});
+		
+		LivingEntityFeatureRendererRegistrationCallback.EVENT.register((type, renderer, helper, context) -> {
+			if(type.equals(EntityType.CREEPER) && renderer instanceof CreeperEntityRenderer creeperRenderer)
+				helper.register(new CreeperHeadFeatureRenderer(creeperRenderer));
 		});
 		
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> bossMusicHandler.stopAll());

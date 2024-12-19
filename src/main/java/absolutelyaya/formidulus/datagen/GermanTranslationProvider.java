@@ -2,6 +2,7 @@ package absolutelyaya.formidulus.datagen;
 
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.item.DeerSkullItem;
+import absolutelyaya.formidulus.item.JollyHatItem;
 import absolutelyaya.formidulus.item.abilities.ItemAbilities;
 import absolutelyaya.formidulus.realtime.TimedEvent;
 import absolutelyaya.formidulus.registries.*;
@@ -78,6 +79,9 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(ItemRegistry.DEER_NECKLACE, "Seltsame Halskette");
 		builder.add(lore(ItemRegistry.DEER_NECKLACE, 0), "Die Halskette eines Hochrangigen Kultisten.");
 		builder.add(ItemRegistry.CHAINLINK, "Kettenglied");
+		builder.add(ItemRegistry.JOLLY_HAT, "Festliche Mütze");
+		builder.add(accessory(JollyHatItem.ACCESSORY_MODE_INACTIVE), "Inaktiv");
+		builder.add(accessory(JollyHatItem.ACCESSORY_MODE_ACTIVE), "Aktiv");
 		
 		builder.add(Lang.NOT_YET_IMPLEMENTED, "NOCH NICHT IMPLEMENTIERT");
 		builder.add(Lang.DEPENDENCY_INFO_REQUIRED, "Scheint nutzlos zu sein ohne '%s'...");
@@ -187,11 +191,14 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(EVENT_INFO_ACTIVE_SUFFIX, " (aktiv)");
 		builder.add(TimedEvent.WEEN.getTitleKey(), "Ween");
 		builder.add(TimedEvent.WEEN.getDescriptionKey(), "Ein Fest an dem schaurige Geister und Ghule gefeiert werden; der ganze Monat in dem es stattfindet, ist in manchen Kreisen als 'Spooky Month' bekannt.");
+		builder.add(TimedEvent.SOLSTICE_FESTIVAL.getTitleKey(), "Fest der Sonnenwende");
+		builder.add(TimedEvent.SOLSTICE_FESTIVAL.getDescriptionKey(), "In einer schonungslosen Welt wie dieser, ist es wichtig Hoffnung aufrecht zu erhalten. In den Tiefen des Winters, wo die Tage kurz, Nächte lang und eine Regionen beinahe unbewohnbar sind, wird die Sonnenwende gefeiert; denn wir haben die härtesten Herausforderungen dieses Winters bereits überstanden.");
 		
 		
 		String cultistMendingChance = Formidulus.config.cultistMendingChance.getTranslationKey(Formidulus.MOD_ID);
 		String deerWarning = Formidulus.config.deerWarning.getTranslationKey(Formidulus.MOD_ID);
 		String fightCheckInterval = Formidulus.config.fightCheckInterval.getTranslationKey(Formidulus.MOD_ID);
+		String jollyChance = Formidulus.config.jollyChance.getTranslationKey(Formidulus.MOD_ID);
 		
 		builder.add(SCREEN_CONFIG_TITLE, "Formidulus Server Einstellungen");
 		builder.add(cultistMendingChance, "Kultist Reperatur Chance");
@@ -204,6 +211,9 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(fightCheckInterval, "Bosskampf Check Intervall");
 		builder.add(fightCheckInterval + ".description",
 				"Der Intervall zwischen den checks die ein Boss Spawner ausführt um zu testen ob sein Kampf läuft, oder ein Lebender Boss zu ihm gehört.");
+		builder.add(jollyChance, "Festliche Mob Chance");
+		builder.add(jollyChance + ".description",
+				"Die Wahrscheinlichkeit dass 'Festliche Mobs' die Festliche Mützen tragen im Rahmen des Fests zur Sonnenwende spawnen (24er Dez).");
 		
 		
 		builder.add(subtitle(SoundRegistry.ACCESSORY_CHANGE_MODE), "Accessoire modus geändert");

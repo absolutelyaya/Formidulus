@@ -45,6 +45,8 @@
   "config.formidulus.deer_warning.description": "Whether Players with less than 20 Armor should be warned when close to Cruor in its unsummoned state.",
   "config.formidulus.fightCheckInverval": "Bossfight Check Interval",
   "config.formidulus.fightCheckInverval.description": "The interval between checks a boss spawner performs to see if there's an active fight, or a spawned boss belonging to it.",
+  "config.formidulus.jolly_chance": "Jolly Chance",
+  "config.formidulus.jolly_chance.description": "Chance 'Jolly Mobs' spawn with Jolly Hats around the Solstice Festival (24th Dec).",
   "death.attack.claw": "%1$s was torn apart by %2$s",
   "death.attack.claw.item": "%1s was torn apart by %2$s using %3$s",
   "death.attack.claw.player": "%1s was torn apart trying to escape %2$s",
