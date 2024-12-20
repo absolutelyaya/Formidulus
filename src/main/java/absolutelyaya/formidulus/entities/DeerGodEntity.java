@@ -1941,7 +1941,7 @@ public class DeerGodEntity extends BossEntity
 				mob.targetGoal.randomizeTarget();
 				//check if target is obstructed
 				if(mob.getTarget() != null &&
-						   mob.getWorld().raycast(new RaycastContext(mob.getPos(), mob.getTarget().getPos(),
+						   mob.getWorld().raycast(new RaycastContext(mob.getPos().add(0, 1.5f, 0), mob.getTarget().getPos(),
 								   RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, mob)).getType().equals(HitResult.Type.MISS))
 				{
 					targetAccessible = true;
@@ -2022,11 +2022,14 @@ public class DeerGodEntity extends BossEntity
 			}
 			
 			//slowly rotate towards target
-			Vec3d diff = mob.getTarget().getPos().subtract(mob.getPos());
-			float curYaw = mob.getYaw(), targetYaw = (float)Math.toDegrees(MathHelper.atan2(diff.z, diff.x)) - 90f;
-			float yaw = MathHelper.lerpAngleDegrees(0.025f * mob.getWorld().getDifficulty().getId(), curYaw, targetYaw);
-			dir = dir.rotateY((float)-Math.toRadians(yaw - curYaw));
-			mob.setYaw(yaw);
+			Vec3d targetDir = mob.getTarget().getPos().subtract(mob.getPos());
+			float curYaw = mob.getYaw(), targetYaw = (float)Math.toDegrees(MathHelper.atan2(targetDir.z, targetDir.x)) - 90f;
+			float yaw = MathHelper.lerpAngleDegrees(0.0175f * mob.getWorld().getDifficulty().getId(), curYaw, targetYaw);
+			if(Math.abs(curYaw - targetYaw) < 25f + mob.getWorld().getDifficulty().getId() * 5f)
+			{
+				dir = dir.rotateY((float)-Math.toRadians(yaw - curYaw));
+				mob.setYaw(yaw);
+			}
 			mob.applyDamageInCylindricArea(mob.getWidth(), mob.getHeight(), DamageSources.get(mob.getWorld(), DamageSources.TRAMPLE, mob), 4f,
 					(hit, success) -> {
 						if(success)
@@ -2054,7 +2057,7 @@ public class DeerGodEntity extends BossEntity
 			}
 			boolean targetBehindBlock = mob.getWorld().raycast(new RaycastContext(mob.getPos().add(0f, 1.5f, 0f), target.getPos().add(0f, 1.5f, 0f),
 					RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, mob)).getType().equals(HitResult.Type.BLOCK);
-			if((mob.distanceTo(target) < 4f && !targetBehindBlock)|| mob.getPos().distanceTo(start) > 16f)
+			if((mob.distanceTo(target) < 4f && !targetBehindBlock) || mob.getPos().distanceTo(start) > 16f)
 			{
 				arrived = true;
 				mob.setAnimation(attackAnimationId);
@@ -2134,7 +2137,7 @@ public class DeerGodEntity extends BossEntity
 						});
 			}
 			if(time > 11 && time < 14)
-				mob.applyDamageInCylindricArea(6.5f, 3.5f, 45f, DamageSources.get(mob.getWorld(), DamageSources.CLAW, mob), 15f,
+				mob.applyDamageInCylindricArea(6.5f, 3.5f, 35f, DamageSources.get(mob.getWorld(), DamageSources.CLAW, mob), 15f,
 						mob.getRotationVector(), mob.getRotationVector().multiply(-1.5f), (hit, success) -> {
 							if(success)
 								hit.setVelocity(mob.getRotationVector().multiply(1f, 0f, 1f).normalize().multiply(2f).add(0f, 1.5f, 0f));
