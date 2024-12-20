@@ -46,7 +46,7 @@ public class HealwaveAbility extends ItemAbility
 	public Optional<TypedActionResult<ItemStack>> onUse(ItemStack stack, LivingEntity user, Hand hand, TypedActionResult<ItemStack> result)
 	{
 		super.onUse(stack, user, hand, result);
-		if(user.isSneaking())
+		if(user.isSneaking() && user.isOnGround())
 			return Optional.empty();
 		if(!(stack.get(DataComponentRegistry.CHARGE) instanceof ChargeComponent comp))
 			return Optional.empty();
@@ -64,7 +64,7 @@ public class HealwaveAbility extends ItemAbility
 	@Override
 	public void castActiveAbility(LivingEntity caster, ItemStack stack, Vec3d pos)
 	{
-		if(!caster.isSneaking())
+		if(!(caster.isSneaking() && caster.isOnGround()))
 			castHealwave(caster, stack, pos);
 	}
 	
