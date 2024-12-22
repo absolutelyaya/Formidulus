@@ -6,6 +6,8 @@
     "AbstractInventoryScreenMixin",
     "ArmorFeatureRendererMixin",
     "BackgroundRendererMixin",
+    "BipedModelMixin",
+    "HeldItemRendererMixin",
     "InGameHudMixin",
     "MouseMixin",
     "MusicTrackerMixin",
