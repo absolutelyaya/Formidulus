@@ -8,17 +8,12 @@ import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ToolItem;
-import net.minecraft.item.ToolMaterial;
+import net.minecraft.item.*;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -76,14 +71,10 @@ public class SacrificialDaggerItem extends ToolItem implements FabricItem
 	}
 	
 	@Override
-	public float getBonusAttackDamage(Entity target, float baseAttackDamage, DamageSource damageSource)
-	{
-		return super.getBonusAttackDamage(target, baseAttackDamage, damageSource);
-	}
-	
-	@Override
 	public boolean canBeEnchantedWith(ItemStack stack, RegistryEntry<Enchantment> enchantment, EnchantingContext context)
 	{
-		return enchantment.getKey().isEmpty() || !enchantment.getKey().get().equals(Enchantments.SWEEPING_EDGE);
+		if(enchantment.getKey().isPresent() && enchantment.getKey().get().equals(Enchantments.SWEEPING_EDGE))
+			return false;
+		return super.canBeEnchantedWith(stack, enchantment, context);
 	}
 }

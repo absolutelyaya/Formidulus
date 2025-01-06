@@ -21,7 +21,8 @@ public class ItemTagProvider extends FabricTagProvider.ItemTagProvider
 	@Override
 	protected void configure(RegistryWrapper.WrapperLookup wrapperLookup)
 	{
-		getOrCreateTagBuilder(ItemTags.SWORD_ENCHANTABLE).add(ItemRegistry.SACRIFICIAL_DAGGER);
+		getOrCreateTagBuilder(ItemTags.SWORD_ENCHANTABLE).add(ItemRegistry.SACRIFICIAL_DAGGER).add(ItemRegistry.SOUL_DAGGER);
+		getOrCreateTagBuilder(ItemTags.SHARP_WEAPON_ENCHANTABLE).add(ItemRegistry.SACRIFICIAL_DAGGER).add(ItemRegistry.SOUL_DAGGER);
 		
 		getOrCreateTagBuilder(TagKey.of(RegistryKeys.ITEM, Identifier.of("trinkets", "chest/necklace")))
 				.add(ItemRegistry.DEER_NECKLACE);
