@@ -97,6 +97,10 @@
   "event.formidulus.solstice_feast.title": "Fest der Sonnenwende",
   "event.formidulus.ween.description": "Ein Fest an dem schaurige Geister und Ghule gefeiert werden; der ganze Monat in dem es stattfindet, ist in manchen Kreisen als 'Spooky Month' bekannt.",
   "event.formidulus.ween.title": "Ween",
+  "item-ability.formidulus.bulwark": "🛡 BOLLWERK 🛡",
+  "item-ability.formidulus.bulwark.desc0": "Halten der Aktionstaste platziert das Bollwerk.",
+  "item-ability.formidulus.bulwark.desc1": "Kann einiges einstecken und schützt jene hinter ihm.",
+  "item-ability.formidulus.bulwark.desc2": "Du kannst dich wärend das Bollwerk platziert ist nicht bewegen.",
   "item-ability.formidulus.healwave": "+ HEILUNGSWELLE +",
   "item-ability.formidulus.healwave.desc0": "Benutze dies um eine Heilungswelle abzugeben.",
   "item-ability.formidulus.healwave.desc1": "Gibt nicht-gegnerischen Wesen um dich herum Regeneration.",
@@ -114,6 +118,7 @@
   "item.accessory_mode.mask": "Maske",
   "item.formidulus.accessory_mode_hint": "[Rechtsklick zum Modus wechseln]",
   "item.formidulus.accessory_mode_prefix": "Accessoire Modus: %s",
+  "item.formidulus.bulwark": "Bollwerk",
   "item.formidulus.chainlink": "Kettenglied",
   "item.formidulus.cultist_spawn_egg": "Kultisten-Spawn-Ei",
   "item.formidulus.debug.not_yet_implemented": "NOCH NICHT IMPLEMENTIERT",
@@ -181,5 +186,7 @@
   "subtitles.formidulus.entity.irrlicht.idle": "Irrlicht knistert",
   "subtitles.formidulus.entity.pumpkin.impact": "Explosiver Kürbis schlägt ein",
   "subtitles.formidulus.item.accessory.change_mode": "Accessoire modus geändert",
+  "subtitles.formidulus.item.bulwark.block": "Bollwerk wird getroffen",
+  "subtitles.formidulus.item.bulwark.break": "Bollwerk fällt",
   "subtitles.formidulus.ween": "es ist ween :D"
 }

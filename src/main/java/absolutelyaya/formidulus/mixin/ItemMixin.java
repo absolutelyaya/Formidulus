@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Item.class)
@@ -24,6 +25,20 @@ public class ItemMixin
 	{
 		if(user.getStackInHand(hand).get(DataComponentRegistry.ABILITY) instanceof AbilityComponent component)
 			component.ability().onUse(user.getStackInHand(hand), user, hand, cir.getReturnValue()).ifPresent(cir::setReturnValue);
+	}
+	
+	@Inject(method = "usageTick", at = @At("TAIL"))
+	void onUseTick(World world, LivingEntity user, ItemStack stack, int remainingUseTicks, CallbackInfo ci)
+	{
+		if(stack.get(DataComponentRegistry.ABILITY) instanceof AbilityComponent component)
+			component.ability().onTickUsing(stack, user, user.getActiveHand());
+	}
+	
+	@Inject(method = "onStoppedUsing", at = @At("TAIL"))
+	void onStopUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks, CallbackInfo ci)
+	{
+		if(stack.get(DataComponentRegistry.ABILITY) instanceof AbilityComponent component)
+			component.ability().onStopUsing(stack, user, user.getActiveHand());
 	}
 	
 	@Inject(method = "useOnBlock", at = @At("TAIL"), cancellable = true)

@@ -1,6 +1,5 @@
 package absolutelyaya.formidulus.item.components;
 
-import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.item.abilities.ItemAbilities;
 import absolutelyaya.formidulus.item.abilities.ItemAbility;
 import com.mojang.serialization.Codec;

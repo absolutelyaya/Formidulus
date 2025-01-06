@@ -60,6 +60,16 @@ public class ItemAbility
 		return Optional.empty();
 	}
 	
+	public void onTickUsing(ItemStack stack, LivingEntity user, Hand hand)
+	{
+	
+	}
+	
+	public void onStopUsing(ItemStack stack, LivingEntity user, Hand hand)
+	{
+	
+	}
+	
 	public Optional<ActionResult> onUseOnBlock(ItemStack stack, ItemUsageContext context, ActionResult result)
 	{
 		return Optional.empty();

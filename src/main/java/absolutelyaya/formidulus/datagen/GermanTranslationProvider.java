@@ -82,6 +82,7 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(ItemRegistry.JOLLY_HAT, "Festliche Mütze");
 		builder.add(accessory(JollyHatItem.ACCESSORY_MODE_INACTIVE), "Inaktiv");
 		builder.add(accessory(JollyHatItem.ACCESSORY_MODE_ACTIVE), "Aktiv");
+		builder.add(ItemRegistry.BULWARK, "Bollwerk");
 		
 		builder.add(Lang.NOT_YET_IMPLEMENTED, "NOCH NICHT IMPLEMENTIERT");
 		builder.add(Lang.DEPENDENCY_INFO_REQUIRED, "Scheint nutzlos zu sein ohne '%s'...");
@@ -100,6 +101,10 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		builder.add(ItemAbilities.HEALWAVE.getTranslationKey(), "+ HEILUNGSWELLE +");
 		builder.add(desc(ItemAbilities.HEALWAVE, 0), "Benutze dies um eine Heilungswelle abzugeben.");
 		builder.add(desc(ItemAbilities.HEALWAVE, 1), "Gibt nicht-gegnerischen Wesen um dich herum Regeneration.");
+		builder.add(ItemAbilities.BULWARK.getTranslationKey(), "\uD83D\uDEE1 BOLLWERK \uD83D\uDEE1");
+		builder.add(desc(ItemAbilities.BULWARK, 0), "Halten der Aktionstaste platziert das Bollwerk.");
+		builder.add(desc(ItemAbilities.BULWARK, 1), "Kann einiges einstecken und schützt jene hinter ihm.");
+		builder.add(desc(ItemAbilities.BULWARK, 2), "Du kannst dich wärend das Bollwerk platziert ist nicht bewegen.");
 		
 		builder.add(BlockRegistry.WEEN, "Ween");
 		builder.add(BlockRegistry.WEEN.getTranslationKey() + ".lore", "es ist ween");
@@ -217,6 +222,8 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		
 		
 		builder.add(subtitle(SoundRegistry.ACCESSORY_CHANGE_MODE), "Accessoire modus geändert");
+		builder.add(subtitle(SoundRegistry.BULWARK_BLOCK), "Bollwerk wird getroffen");
+		builder.add(subtitle(SoundRegistry.BULWARK_BREAK), "Bollwerk fällt");
 		
 		builder.add(subtitle(SoundRegistry.WEEN), "es ist ween :D");
 		builder.add(subtitle(SoundRegistry.BIG_LANTERN_HEALWAVE), "Laterne gibt Heilwelle ab");

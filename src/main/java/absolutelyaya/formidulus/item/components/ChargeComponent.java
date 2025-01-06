@@ -39,6 +39,13 @@ public record ChargeComponent(float charge, float maxCharge)
 		return Optional.of(new ChargeComponent(Math.max(charge - percent * maxCharge, 0f), maxCharge));
 	}
 	
+	public Optional<ChargeComponent> tryAddCharge(float percent)
+	{
+		if(getChargePercent() < percent)
+			return Optional.empty();
+		return Optional.of(new ChargeComponent(Math.min(charge + percent * maxCharge, maxCharge), maxCharge));
+	}
+	
 	public float getChargePercent()
 	{
 		return charge / maxCharge;

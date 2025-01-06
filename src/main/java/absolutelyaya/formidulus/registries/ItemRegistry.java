@@ -2,11 +2,8 @@ package absolutelyaya.formidulus.registries;
 
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.damage.DamageSources;
-import absolutelyaya.formidulus.item.GreatLanternItem;
+import absolutelyaya.formidulus.item.*;
 import absolutelyaya.formidulus.datagen.Lang;
-import absolutelyaya.formidulus.item.DeerSkullItem;
-import absolutelyaya.formidulus.item.JollyHatItem;
-import absolutelyaya.formidulus.item.SacrificialDaggerItem;
 import absolutelyaya.formidulus.item.abilities.ItemAbilities;
 import absolutelyaya.formidulus.item.components.*;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -28,17 +25,17 @@ import java.util.function.Function;
 public class ItemRegistry
 {
 	public static final DeerSkullItem DEER_SKULL = register(Formidulus.identifier("deer_skull"),
-			id -> new DeerSkullItem(new Item.Settings().component(DataComponentTypes.MAX_STACK_SIZE, 1).component(DataComponentTypes.RARITY, Rarity.RARE)
+			id -> new DeerSkullItem(new Item.Settings().maxCount(1).rarity(Rarity.RARE)
 											.component(DataComponentRegistry.ACCESSORY,
 													new AccessoryComponent(List.of(DeerSkullItem.ACCESSORY_MODE_CAP, DeerSkullItem.ACCESSORY_MODE_MASK), 0))
 											.component(DataComponentRegistry.EXPANDABLE_LORE, ExpandableLoreComponent.makeGenericBlock(id, 6))));
 	public static final BlockItem WEEN = register(Formidulus.identifier("ween"),
 			id -> new BlockItem(BlockRegistry.WEEN,
-					new Item.Settings().component(DataComponentTypes.RARITY, Rarity.UNCOMMON)
+					new Item.Settings().rarity(Rarity.UNCOMMON)
 							.component(DataComponentTypes.LORE, new LoreComponent(List.of(Text.translatable(BlockRegistry.WEEN.getTranslationKey() + ".lore"))))));
 	public static final SacrificialDaggerItem SACRIFICIAL_DAGGER = register(Formidulus.identifier("sacrificial_dagger"),
 			id -> new SacrificialDaggerItem(ToolMaterials.IRON,
-					new Item.Settings().component(DataComponentTypes.RARITY, Rarity.UNCOMMON)
+					new Item.Settings().rarity(Rarity.UNCOMMON)
 							.component(DataComponentTypes.MAX_DAMAGE, 640)
 							.component(DataComponentRegistry.DAMAGE_TYPE, new DamageTypeComponent(DamageSources.SACRIFICE))
 							.component(DataComponentTypes.ATTRIBUTE_MODIFIERS, SacrificialDaggerItem.createAttributeModifiers())
@@ -46,7 +43,7 @@ public class ItemRegistry
 							.component(DataComponentRegistry.EXPANDABLE_LORE, ExpandableLoreComponent.makeGeneric(id, 2))));
 	public static final SacrificialDaggerItem SOUL_DAGGER = register(Formidulus.identifier("soul_dagger"),
 			id -> new SacrificialDaggerItem(ToolMaterials.DIAMOND,
-					new Item.Settings().component(DataComponentTypes.RARITY, Rarity.UNCOMMON)
+					new Item.Settings().rarity(Rarity.UNCOMMON)
 							.component(DataComponentTypes.MAX_DAMAGE, 320)
 							.component(DataComponentRegistry.DAMAGE_TYPE, new DamageTypeComponent(DamageSources.SACRIFICE))
 							.component(DataComponentTypes.ATTRIBUTE_MODIFIERS, SacrificialDaggerItem.createAttributeModifiers())
@@ -55,12 +52,16 @@ public class ItemRegistry
 	public static final BannerPatternItem EYES_BANNER_PATTERN = register(Formidulus.identifier("eyes_pattern"),
 			id -> new BannerPatternItem(FormidableBannerPatterns.EYES_TAG, new Item.Settings().rarity(Rarity.RARE).maxCount(1)));
 	public static final GreatLanternItem GREAT_LANTERN = register(Formidulus.identifier("great_lantern"),
-			id -> new GreatLanternItem(new Item.Settings().component(DataComponentTypes.RARITY, Rarity.RARE)
+			id -> new GreatLanternItem(new Item.Settings().rarity(Rarity.RARE).maxCount(1)
 											 .component(DataComponentRegistry.ABILITY, new AbilityComponent(ItemAbilities.HEALWAVE))
 											 .component(DataComponentRegistry.EXPANDABLE_LORE, ExpandableLoreComponent.makeGenericBlock(id, 5))
-											 .component(DataComponentRegistry.CHARGE, new ChargeComponent(4, 4))
-											 .component(DataComponentTypes.MAX_STACK_SIZE, 1)));
+											 .component(DataComponentRegistry.CHARGE, new ChargeComponent(4, 4))));
 	public static final Item CHAINLINK = register(Formidulus.identifier("chainlink"), id -> new Item(new Item.Settings()));
+	public static final Item BULWARK = register(Formidulus.identifier("bulwark"),
+			id -> new BulwarkItem(new Item.Settings().rarity(Rarity.RARE).maxCount(1).maxDamage(1500)
+										  .component(DataComponentTypes.ATTRIBUTE_MODIFIERS, BulwarkItem.createAttributeModifiers())
+										  .component(DataComponentRegistry.ABILITY, new AbilityComponent(ItemAbilities.BULWARK))
+										  .component(DataComponentRegistry.CHARGE, new ChargeComponent(3, 3))));
 	
 	public static final Item DEER_NECKLACE = register(Formidulus.identifier("deer_necklace"),
 			id -> {
@@ -95,7 +96,7 @@ public class ItemRegistry
 	
 	public static final BlockItem BOSS_SPAWNER = register(Formidulus.identifier("boss_spawner"),
 			id -> new BlockItem(BlockRegistry.BOSS_SPAWNER,
-					new Item.Settings().component(DataComponentTypes.RARITY, Rarity.EPIC)));
+					new Item.Settings().rarity(Rarity.EPIC)));
 	
 	public static <T extends Item> T register(Identifier id, Function<Identifier, T> factory)
 	{
@@ -124,6 +125,7 @@ public class ItemRegistry
 			entries.add(SACRIFICIAL_DAGGER);
 			entries.add(SOUL_DAGGER);
 			entries.add(GREAT_LANTERN);
+			entries.add(BULWARK);
 			entries.add(JOLLY_HAT);
 		});
 		ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register((entries) -> {

@@ -83,6 +83,7 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(ItemRegistry.JOLLY_HAT, "Jolly Hat");
 		builder.add(accessory(JollyHatItem.ACCESSORY_MODE_INACTIVE), "Inactive");
 		builder.add(accessory(JollyHatItem.ACCESSORY_MODE_ACTIVE), "Active");
+		builder.add(ItemRegistry.BULWARK, "Bulwark");
 		
 		builder.add(Lang.NOT_YET_IMPLEMENTED, "NOT YET IMPLEMENTED");
 		builder.add(Lang.DEPENDENCY_INFO_REQUIRED, "Seems useless without '%s'...");
@@ -101,6 +102,10 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		builder.add(ItemAbilities.HEALWAVE.getTranslationKey(), "+ HEALWAVE +");
 		builder.add(desc(ItemAbilities.HEALWAVE, 0), "Use when fully charged to emit a Healwave.");
 		builder.add(desc(ItemAbilities.HEALWAVE, 1), "Applies Regeneration to Non-Hostile Entities around you.");
+		builder.add(ItemAbilities.BULWARK.getTranslationKey(), "\uD83D\uDEE1 BULWARK \uD83D\uDEE1");
+		builder.add(desc(ItemAbilities.BULWARK, 0), "Hold to place down the Bulwark.");
+		builder.add(desc(ItemAbilities.BULWARK, 1), "Can take a lot of hits, while guarding those behind.");
+		builder.add(desc(ItemAbilities.BULWARK, 2), "You cannot move or turn while the Bulwark is placed.");
 		
 		builder.add(BlockRegistry.WEEN, "Ween");
 		builder.add(BlockRegistry.WEEN.getTranslationKey() + ".lore", "it's ween");
@@ -218,6 +223,8 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		
 		
 		builder.add(subtitle(SoundRegistry.ACCESSORY_CHANGE_MODE), "Accessory mode changed");
+		builder.add(subtitle(SoundRegistry.BULWARK_BLOCK), "Bulwark is hit");
+		builder.add(subtitle(SoundRegistry.BULWARK_BREAK), "Bulwark falls");
 		
 		builder.add(subtitle(SoundRegistry.WEEN), "its ween :D");
 		builder.add(subtitle(SoundRegistry.BIG_LANTERN_HEALWAVE), "Lantern emits Healwave");

@@ -1,4 +1,4 @@
-package absolutelyaya.formidulus.rendering.entity;
+package absolutelyaya.formidulus.rendering.equipment;
 
 import absolutelyaya.formidulus.FormidulusClient;
 import net.fabricmc.fabric.api.client.rendering.v1.BuiltinItemRendererRegistry;
@@ -9,19 +9,25 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 
-public class JollyHatRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer
+public class BulwarkRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer
 {
-	JollyHatModel model;
+	BulwarkModel model;
+	
+	public BulwarkRenderer()
+	{
+	
+	}
 	
 	@Override
 	public void render(ItemStack stack, ModelTransformationMode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay)
 	{
 		if(model == null)
-			model = new JollyHatModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(FormidulusClient.JOLLY_HAT_LAYER));
+			model = new BulwarkModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(FormidulusClient.BULWARK_LAYER));
 		matrices.push();
-		matrices.translate(0.5, 1.475, 0.5);
+		matrices.translate(0.5, 0f, 0.45);
+		matrices.translate(0, 1.5, 0);
 		matrices.scale(1, -1, 1);
-		model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(JollyHatModel.TEXTURE)), light, overlay);
+		model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(BulwarkModel.TEXTURE)), light, overlay);
 		matrices.pop();
 	}
 }

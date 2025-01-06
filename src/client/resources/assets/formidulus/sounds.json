@@ -8,6 +8,24 @@
     ],
     "subtitle": "subtitles.formidulus.item.accessory.change_mode"
   },
+  "item.bulwark.block": {
+    "sounds": [
+      {
+        "name": "item.shield.block",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.item.bulwark.block"
+  },
+  "item.bulwark.break": {
+    "sounds": [
+      {
+        "name": "item.shield.break",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.item.bulwark.break"
+  },
 
 
   "ween": {

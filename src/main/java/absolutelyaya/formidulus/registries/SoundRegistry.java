@@ -9,6 +9,8 @@ import net.minecraft.util.Identifier;
 public class SoundRegistry
 {
 	public static final SoundEvent ACCESSORY_CHANGE_MODE = register(Formidulus.identifier("item.accessory.change_mode"));
+	public static final SoundEvent BULWARK_BLOCK = register(Formidulus.identifier("item.bulwark.block"));
+	public static final SoundEvent BULWARK_BREAK = register(Formidulus.identifier("item.bulwark.break"));
 	
 	public static final SoundEvent WEEN = register(Formidulus.identifier("ween"));
 	public static final SoundEvent BIG_LANTERN_HEALWAVE = register(Formidulus.identifier("block.big_lantern.burst"));

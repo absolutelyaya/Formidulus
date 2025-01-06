@@ -51,6 +51,7 @@ public class EntityLootTableProvider extends SimpleFabricLootTableProvider
 						.pool(LootPool.builder().with(ItemEntry.builder(ItemRegistry.CHAINLINK))
 									  .apply(SetCountLootFunction.builder(UniformLootNumberProvider.create(2, 5))).build())
 						.pool(LootPool.builder().conditionally(RandomChanceWithEnchantedBonusLootCondition.builder(registryLookup, 0.33f, 0.05f).build())
-									  .with(ItemEntry.builder(ItemRegistry.GREAT_LANTERN))));
+									  .with(ItemEntry.builder(ItemRegistry.GREAT_LANTERN))
+									  .with(ItemEntry.builder(ItemRegistry.BULWARK))));
 	}
 }

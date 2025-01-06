@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "c": {
+      "item": "formidulus:chainlink"
+    },
+    "s": {
+      "item": "minecraft:shield"
+    }
+  },
+  "pattern": [
+    "cc ",
+    "csc",
+    " cc"
+  ],
+  "result": {
+    "count": 1,
+    "id": "formidulus:bulwark"
+  },
+  "show_notification": false
+}

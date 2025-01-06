@@ -15,6 +15,7 @@ import absolutelyaya.formidulus.rendering.block.BossSpawnerRenderer;
 import absolutelyaya.formidulus.rendering.block.DeerSkullBlockEntityRenderer;
 import absolutelyaya.formidulus.rendering.entity.*;
 import absolutelyaya.formidulus.rendering.entity.feature.CreeperHeadFeatureRenderer;
+import absolutelyaya.formidulus.rendering.equipment.*;
 import absolutelyaya.formidulus.sound.BossMusicHandler;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -37,6 +38,7 @@ public class FormidulusClient implements ClientModInitializer
 	public static final EntityModelLayer IRRLICHT_LAYER = new EntityModelLayer(Formidulus.identifier("irrlicht"), "irrlicht");
 	public static final EntityModelLayer DEER_FOLLOWER_LAYER = new EntityModelLayer(Formidulus.identifier("deer_follower"), "deer_follower");
 	public static final EntityModelLayer JOLLY_HAT_LAYER = new EntityModelLayer(Formidulus.identifier("jolly_hat"), "jolly_hat");
+	public static final EntityModelLayer BULWARK_LAYER = new EntityModelLayer(Formidulus.identifier("bulwark"), "bulwark");
 	public static BossMusicHandler bossMusicHandler;
 	
 	@Override
@@ -52,10 +54,12 @@ public class FormidulusClient implements ClientModInitializer
 		
 		//Entity Model Layers
 		EntityModelLayerRegistry.registerModelLayer(DEER_GOD_LAYER, DeerGodModel::getTexturedModelData);
-		EntityModelLayerRegistry.registerModelLayer(DEER_GOD_SKULL_LAYER, DeerGodSkullModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(IRRLICHT_LAYER, IrrlichtModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(DEER_FOLLOWER_LAYER, DeerFollowerModel::getTexturedModelData);
+		//Entity Model Layers (Equipment)
+		EntityModelLayerRegistry.registerModelLayer(DEER_GOD_SKULL_LAYER, DeerGodSkullModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(JOLLY_HAT_LAYER, JollyHatModel::getTexturedModelData);
+		EntityModelLayerRegistry.registerModelLayer(BULWARK_LAYER, BulwarkModel::getTexturedModelData);
 		
 		//Particles
 		ParticleFactoryRegistry particles = ParticleFactoryRegistry.getInstance();
@@ -74,9 +78,11 @@ public class FormidulusClient implements ClientModInitializer
 		
 		HudRenderCallback.EVENT.register((context, tickCounter) -> TitleHUD.render(context, tickCounter.getLastFrameDuration()));
 		
+		//Item Renderers
 		BuiltinItemRendererRegistry builtinItemRendererRegistry = BuiltinItemRendererRegistry.INSTANCE;
 		builtinItemRendererRegistry.register(ItemRegistry.DEER_SKULL, new DeerGodSkullRenderer());
 		builtinItemRendererRegistry.register(ItemRegistry.JOLLY_HAT, new JollyHatRenderer());
+		builtinItemRendererRegistry.register(ItemRegistry.BULWARK, new BulwarkRenderer());
 		
 		ModelPredicateProviderRegistry.register(Formidulus.identifier("accessory_mode"),
 				(stack, world, entity, seed) -> {

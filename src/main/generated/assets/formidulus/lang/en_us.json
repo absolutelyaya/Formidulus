@@ -97,6 +97,10 @@
   "event.formidulus.solstice_feast.title": "Solstice Festival",
   "event.formidulus.ween.description": "A time where ghastly ghosts and ghouls are worshipped; the entire Month it takes place in is also known as 'Spooky Month' in some circles.",
   "event.formidulus.ween.title": "Ween",
+  "item-ability.formidulus.bulwark": "🛡 BULWARK 🛡",
+  "item-ability.formidulus.bulwark.desc0": "Hold to place down the Bulwark.",
+  "item-ability.formidulus.bulwark.desc1": "Can take a lot of hits, while guarding those behind.",
+  "item-ability.formidulus.bulwark.desc2": "You cannot move or turn while the Bulwark is placed.",
   "item-ability.formidulus.healwave": "+ HEALWAVE +",
   "item-ability.formidulus.healwave.desc0": "Use when fully charged to emit a Healwave.",
   "item-ability.formidulus.healwave.desc1": "Applies Regeneration to Non-Hostile Entities around you.",
@@ -114,6 +118,7 @@
   "item.accessory_mode.mask": "Mask",
   "item.formidulus.accessory_mode_hint": "[Right Click to cycle]",
   "item.formidulus.accessory_mode_prefix": "Accessory Mode: %s",
+  "item.formidulus.bulwark": "Bulwark",
   "item.formidulus.chainlink": "Chain Link",
   "item.formidulus.cultist_spawn_egg": "Cultist Spawn Egg",
   "item.formidulus.debug.not_yet_implemented": "NOT YET IMPLEMENTED",
@@ -181,5 +186,7 @@
   "subtitles.formidulus.entity.irrlicht.idle": "Irrlicht crackles",
   "subtitles.formidulus.entity.pumpkin.impact": "Volatile Pumpkin impact",
   "subtitles.formidulus.item.accessory.change_mode": "Accessory mode changed",
+  "subtitles.formidulus.item.bulwark.block": "Bulwark is hit",
+  "subtitles.formidulus.item.bulwark.break": "Bulwark falls",
   "subtitles.formidulus.ween": "its ween :D"
 }

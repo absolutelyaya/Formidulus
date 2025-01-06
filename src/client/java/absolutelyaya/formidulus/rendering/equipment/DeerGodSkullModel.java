@@ -1,4 +1,4 @@
-package absolutelyaya.formidulus.rendering.entity;
+package absolutelyaya.formidulus.rendering.equipment;
 
 import absolutelyaya.formidulus.Formidulus;
 import net.minecraft.client.model.*;

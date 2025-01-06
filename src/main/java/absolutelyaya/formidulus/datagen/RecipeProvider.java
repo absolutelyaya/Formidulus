@@ -38,6 +38,12 @@ public class RecipeProvider extends FabricRecipeProvider
 				.showNotification(false)
 				.criterion("deer", InventoryChangedCriterion.Conditions.items(ItemRegistry.CHAINLINK))
 				.offerTo(exporter);
+		ShapedRecipeJsonBuilder.create(RecipeCategory.COMBAT, ItemRegistry.BULWARK)
+				.input('c', ItemRegistry.CHAINLINK).input('s', Items.SHIELD)
+				.pattern("cc ").pattern("csc").pattern(" cc")
+				.showNotification(false)
+				.criterion("deer", InventoryChangedCriterion.Conditions.items(ItemRegistry.CHAINLINK))
+				.offerTo(exporter);
 		ShapelessRecipeJsonBuilder.create(RecipeCategory.MISC, Items.CHAIN)
 				.input(ItemRegistry.CHAINLINK, 3)
 				.criterion("deer", InventoryChangedCriterion.Conditions.items(ItemRegistry.CHAINLINK))

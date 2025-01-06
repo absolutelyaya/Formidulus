@@ -70,6 +70,10 @@
         {
           "type": "minecraft:item",
           "name": "formidulus:great_lantern"
+        },
+        {
+          "type": "minecraft:item",
+          "name": "formidulus:bulwark"
         }
       ],
       "rolls": 1.0
