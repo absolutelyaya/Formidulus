@@ -966,6 +966,12 @@ public class DeerGodEntity extends BossEntity
 	}
 	
 	@Override
+	protected boolean canStartRiding(Entity entity)
+	{
+		return false;
+	}
+	
+	@Override
 	protected boolean shouldDropLoot()
 	{
 		return false; //handled in UpdatePostDeath instead
