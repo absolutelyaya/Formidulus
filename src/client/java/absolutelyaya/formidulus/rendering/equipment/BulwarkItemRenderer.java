@@ -9,11 +9,11 @@ import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 
-public class BulwarkRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer
+public class BulwarkItemRenderer implements BuiltinItemRendererRegistry.DynamicItemRenderer
 {
 	BulwarkModel model;
 	
-	public BulwarkRenderer()
+	public BulwarkItemRenderer()
 	{
 	
 	}

@@ -1,10 +1,7 @@
 package absolutelyaya.formidulus.registries;
 
 import absolutelyaya.formidulus.Formidulus;
-import absolutelyaya.formidulus.entities.DeerFollowerEntity;
-import absolutelyaya.formidulus.entities.DeerGodEntity;
-import absolutelyaya.formidulus.entities.PumpkinProjectile;
-import absolutelyaya.formidulus.entities.IrrlichtEntity;
+import absolutelyaya.formidulus.entities.*;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -21,6 +18,8 @@ public class EntityRegistry
 			EntityType.Builder.create(PumpkinProjectile::new, SpawnGroup.MISC).dimensions(0.4f, 0.4f).build("pumpkin"));
 	public static final EntityType<DeerFollowerEntity> DEER_FOLLOWER = Registry.register(Registries.ENTITY_TYPE, Formidulus.identifier("deer_follower"),
 			EntityType.Builder.create(DeerFollowerEntity::new, SpawnGroup.MONSTER).dimensions(0.6f, 1.95f).build("deer_follower"));
+	public static final EntityType<BulwarkEntity> BULWARK = Registry.register(Registries.ENTITY_TYPE, Formidulus.identifier("bulwark"),
+			EntityType.Builder.create(BulwarkEntity::new, SpawnGroup.MISC).dimensions(1.1f, 2f).build("bulwark"));
 	
 	public static void register()
 	{
@@ -37,5 +36,7 @@ public class EntityRegistry
 																	   .add(EntityAttributes.GENERIC_MAX_HEALTH, 25)
 																	   .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2)
 																	   .add(EntityAttributes.GENERIC_ARMOR, 3));
+		FabricDefaultAttributeRegistry.register(BULWARK, IrrlichtEntity.createMobAttributes()
+																  .add(EntityAttributes.GENERIC_MAX_HEALTH, 30));
 	}
 }

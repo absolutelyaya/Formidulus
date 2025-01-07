@@ -51,6 +51,7 @@ public class FormidulusClient implements ClientModInitializer
 		EntityRendererRegistry.register(EntityRegistry.IRRLICHT, IrrlichtRenderer::new);
 		EntityRendererRegistry.register(EntityRegistry.PUMPKIN, PumpkinRenderer::new);
 		EntityRendererRegistry.register(EntityRegistry.DEER_FOLLOWER, DeerFollowerRenderer::new);
+		EntityRendererRegistry.register(EntityRegistry.BULWARK, BulwarkEntityRenderer::new);
 		
 		//Entity Model Layers
 		EntityModelLayerRegistry.registerModelLayer(DEER_GOD_LAYER, DeerGodModel::getTexturedModelData);
@@ -82,7 +83,7 @@ public class FormidulusClient implements ClientModInitializer
 		BuiltinItemRendererRegistry builtinItemRendererRegistry = BuiltinItemRendererRegistry.INSTANCE;
 		builtinItemRendererRegistry.register(ItemRegistry.DEER_SKULL, new DeerGodSkullRenderer());
 		builtinItemRendererRegistry.register(ItemRegistry.JOLLY_HAT, new JollyHatRenderer());
-		builtinItemRendererRegistry.register(ItemRegistry.BULWARK, new BulwarkRenderer());
+		builtinItemRendererRegistry.register(ItemRegistry.BULWARK, new BulwarkItemRenderer());
 		
 		ModelPredicateProviderRegistry.register(Formidulus.identifier("accessory_mode"),
 				(stack, world, entity, seed) -> {

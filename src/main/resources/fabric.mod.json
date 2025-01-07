@@ -38,6 +38,9 @@
 		],
 		"mm:early_risers": [
 			"absolutelyaya.formidulus.EarlyRiser"
+		],
+		"cardinal-components": [
+			"absolutelyaya.formidulus.components.FormidableComponents"
 		]
 	},
 	"mixins": [
@@ -50,7 +53,10 @@
 	"custom": {
 		"modmenu": {
 			"update_checker": true
-		}
+		},
+		"cardinal-components": [
+			"formidulus:bulwark"
+		]
 	},
 	"depends": {
 		"fabricloader": ">=0.16.7",

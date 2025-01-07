@@ -19,6 +19,7 @@
   "mixins": [
     "BossBarHudMixin",
     "ClientBossBarMixin",
-    "ClientItemMixin"
+    "ClientItemMixin",
+    "itemability.ClientBulwarkAbilityMixin"
   ]
 }

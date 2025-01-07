@@ -60,8 +60,7 @@ public class ItemRegistry
 	public static final Item BULWARK = register(Formidulus.identifier("bulwark"),
 			id -> new BulwarkItem(new Item.Settings().rarity(Rarity.RARE).maxCount(1).maxDamage(1500)
 										  .component(DataComponentTypes.ATTRIBUTE_MODIFIERS, BulwarkItem.createAttributeModifiers())
-										  .component(DataComponentRegistry.ABILITY, new AbilityComponent(ItemAbilities.BULWARK))
-										  .component(DataComponentRegistry.CHARGE, new ChargeComponent(3, 3))));
+										  .component(DataComponentRegistry.ABILITY, new AbilityComponent(ItemAbilities.BULWARK))));
 	
 	public static final Item DEER_NECKLACE = register(Formidulus.identifier("deer_necklace"),
 			id -> {

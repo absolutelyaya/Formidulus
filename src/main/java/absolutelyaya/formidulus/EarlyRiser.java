@@ -7,7 +7,6 @@ import net.fabricmc.loader.api.MappingResolver;
 
 public class EarlyRiser implements Runnable
 {
-	
 	@Override
 	public void run()
 	{
@@ -22,5 +21,9 @@ public class EarlyRiser implements Runnable
 		ClassTinkerers.enumBuilder(damageEffect, String.class, soundEvent)
 				.addEnum("FORMIDULUS_LANTERN", () -> new Object[]{"formidulus_lantern", SoundRegistry.LANTERN_DAMAGE})
 				.addEnum("FORMIDULUS_CLAW", () -> new Object[]{"formidulus_claw", SoundRegistry.CLAW_DAMAGE}).build();
+		
+		String useAction = remapper.mapClassName("intermediary", "net.minecraft.class_1839");
+		ClassTinkerers.enumBuilder(useAction)
+				.addEnum("FORMIDULUS_BULWARK");
 	}
 }

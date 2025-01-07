@@ -1,5 +1,10 @@
 package absolutelyaya.formidulus.mixin;
 
+import absolutelyaya.formidulus.item.abilities.BulwarkAbility;
+import absolutelyaya.formidulus.item.abilities.ItemAbilities;
+import absolutelyaya.formidulus.item.abilities.ItemAbility;
+import absolutelyaya.formidulus.item.components.AbilityComponent;
+import absolutelyaya.formidulus.registries.DataComponentRegistry;
 import absolutelyaya.formidulus.registries.ItemRegistry;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.feature.FeatureRenderer;
@@ -26,9 +31,21 @@ public abstract class HeldItemRendererMixin<T extends LivingEntity, M extends En
 		super(context);
 	}
 	
-	@Inject(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V"))
+	@Inject(method = "renderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/HeldItemRenderer;renderItem(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformationMode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V"), cancellable = true)
 	void onRenderItem(LivingEntity entity, ItemStack stack, ModelTransformationMode transformationMode, Arm arm, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, CallbackInfo ci)
 	{
+		if(ItemAbility.hasAbility(stack, ItemAbilities.BULWARK))
+		{
+			AbilityComponent comp = stack.getComponents().get(DataComponentRegistry.ABILITY);
+			if(comp == null)
+				return;
+			if(comp.ability() instanceof BulwarkAbility bulwark && bulwark.isActive())
+			{
+				matrices.pop();
+				ci.cancel();
+			}
+			return;
+		}
 		if(stack.isOf(ItemRegistry.GREAT_LANTERN))
 		{
 			matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(-15f));

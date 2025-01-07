@@ -15,9 +15,9 @@ public record AbilityComponent(ItemAbility ability)
 			instance -> instance.group(Identifier.CODEC.fieldOf("ability").forGetter(AbilityComponent::getTypeId))
 								.apply(instance, AbilityComponent::fromIdentifier));
 	public static final PacketCodec<ByteBuf, AbilityComponent> PACKET_CODEC = PacketCodec.tuple(
-			Identifier.PACKET_CODEC,
-			AbilityComponent::getTypeId,
-			AbilityComponent::fromIdentifier
+			ItemAbility.PACKET_CODEC,
+			AbilityComponent::ability,
+			AbilityComponent::new
 	);
 
 	public Identifier getTypeId()
