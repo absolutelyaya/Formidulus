@@ -1,7 +1,7 @@
 package absolutelyaya.formidulus.components;
 
 import absolutelyaya.formidulus.Formidulus;
-import absolutelyaya.formidulus.components.entity.BulwarkComponent;
+import absolutelyaya.formidulus.components.entity.BulwarkAbilityEntityComponent;
 import absolutelyaya.formidulus.components.entity.IBulwarkComponent;
 import org.ladysnake.cca.api.v3.component.ComponentKey;
 import org.ladysnake.cca.api.v3.component.ComponentRegistry;
@@ -17,6 +17,6 @@ public class FormidableComponents implements EntityComponentInitializer
 	@Override
 	public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry)
 	{
-		registry.registerForPlayers(BULWARK, BulwarkComponent::new, RespawnCopyStrategy.NEVER_COPY);
+		registry.registerForPlayers(BULWARK, BulwarkAbilityEntityComponent::new, RespawnCopyStrategy.NEVER_COPY);
 	}
 }

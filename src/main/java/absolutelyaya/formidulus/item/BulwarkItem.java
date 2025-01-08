@@ -50,16 +50,9 @@ public class BulwarkItem extends Item implements Equipment
 	}
 	
 	@Override
-	public UseAction getUseAction(ItemStack stack) {
-		return UseAction.BLOCK;
-	}
-	
-	@Override
 	public int getMaxUseTime(ItemStack stack, LivingEntity user)
 	{
-		if(stack.get(DataComponentRegistry.CHARGE) instanceof ChargeComponent charge)
-			return charge.isCharged(0.1f) ? 72000 : 2;
-		return 2;
+		return 72000;
 	}
 	
 	@Override

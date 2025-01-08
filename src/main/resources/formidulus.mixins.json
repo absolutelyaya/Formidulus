@@ -8,7 +8,8 @@
     "MobEntityMixin",
     "PlayerEntityMixin",
     "PumpkinMixin",
-    "itemability.BulwarkMixin"
+    "itemability.BulwarkItemMixin",
+    "itemability.BulwarkPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -24,7 +24,9 @@ public class BulwarkItemRenderer implements BuiltinItemRendererRegistry.DynamicI
 		if(model == null)
 			model = new BulwarkModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(FormidulusClient.BULWARK_LAYER));
 		matrices.push();
-		matrices.translate(0.5, 0f, 0.45);
+		if(!mode.equals(ModelTransformationMode.GUI))
+			matrices.translate(0, 0.15f, 0);
+		matrices.translate(0.5, 0f, 0.96);
 		matrices.translate(0, 1.5, 0);
 		matrices.scale(1, -1, 1);
 		model.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntityCutoutNoCull(BulwarkModel.TEXTURE)), light, overlay);

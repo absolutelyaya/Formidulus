@@ -43,6 +43,7 @@ public class BulwarkAbility extends ItemAbility
 			IBulwarkComponent comp = FormidableComponents.BULWARK.get(player);
 			if(comp.getBulwarkEntity() == null)
 				comp.setBulwark(BulwarkEntity.place(player));
+			user.setSneaking(true);
 		}
 		return super.onUse(stack, user, hand, result);
 	}
@@ -58,6 +59,7 @@ public class BulwarkAbility extends ItemAbility
 			if(comp.getBulwarkEntity() instanceof BulwarkEntity b && b.getCurrentAnimation() != (byte)2)
 				b.setAnimation((byte)2);
 			comp.setBulwark(null);
+			user.setSneaking(false);
 		}
 		if(user instanceof PlayerEntity player)
 			player.getItemCooldownManager().set(ItemRegistry.BULWARK, 40);

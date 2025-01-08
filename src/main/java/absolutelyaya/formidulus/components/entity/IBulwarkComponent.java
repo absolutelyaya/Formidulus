@@ -8,4 +8,6 @@ public interface IBulwarkComponent extends ComponentV3
 	void setBulwark(BulwarkEntity entity);
 	
 	BulwarkEntity getBulwarkEntity();
+	
+	boolean hasBulwark();
 }

@@ -11,6 +11,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +48,7 @@ public class BulwarkEntity extends AnimatedEntity
 			return null;
 		BulwarkEntity bulwark = new BulwarkEntity(EntityRegistry.BULWARK, owner.getWorld());
 		bulwark.setOwner(owner);
-		bulwark.setPosition(owner.getPos().add(owner.getRotationVector().multiply(1, 0, 1).normalize().multiply(0.2f)));
+		bulwark.setPosition(owner.getPos().add(owner.getRotationVector().multiply(1, 0, 1).normalize().multiply(0.4f)));
 		bulwark.setYaw(owner.getYaw());
 		owner.getWorld().spawnEntity(bulwark);
 		bulwark.setYaw(owner.getYaw());
@@ -189,12 +190,14 @@ public class BulwarkEntity extends AnimatedEntity
 			return;
 		}
 		PlayerEntity owner = getWorld().getPlayerByUuid(dataTracker.get(OWNER).get());
-		if(owner == null || !owner.isAlive() || distanceTo(owner) > 1f)
+		if(!getWorld().isClient && (owner == null || !owner.isAlive() || new Vec2f((float)getX(), (float)getZ()).distanceSquared(new Vec2f((float)owner.getX(), (float)owner.getZ())) > 1f))
 			setAnimation(REMOVE_ANIM);
 		if(getCurrentAnimation() == PLACE_ANIM && getCurrentAnimationDuration() >= 0.3f && !getAnimationFlag(0))
 		{
 			playSound(SoundRegistry.BULWARK_BLOCK, 1f, 0.8f);
 			setAnimationFlag(0, true);
 		}
+		if(owner != null)
+			setPos(getX(), owner.getY(), getZ());
 	}
 }

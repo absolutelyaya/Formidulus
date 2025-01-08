@@ -7,12 +7,12 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.registry.RegistryWrapper;
 
-public class BulwarkComponent implements IBulwarkComponent
+public class BulwarkAbilityEntityComponent implements IBulwarkComponent
 {
 	PlayerEntity provider;
 	int bulwark = -1;
 	
-	public BulwarkComponent(PlayerEntity provider)
+	public BulwarkAbilityEntityComponent(PlayerEntity provider)
 	{
 		this.provider = provider;
 	}
@@ -32,6 +32,12 @@ public class BulwarkComponent implements IBulwarkComponent
 		if(provider.getWorld().getEntityById(bulwark) instanceof BulwarkEntity b && b.getOwner().equals(provider))
 			return b;
 		return null;
+	}
+	
+	@Override
+	public boolean hasBulwark()
+	{
+		return bulwark > -1;
 	}
 	
 	@Override

@@ -2,6 +2,7 @@ package absolutelyaya.formidulus.mixin;
 
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.entities.boss.BossFightManager;
+import absolutelyaya.formidulus.item.components.AbilityComponent;
 import absolutelyaya.formidulus.item.components.DamageTypeComponent;
 import absolutelyaya.formidulus.registries.DataComponentRegistry;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
@@ -13,10 +14,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -30,6 +33,9 @@ public abstract class PlayerEntityMixin extends LivingEntity
 	{
 		super(entityType, world);
 	}
+	
+	@Unique ItemStack lastHeldItem;
+	@Unique boolean wasUsingItem;
 	
 	@WrapOperation(method = "attack", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/damage/DamageSources;playerAttack(Lnet/minecraft/entity/player/PlayerEntity;)Lnet/minecraft/entity/damage/DamageSource;"))
 	DamageSource onGetDamageSource(net.minecraft.entity.damage.DamageSources instance, PlayerEntity attacker, Operation<DamageSource> original)
@@ -49,5 +55,18 @@ public abstract class PlayerEntityMixin extends LivingEntity
 	{
 		if((Object)this instanceof ServerPlayerEntity player)
 			BossFightManager.INSTANCE.onPlayerDeath(player);
+	}
+	
+	@Inject(method = "tick", at = @At("HEAD"))
+	void preTick(CallbackInfo ci)
+	{
+		ItemStack stack = getMainHandStack();
+		if(!stack.equals(lastHeldItem))
+		{
+			if(wasUsingItem && getActiveHand().equals(Hand.MAIN_HAND) && lastHeldItem != null && lastHeldItem.get(DataComponentRegistry.ABILITY) instanceof AbilityComponent ability)
+				ability.ability().onStopUsing(lastHeldItem, (PlayerEntity)((Object)this), Hand.MAIN_HAND);
+			lastHeldItem = stack;
+		}
+		wasUsingItem = isUsingItem();
 	}
 }

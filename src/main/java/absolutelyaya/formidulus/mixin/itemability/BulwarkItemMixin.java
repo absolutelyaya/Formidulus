@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Item.class)
-public class BulwarkMixin
+public class BulwarkItemMixin
 {
 	@ModifyReturnValue(method = "getUseAction", at = @At("RETURN"))
 	UseAction onGetUseAction(UseAction original, @Local(argsOnly = true)ItemStack stack)
