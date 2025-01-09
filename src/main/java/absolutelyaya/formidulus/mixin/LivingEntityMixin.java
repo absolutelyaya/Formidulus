@@ -1,6 +1,7 @@
 package absolutelyaya.formidulus.mixin;
 
 import absolutelyaya.formidulus.compat.TrinketsUtil;
+import absolutelyaya.formidulus.damage.DamageSources;
 import absolutelyaya.formidulus.entities.BossEntity;
 import absolutelyaya.formidulus.item.JollyHatItem;
 import absolutelyaya.formidulus.item.components.AbilityComponent;
@@ -17,6 +18,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -70,6 +72,13 @@ public abstract class LivingEntityMixin extends Entity
 			bossImmunity--;
 		if (soulImmunity > 0)
 			soulImmunity--;
+	}
+	
+	@Inject(method = "damage", at = @At("HEAD"), cancellable = true)
+	void preDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir)
+	{
+		if(source.isOf(DamageSources.SOUL) && getType().isIn(TagRegistry.SOULLESS_MOBS))
+			cir.setReturnValue(false);
 	}
 	
 	@ModifyExpressionValue(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/damage/DamageSource;isIn(Lnet/minecraft/registry/tag/TagKey;)Z", ordinal = 4))

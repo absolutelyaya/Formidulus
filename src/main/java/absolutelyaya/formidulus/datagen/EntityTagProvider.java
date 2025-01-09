@@ -22,5 +22,9 @@ public class EntityTagProvider extends FabricTagProvider.EntityTypeTagProvider
 	{
 		getOrCreateTagBuilder(ConventionalEntityTypeTags.BOSSES).add(EntityRegistry.DEER_GOD);
 		getOrCreateTagBuilder(TagRegistry.JOLLY_MOBS).add(EntityType.ZOMBIE).add(EntityType.SKELETON).add(EntityType.CREEPER);
+		getOrCreateTagBuilder(TagRegistry.SOULLESS_MOBS).add(EntityRegistry.BULWARK)
+				.add(EntityType.SNOW_GOLEM).add(EntityType.IRON_GOLEM)
+				.add(EntityType.BOAT).add(EntityType.CHEST_BOAT).add(EntityType.PAINTING).add(EntityType.ITEM_FRAME).add(EntityType.ARMOR_STAND).add(EntityType.END_CRYSTAL)
+				.add(EntityType.MINECART).add(EntityType.HOPPER_MINECART).add(EntityType.FURNACE_MINECART).add(EntityType.SPAWNER_MINECART);
 	}
 }

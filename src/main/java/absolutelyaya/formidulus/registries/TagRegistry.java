@@ -20,5 +20,6 @@ public class TagRegistry
 	
 	public static final TagKey<Block> PUMPKIN = TagKey.of(RegistryKeys.BLOCK, Formidulus.identifier("pumpkin"));
 	
-	public static final TagKey<EntityType<?>> JOLLY_MOBS = TagKey.of(RegistryKeys.ENTITY_TYPE, Formidulus.identifier("jolly_mobs"));
+	public static final TagKey<EntityType<?>> JOLLY_MOBS = TagKey.of(RegistryKeys.ENTITY_TYPE, Formidulus.identifier("jolly"));
+	public static final TagKey<EntityType<?>> SOULLESS_MOBS = TagKey.of(RegistryKeys.ENTITY_TYPE, Formidulus.identifier("soulless"));
 }
