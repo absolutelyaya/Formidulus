@@ -38,7 +38,7 @@ public class BulwarkAbility extends ItemAbility
 	public Optional<TypedActionResult<ItemStack>> onUse(ItemStack stack, LivingEntity user, Hand hand, TypedActionResult<ItemStack> result)
 	{
 		active = true;
-		if(user instanceof PlayerEntity player)
+		if(user instanceof PlayerEntity player && !user.getWorld().isClient)
 		{
 			IBulwarkComponent comp = FormidableComponents.BULWARK.get(player);
 			if(comp.getBulwarkEntity() == null)
@@ -53,10 +53,10 @@ public class BulwarkAbility extends ItemAbility
 	{
 		super.onStopUsing(stack, user, hand);
 		active = false;
-		if(user instanceof PlayerEntity player)
+		if(user instanceof PlayerEntity player && !player.getWorld().isClient)
 		{
 			IBulwarkComponent comp = FormidableComponents.BULWARK.get(player);
-			if(comp.getBulwarkEntity() instanceof BulwarkEntity b && b.getCurrentAnimation() != (byte)2)
+			if(comp.getBulwarkEntity() instanceof BulwarkEntity b && b.getCurrentAnimation() != (byte)3)
 				b.setAnimation((byte)3);
 			comp.setBulwark(null);
 			user.setSneaking(false);

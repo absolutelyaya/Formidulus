@@ -2,7 +2,10 @@ package absolutelyaya.formidulus.components.entity;
 
 import absolutelyaya.formidulus.components.FormidableComponents;
 import absolutelyaya.formidulus.entities.BulwarkEntity;
+import absolutelyaya.formidulus.item.abilities.ItemAbilities;
+import absolutelyaya.formidulus.item.abilities.ItemAbility;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.registry.RegistryWrapper;
@@ -46,6 +49,19 @@ public class BulwarkAbilityEntityComponent implements IBulwarkComponent
 	public float getBulwarkYaw()
 	{
 		return bulwarkYaw;
+	}
+	
+	@Override
+	public void onBulwarkBreak()
+	{
+		if(provider.getWorld().isClient)
+			return;
+		ItemStack active = provider.getActiveItem();
+		if(ItemAbility.hasAbility(active, ItemAbilities.BULWARK))
+		{
+			provider.stopUsingItem();
+			provider.getItemCooldownManager().set(active.getItem(), 200);
+		}
 	}
 	
 	@Override

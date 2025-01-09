@@ -1,5 +1,7 @@
 package absolutelyaya.formidulus.entities;
 
+import absolutelyaya.formidulus.components.FormidableComponents;
+import absolutelyaya.formidulus.components.entity.IBulwarkComponent;
 import absolutelyaya.formidulus.registries.EntityRegistry;
 import absolutelyaya.formidulus.registries.SoundRegistry;
 import net.minecraft.entity.AnimationState;
@@ -12,9 +14,9 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec2f;
@@ -86,14 +88,6 @@ public class BulwarkEntity extends AnimatedEntity
 	}
 	
 	@Override
-	public void onSpawnPacket(EntitySpawnS2CPacket packet)
-	{
-		super.onSpawnPacket(packet);
-		if(getWorld().isClient)
-			setAnimation(PLACE_ANIM);
-	}
-	
-	@Override
 	protected @Nullable AnimationState getAnimationState(byte id)
 	{
 		return switch(id)
@@ -157,15 +151,13 @@ public class BulwarkEntity extends AnimatedEntity
 			if(getHealth() <= 0f)
 			{
 				setAnimation(REMOVE_ANIM);
-				dataTracker.get(OWNER).ifPresent(p -> {
-				
-				});
+				PlayerEntity owner = getOwner();
+				IBulwarkComponent comp = FormidableComponents.BULWARK.get(owner);
+				comp.onBulwarkBreak();
 				playSound(SoundRegistry.BULWARK_BREAK, 1f, 0.8f);
 			}
 			else
-			{
 				setAnimation(HIT_ANIM);
-			}
 		}
 		return b;
 	}
@@ -211,13 +203,21 @@ public class BulwarkEntity extends AnimatedEntity
 		if(getCurrentAnimation() == PLACE_ANIM && getCurrentAnimationDuration() >= 0.1f && !getAnimationFlag(0))
 		{
 			if(!dataTracker.get(SMASH))
+			{
 				playSound(SoundRegistry.BULWARK_PLACE, 1f, 0.9f);
+				for (int i = 0; i < 16; i++)
+				{
+					Vec3d ppos = getPos().add(Vec3d.ZERO.addRandom(random, 1.25f).multiply(1f, 0f, 1f));
+					getWorld().addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, getWorld().getBlockState(BlockPos.ofFloored(ppos).down())),
+							ppos.x, ppos.y, ppos.z, 0f, 0f, 0f);
+				}
+			}
 			else
 			{
 				playSound(SoundRegistry.BULWARK_SMASH, 1f, 0.9f);
 				for (int i = 0; i < 32; i++)
 				{
-					Vec3d ppos = getPos().add(Vec3d.ZERO.addRandom(random, 2).multiply(1, 0, 1));
+					Vec3d ppos = getPos().add(Vec3d.ZERO.addRandom(random, 2f).multiply(1f, 0f, 1f));
 					getWorld().addParticle(new BlockStateParticleEffect(ParticleTypes.DUST_PILLAR, getWorld().getBlockState(BlockPos.ofFloored(ppos).down())),
 							ppos.x, ppos.y, ppos.z, 0f, 0.33f, 0f);
 				}
@@ -239,5 +239,21 @@ public class BulwarkEntity extends AnimatedEntity
 		}
 		if(owner != null)
 			setPosition(getX(), owner.getY(), getZ());
+	}
+	
+	public boolean tryBlockDamage(DamageSource source, float amount)
+	{
+		if(source.getSource() instanceof Entity src && tryBlockDamage(src, source, amount))
+			return true;
+		return source.getAttacker() instanceof Entity src && tryBlockDamage(src, source, amount);
+	}
+	
+	public boolean tryBlockDamage(Entity sourceEntity, DamageSource source, float amount)
+	{
+		float angle = getRelativeHorizontalAngleTo(getPos(), sourceEntity.getPos(), getRotationVector());
+		boolean b = angle > 0.3f;
+		if(b && !source.isIn(DamageTypeTags.IS_EXPLOSION))
+			damage(source, amount);
+		return b;
 	}
 }

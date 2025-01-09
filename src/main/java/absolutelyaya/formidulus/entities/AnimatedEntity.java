@@ -98,7 +98,7 @@ public abstract class AnimatedEntity extends LivingEntity
 	{
 		Vec3d targetDir = target.multiply(1, 0, 1).subtract(pos.multiply(1, 0, 1)).normalize();
 		forward = forward.multiply(1, 0, 1).normalize();
-		return (float)Math.acos(targetDir.dotProduct(forward));
+		return (float)targetDir.dotProduct(forward);
 	}
 	
 	@Override
