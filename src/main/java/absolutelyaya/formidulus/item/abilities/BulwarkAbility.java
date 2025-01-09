@@ -57,7 +57,7 @@ public class BulwarkAbility extends ItemAbility
 		{
 			IBulwarkComponent comp = FormidableComponents.BULWARK.get(player);
 			if(comp.getBulwarkEntity() instanceof BulwarkEntity b && b.getCurrentAnimation() != (byte)2)
-				b.setAnimation((byte)2);
+				b.setAnimation((byte)3);
 			comp.setBulwark(null);
 			user.setSneaking(false);
 		}

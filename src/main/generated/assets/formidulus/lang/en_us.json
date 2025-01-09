@@ -188,5 +188,7 @@
   "subtitles.formidulus.item.accessory.change_mode": "Accessory mode changed",
   "subtitles.formidulus.item.bulwark.block": "Bulwark is hit",
   "subtitles.formidulus.item.bulwark.break": "Bulwark falls",
+  "subtitles.formidulus.item.bulwark.place": "Bulwark is placed",
+  "subtitles.formidulus.item.bulwark.smash": "Bulwark smashes the Floor",
   "subtitles.formidulus.ween": "its ween :D"
 }

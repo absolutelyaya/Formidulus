@@ -222,6 +222,8 @@ public class GermanTranslationProvider extends FabricLanguageProvider implements
 		
 		
 		builder.add(subtitle(SoundRegistry.ACCESSORY_CHANGE_MODE), "Accessoire modus geändert");
+		builder.add(subtitle(SoundRegistry.BULWARK_PLACE), "Bollwerk wird aufgestellt");
+		builder.add(subtitle(SoundRegistry.BULWARK_SMASH), "Bollwerk schlägt auf den Boden");
 		builder.add(subtitle(SoundRegistry.BULWARK_BLOCK), "Bollwerk wird getroffen");
 		builder.add(subtitle(SoundRegistry.BULWARK_BREAK), "Bollwerk fällt");
 		

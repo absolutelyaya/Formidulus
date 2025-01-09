@@ -8,6 +8,24 @@
     ],
     "subtitle": "subtitles.formidulus.item.accessory.change_mode"
   },
+  "item.bulwark.place": {
+    "sounds": [
+      {
+        "name": "item.mace.smash_ground",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.item.bulwark.place"
+  },
+  "item.bulwark.smash": {
+    "sounds": [
+      {
+        "name": "item.mace.smash_ground_heavy",
+        "type": "event"
+      }
+    ],
+    "subtitle": "subtitles.formidulus.item.bulwark.smash"
+  },
   "item.bulwark.block": {
     "sounds": [
       {

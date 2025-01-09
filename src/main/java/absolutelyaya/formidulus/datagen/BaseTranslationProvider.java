@@ -223,6 +223,8 @@ public class BaseTranslationProvider extends FabricLanguageProvider implements L
 		
 		
 		builder.add(subtitle(SoundRegistry.ACCESSORY_CHANGE_MODE), "Accessory mode changed");
+		builder.add(subtitle(SoundRegistry.BULWARK_PLACE), "Bulwark is placed");
+		builder.add(subtitle(SoundRegistry.BULWARK_SMASH), "Bulwark smashes the Floor");
 		builder.add(subtitle(SoundRegistry.BULWARK_BLOCK), "Bulwark is hit");
 		builder.add(subtitle(SoundRegistry.BULWARK_BREAK), "Bulwark falls");
 		

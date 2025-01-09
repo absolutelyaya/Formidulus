@@ -188,5 +188,7 @@
   "subtitles.formidulus.item.accessory.change_mode": "Accessoire modus geändert",
   "subtitles.formidulus.item.bulwark.block": "Bollwerk wird getroffen",
   "subtitles.formidulus.item.bulwark.break": "Bollwerk fällt",
+  "subtitles.formidulus.item.bulwark.place": "Bollwerk wird aufgestellt",
+  "subtitles.formidulus.item.bulwark.smash": "Bollwerk schlägt auf den Boden",
   "subtitles.formidulus.ween": "es ist ween :D"
 }

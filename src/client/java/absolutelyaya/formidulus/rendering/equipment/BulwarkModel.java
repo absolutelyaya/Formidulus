@@ -3,7 +3,6 @@ package absolutelyaya.formidulus.rendering.equipment;
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.entities.BulwarkEntity;
 import absolutelyaya.formidulus.rendering.entity.BulwarkAnimations;
-import absolutelyaya.formidulus.rendering.entity.DeerGodAnimations;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
@@ -27,10 +26,10 @@ public class BulwarkModel extends SinglePartEntityModel<BulwarkEntity>
 	{
 		ModelData modelData = new ModelData();
 		ModelPartData modelPartData = modelData.getRoot();
-		ModelPartData root = modelPartData.addChild("root", ModelPartBuilder.create().uv(15, 15).cuboid(-7.5F, -9.0F, -4.0F, 15.0F, 19.0F, 1.0F, new Dilation(0.0F))
-																	.uv(48, 12).cuboid(-1.5F, -3.0F, -3.0F, 3.0F, 6.0F, 4.0F, new Dilation(0.0F))
-																	.uv(13, 36).cuboid(-8.5F, 10.0F, -5.0F, 17.0F, 5.0F, 2.0F, new Dilation(0.0F))
-																	.uv(15, 43).cuboid(-8.5F, 15.0F, -4.0F, 17.0F, 3.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 9.0F, -4.0F));
+		modelPartData.addChild("root", ModelPartBuilder.create().uv(15, 15).cuboid(-7.5F, -9.0F, -4.0F, 15.0F, 19.0F, 1.0F, new Dilation(0.0F))
+											   .uv(47, 11).cuboid(-1.5F, -3.0F, -3.0F, 3.0F, 6.0F, 5.0F, new Dilation(0.0F))
+											   .uv(13, 36).cuboid(-8.5F, 10.0F, -5.0F, 17.0F, 5.0F, 2.0F, new Dilation(0.0F))
+											   .uv(15, 43).cuboid(-8.5F, 15.0F, -4.0F, 17.0F, 3.0F, 0.0F, new Dilation(0.0F)), ModelTransform.pivot(0.0F, 9.0F, -4.0F));
 		return TexturedModelData.of(modelData, 64, 64);
 	}
 	
@@ -50,6 +49,7 @@ public class BulwarkModel extends SinglePartEntityModel<BulwarkEntity>
 	public void setAngles(BulwarkEntity entity, float limbAngle, float limbDistance, float ageInTicks, float headYaw, float headPitch)
 	{
 		root.traverse().forEach(ModelPart::resetTransform);
+		updateAnimation(entity.prePlaceAnimationState, BulwarkAnimations.prePlace, ageInTicks);
 		updateAnimation(entity.placeAnimationState, BulwarkAnimations.place, ageInTicks);
 		updateAnimation(entity.hitAnimationState, BulwarkAnimations.hit, ageInTicks);
 		updateAnimation(entity.removeAnimationState, BulwarkAnimations.unplace, ageInTicks);

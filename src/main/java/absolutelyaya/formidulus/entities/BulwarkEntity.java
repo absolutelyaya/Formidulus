@@ -5,12 +5,18 @@ import absolutelyaya.formidulus.registries.SoundRegistry;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.util.TypeFilter;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -22,13 +28,16 @@ import java.util.UUID;
 public class BulwarkEntity extends AnimatedEntity
 {
 	public static final TrackedData<Optional<UUID>> OWNER = DataTracker.registerData(BulwarkEntity.class, TrackedDataHandlerRegistry.OPTIONAL_UUID);
+	public static final TrackedData<Boolean> SMASH = DataTracker.registerData(BulwarkEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	public AnimationState prePlaceAnimationState = new AnimationState();
 	public AnimationState placeAnimationState = new AnimationState();
 	public AnimationState hitAnimationState = new AnimationState();
 	public AnimationState removeAnimationState = new AnimationState();
 	
-	static final byte PLACE_ANIM = 0;
-	static final byte HIT_ANIM = 1;
-	static final byte REMOVE_ANIM = 2;
+	static final byte PREPLACE_ANIM = 0;
+	static final byte PLACE_ANIM = 1;
+	static final byte HIT_ANIM = 2;
+	static final byte REMOVE_ANIM = 3;
 	
 	public BulwarkEntity(EntityType<? extends AnimatedEntity> type, World world)
 	{
@@ -40,6 +49,7 @@ public class BulwarkEntity extends AnimatedEntity
 	{
 		super.initDataTracker(builder);
 		builder.add(OWNER, Optional.empty());
+		builder.add(SMASH, false);
 	}
 	
 	public static BulwarkEntity place(PlayerEntity owner)
@@ -54,7 +64,9 @@ public class BulwarkEntity extends AnimatedEntity
 		bulwark.setYaw(owner.getYaw());
 		bulwark.setHeadYaw(owner.getYaw());
 		bulwark.setBodyYaw(owner.getYaw());
-		bulwark.setAnimation(PLACE_ANIM);
+		bulwark.setAnimation(PREPLACE_ANIM);
+		if(!owner.isOnGround())
+			bulwark.dataTracker.set(SMASH, true);
 		return bulwark;
 	}
 	
@@ -86,6 +98,7 @@ public class BulwarkEntity extends AnimatedEntity
 	{
 		return switch(id)
 		{
+			case PREPLACE_ANIM -> prePlaceAnimationState;
 			case PLACE_ANIM -> placeAnimationState;
 			case HIT_ANIM -> hitAnimationState;
 			case REMOVE_ANIM -> removeAnimationState;
@@ -173,6 +186,8 @@ public class BulwarkEntity extends AnimatedEntity
 	public void tick()
 	{
 		super.tick();
+		if(getOwner() != null && getOwner().isOnGround() && getCurrentAnimation() == PREPLACE_ANIM && getCurrentAnimationDuration() > 0.25f)
+			setAnimation(PLACE_ANIM);
 		setVelocity(Vec3d.ZERO);
 		if(isRemoved())
 			return;
@@ -190,14 +205,36 @@ public class BulwarkEntity extends AnimatedEntity
 			return;
 		}
 		PlayerEntity owner = getWorld().getPlayerByUuid(dataTracker.get(OWNER).get());
-		if(!getWorld().isClient && (owner == null || !owner.isAlive() || new Vec2f((float)getX(), (float)getZ()).distanceSquared(new Vec2f((float)owner.getX(), (float)owner.getZ())) > 1f))
+		if(!getWorld().isClient && (owner == null || !owner.isAlive() ||
+											new Vec2f((float)getX(), (float)getZ()).distanceSquared(new Vec2f((float)owner.getX(), (float)owner.getZ())) > 1f))
 			setAnimation(REMOVE_ANIM);
-		if(getCurrentAnimation() == PLACE_ANIM && getCurrentAnimationDuration() >= 0.3f && !getAnimationFlag(0))
+		if(getCurrentAnimation() == PLACE_ANIM && getCurrentAnimationDuration() >= 0.1f && !getAnimationFlag(0))
 		{
-			playSound(SoundRegistry.BULWARK_BLOCK, 1f, 0.8f);
+			if(!dataTracker.get(SMASH))
+				playSound(SoundRegistry.BULWARK_PLACE, 1f, 0.9f);
+			else
+			{
+				playSound(SoundRegistry.BULWARK_SMASH, 1f, 0.9f);
+				for (int i = 0; i < 32; i++)
+				{
+					Vec3d ppos = getPos().add(Vec3d.ZERO.addRandom(random, 2).multiply(1, 0, 1));
+					getWorld().addParticle(new BlockStateParticleEffect(ParticleTypes.DUST_PILLAR, getWorld().getBlockState(BlockPos.ofFloored(ppos).down())),
+							ppos.x, ppos.y, ppos.z, 0f, 0.33f, 0f);
+				}
+				if(!getWorld().isClient)
+				{
+					getWorld().getEntitiesByType(TypeFilter.instanceOf(LivingEntity.class), getBoundingBox().expand(3f, 1f, 3f),
+									i -> i.canTakeDamage() && !(i.equals(owner) || i.equals(this)))
+							.forEach(living -> {
+								Vec3d dir = living.getPos().subtract(getPos()).multiply(1f, 0f, 1f).normalize();
+								living.addVelocity(dir.multiply(2f).add(0f, 0.2f, 0f)
+														   .multiply(1f - living.getAttributeValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE)));
+							});
+				}
+			}
 			setAnimationFlag(0, true);
 		}
 		if(owner != null)
-			setPos(getX(), owner.getY(), getZ());
+			setPosition(getX(), owner.getY(), getZ());
 	}
 }

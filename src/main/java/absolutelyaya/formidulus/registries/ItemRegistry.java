@@ -58,7 +58,7 @@ public class ItemRegistry
 											 .component(DataComponentRegistry.CHARGE, new ChargeComponent(4, 4))));
 	public static final Item CHAINLINK = register(Formidulus.identifier("chainlink"), id -> new Item(new Item.Settings()));
 	public static final Item BULWARK = register(Formidulus.identifier("bulwark"),
-			id -> new BulwarkItem(new Item.Settings().rarity(Rarity.RARE).maxCount(1).maxDamage(1500)
+			id -> new BulwarkItem(new Item.Settings().rarity(Rarity.RARE).maxCount(1)
 										  .component(DataComponentTypes.ATTRIBUTE_MODIFIERS, BulwarkItem.createAttributeModifiers())
 										  .component(DataComponentRegistry.ABILITY, new AbilityComponent(ItemAbilities.BULWARK))));
 	
