@@ -17,6 +17,7 @@ public class TagRegistry
 	
 	public static final TagKey<DamageType> BOSS_DAMAGE = TagKey.of(RegistryKeys.DAMAGE_TYPE, Formidulus.identifier("boss_damage"));
 	public static final TagKey<DamageType> SOUL_DAMAGE = TagKey.of(RegistryKeys.DAMAGE_TYPE, Formidulus.identifier("soul_damage"));
+	public static final TagKey<DamageType> SHIELD_DISABLING_DAMAGE = TagKey.of(RegistryKeys.DAMAGE_TYPE, Formidulus.identifier("shield_disabling"));
 	
 	public static final TagKey<Block> PUMPKIN = TagKey.of(RegistryKeys.BLOCK, Formidulus.identifier("pumpkin"));
 	

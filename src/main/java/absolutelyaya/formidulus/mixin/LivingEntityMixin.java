@@ -107,6 +107,14 @@ public abstract class LivingEntityMixin extends Entity
 		return constant;
 	}
 	
+	@SuppressWarnings("all")
+	@Inject(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;takeShieldHit(Lnet/minecraft/entity/LivingEntity;)V"))
+	void onTakeShieldHit(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir)
+	{
+		if(source.isIn(TagRegistry.SHIELD_DISABLING_DAMAGE) && (Object)this instanceof PlayerEntity player)
+			player.disableShield();
+	}
+	
 	@ModifyConstant(method = "onDamaged", constant = @Constant(intValue = 20))
 	int modifyTimeUntilRegenOnDamaged(int constant, @Local(argsOnly = true) DamageSource source)
 	{

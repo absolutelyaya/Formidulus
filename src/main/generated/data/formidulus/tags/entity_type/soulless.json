@@ -1,0 +1,17 @@
+{
+  "values": [
+    "formidulus:bulwark",
+    "minecraft:snow_golem",
+    "minecraft:iron_golem",
+    "minecraft:boat",
+    "minecraft:chest_boat",
+    "minecraft:painting",
+    "minecraft:item_frame",
+    "minecraft:armor_stand",
+    "minecraft:end_crystal",
+    "minecraft:minecart",
+    "minecraft:hopper_minecart",
+    "minecraft:furnace_minecart",
+    "minecraft:spawner_minecart"
+  ]
+}
