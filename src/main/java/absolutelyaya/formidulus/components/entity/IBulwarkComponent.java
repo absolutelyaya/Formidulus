@@ -10,4 +10,6 @@ public interface IBulwarkComponent extends ComponentV3
 	BulwarkEntity getBulwarkEntity();
 	
 	boolean hasBulwark();
+	
+	float getBulwarkYaw();
 }

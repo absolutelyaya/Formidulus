@@ -5,6 +5,7 @@ import absolutelyaya.formidulus.components.entity.IBulwarkComponent;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
@@ -73,13 +74,19 @@ public abstract class BulwarkPlayerMixin extends LivingEntity
 	}
 	
 	@Override
-	public void onLanding()
+	public void changeLookDirection(double cursorDeltaX, double cursorDeltaY)
 	{
-		super.onLanding();
+		super.changeLookDirection(cursorDeltaX, cursorDeltaY);
 		IBulwarkComponent comp = FormidableComponents.BULWARK.get(this);
 		if(comp.hasBulwark())
 		{
-			//TODO: impact
+			float yaw = comp.getBulwarkYaw();
+			setBodyYaw(yaw);
+			float f = MathHelper.wrapDegrees(getYaw() - yaw);
+			float g = MathHelper.clamp(f, -40f, 40f);
+			prevYaw += g - f;
+			setYaw(getYaw() + g - f);
+			setHeadYaw(getYaw());
 		}
 	}
 }

@@ -11,6 +11,7 @@ public class BulwarkAbilityEntityComponent implements IBulwarkComponent
 {
 	PlayerEntity provider;
 	int bulwark = -1;
+	float bulwarkYaw;
 	
 	public BulwarkAbilityEntityComponent(PlayerEntity provider)
 	{
@@ -21,6 +22,7 @@ public class BulwarkAbilityEntityComponent implements IBulwarkComponent
 	public void setBulwark(BulwarkEntity entity)
 	{
 		bulwark = entity == null ? -1 : entity.getId();
+		bulwarkYaw = entity == null ? 0f : entity.getYaw();
 		FormidableComponents.BULWARK.sync(provider);
 	}
 	
@@ -41,15 +43,24 @@ public class BulwarkAbilityEntityComponent implements IBulwarkComponent
 	}
 	
 	@Override
+	public float getBulwarkYaw()
+	{
+		return bulwarkYaw;
+	}
+	
+	@Override
 	public void readFromNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup)
 	{
-		if(tag.contains("bulwark", NbtElement.INT_TYPE))
-			bulwark = tag.getInt("bulwark");
+		if(tag.contains("Bulwark", NbtElement.INT_TYPE))
+			bulwark = tag.getInt("Bulwark");
+		if(tag.contains("BulwarkYaw", NbtElement.FLOAT_TYPE))
+			bulwarkYaw = tag.getFloat("BulwarkYaw");
 	}
 	
 	@Override
 	public void writeToNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup)
 	{
-		tag.putInt("bulwark", bulwark);
+		tag.putInt("Bulwark", bulwark);
+		tag.putFloat("BulwarkYaw", bulwarkYaw);
 	}
 }
