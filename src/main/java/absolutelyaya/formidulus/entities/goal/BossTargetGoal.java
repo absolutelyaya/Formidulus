@@ -143,9 +143,10 @@ public class BossTargetGoal extends Goal
 	
 	public LivingEntity getRandomTarget()
 	{
-		if(knownTargets.isEmpty())
+		List<LivingEntity> targets = getAllTargets();
+		if(targets.isEmpty())
 			return null;
-		return getAllTargets().get(mob.getRandom().nextInt(knownTargets.size()));
+		return targets.get(mob.getRandom().nextInt(knownTargets.size()));
 	}
 	
 	public List<LivingEntity> getAllTargets()
