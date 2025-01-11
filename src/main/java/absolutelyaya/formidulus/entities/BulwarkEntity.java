@@ -2,21 +2,23 @@ package absolutelyaya.formidulus.entities;
 
 import absolutelyaya.formidulus.components.FormidableComponents;
 import absolutelyaya.formidulus.components.entity.IBulwarkComponent;
+import absolutelyaya.formidulus.entities.goal.InterruptableGoal;
 import absolutelyaya.formidulus.registries.EntityRegistry;
 import absolutelyaya.formidulus.registries.SoundRegistry;
+import absolutelyaya.formidulus.registries.TagRegistry;
 import net.minecraft.entity.AnimationState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.util.TypeFilter;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec2f;
@@ -143,7 +145,20 @@ public class BulwarkEntity extends AnimatedEntity
 	}
 	
 	@Override
+	public int getAir()
+	{
+		return 20; // a shield can't drown.
+	}
+	
+	@Override
 	public boolean damage(DamageSource source, float amount)
+	{
+		if(source.isOf(DamageTypes.ON_FIRE))
+			return super.damage(source, amount);
+		return false; // avoid being damaged twice by AOE
+	}
+	
+	public void redirectDamage(DamageSource source, float amount)
 	{
 		boolean b = super.damage(source, amount);
 		if(b)
@@ -159,7 +174,6 @@ public class BulwarkEntity extends AnimatedEntity
 			else
 				setAnimation(HIT_ANIM);
 		}
-		return b;
 	}
 	
 	@Override
@@ -243,6 +257,8 @@ public class BulwarkEntity extends AnimatedEntity
 	
 	public boolean tryBlockDamage(DamageSource source, float amount)
 	{
+		if(source.isIn(TagRegistry.BULWARK_UNBLOCKABLE_DAMAGE))
+			return false;
 		if(source.getSource() instanceof Entity src && tryBlockDamage(src, source, amount))
 			return true;
 		return source.getAttacker() instanceof Entity src && tryBlockDamage(src, source, amount);
@@ -251,9 +267,14 @@ public class BulwarkEntity extends AnimatedEntity
 	public boolean tryBlockDamage(Entity sourceEntity, DamageSource source, float amount)
 	{
 		float angle = getRelativeHorizontalAngleTo(getPos(), sourceEntity.getPos(), getRotationVector());
-		boolean b = angle > 0.3f;
-		if(b && !source.isIn(DamageTypeTags.IS_EXPLOSION))
-			damage(source, amount);
-		return b;
+		boolean frontal = angle > 0.3f;
+		if(frontal && !source.isIn(TagRegistry.BULWARK_UNBLOCKABLE_DAMAGE))
+		{
+			redirectDamage(source, amount);
+			if(sourceEntity instanceof AnimatedHostileEntity entity)
+				entity.tryInterruptActiveGoals(InterruptableGoal.BULWARK);
+			return true;
+		}
+		return false;
 	}
 }

@@ -233,7 +233,7 @@ public abstract class BossEntity extends AnimatedHostileEntity
 	
 	public void forceReset()
 	{
-		cancelActiveGoals();
+		forceStopActiveGoals();
 		if(outOfCombatGoal != null)
 			outOfCombatGoal.start(); //perform reset logic
 	}

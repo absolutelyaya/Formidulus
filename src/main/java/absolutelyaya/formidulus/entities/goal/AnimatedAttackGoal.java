@@ -74,7 +74,7 @@ public abstract class AnimatedAttackGoal<T extends AnimatedHostileEntity> extend
 		super.stop();
 		if(mob.getCurrentAnimation() == attackAnimationId)
 			mob.setAnimation(postAnimationID);
-		if(!wasInterrupted())
+		if(!wasForceStopped())
 			mob.setAttackCooldown(getAttackCooldown());
 	}
 }

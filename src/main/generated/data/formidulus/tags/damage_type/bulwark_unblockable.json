@@ -1,0 +1,23 @@
+{
+  "values": [
+    "minecraft:cramming",
+    "minecraft:magic",
+    "minecraft:indirect_magic",
+    "minecraft:dragon_breath",
+    "minecraft:bad_respawn_point",
+    "minecraft:generic_kill",
+    "minecraft:fly_into_wall",
+    "minecraft:fall",
+    "minecraft:drown",
+    "minecraft:dry_out",
+    "minecraft:wither",
+    "minecraft:hot_floor",
+    "minecraft:freeze",
+    "minecraft:lava",
+    "minecraft:in_wall",
+    "minecraft:out_of_world",
+    "minecraft:outside_border",
+    "minecraft:starve",
+    "minecraft:on_fire"
+  ]
+}

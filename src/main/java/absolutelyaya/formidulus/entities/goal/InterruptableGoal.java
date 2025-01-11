@@ -4,23 +4,36 @@ import net.minecraft.entity.ai.goal.Goal;
 
 public abstract class InterruptableGoal extends Goal
 {
-	boolean interrupted;
+	public static final byte FORCE_STOP = -1;
+	public static final byte BULWARK = 100;
+	byte interruptReason;
 	
 	@Override
 	public void start()
 	{
 		super.start();
-		interrupted = false;
+		interruptReason = 0;
 	}
 	
-	public void interrupt()
+	public void forceStop()
 	{
-		interrupted = true;
+		interruptReason = FORCE_STOP;
 		stop();
 	}
 	
-	public boolean wasInterrupted()
+	public void interrupt(byte reason)
 	{
-		return interrupted;
+		if(tryInterrupt(reason))
+			interruptReason = reason;
+	}
+	
+	public boolean wasForceStopped()
+	{
+		return interruptReason == -1;
+	}
+	
+	protected boolean tryInterrupt(byte reason)
+	{
+		return false;
 	}
 }

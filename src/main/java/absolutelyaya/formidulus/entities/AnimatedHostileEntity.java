@@ -117,12 +117,20 @@ public abstract class AnimatedHostileEntity extends HostileEntity
 			setTarget(null);
 	}
 	
-	protected void cancelActiveGoals()
+	protected void forceStopActiveGoals()
 	{
 		navigation.stop();
 		goalSelector.getGoals().forEach(i -> {
 			if(i.getGoal() instanceof InterruptableGoal animated && i.isRunning())
-				animated.interrupt();
+				animated.forceStop();
+		});
+	}
+	
+	public void tryInterruptActiveGoals(byte reason)
+	{
+		goalSelector.getGoals().forEach(i -> {
+			if(i.getGoal() instanceof InterruptableGoal interruptable && i.isRunning())
+				interruptable.interrupt(reason);
 		});
 	}
 	

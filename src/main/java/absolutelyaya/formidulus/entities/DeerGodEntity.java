@@ -2,6 +2,8 @@ package absolutelyaya.formidulus.entities;
 
 import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.block.BossSpawnerBlockEntity;
+import absolutelyaya.formidulus.components.FormidableComponents;
+import absolutelyaya.formidulus.components.entity.IBulwarkComponent;
 import absolutelyaya.formidulus.damage.DamageSources;
 import absolutelyaya.formidulus.datagen.Lang;
 import absolutelyaya.formidulus.entities.boss.BossFightManager;
@@ -277,7 +279,7 @@ public class DeerGodEntity extends BossEntity
 		if(getWorld().isClient)
 			return;
 		if((getTarget() == null || getTarget().isRemoved()) && !isNotInAttackAnimation() && !isInSequence())
-			cancelActiveGoals();
+			forceStopActiveGoals();
 		if(getHealth() < getMaxHealth() * 0.75f && dataTracker.get(TELEPORT_COOLDOWN) > 0)
 			dataTracker.set(TELEPORT_COOLDOWN, dataTracker.get(TELEPORT_COOLDOWN) - (int)(1 + getCooldownBonusSpeed()));
 		if(isTeleporting())
@@ -918,7 +920,7 @@ public class DeerGodEntity extends BossEntity
 		if(getHealth() <= 0)
 		{
 			dataTracker.set(DYING, true);
-			cancelActiveGoals();
+			forceStopActiveGoals();
 			setAnimation(DEATH_SEQUENCE_ANIM);
 			triggerMonologueSequence(SequenceTriggerPayload.DEATH_SEQUENCE);
 			shouldUpdateBossbar = false;
@@ -938,7 +940,7 @@ public class DeerGodEntity extends BossEntity
 		}
 		if(!dataTracker.get(CLAW) && b && getHealth() <= getMaxHealth() / 2f && getHealth() > 0f)
 		{
-			cancelActiveGoals();
+			forceStopActiveGoals();
 			setAnimation(PHASE_TRANSITION_ANIM);
 			dataTracker.set(CLAW, true);
 			setHealth(getMaxHealth() / 2f);
@@ -953,9 +955,9 @@ public class DeerGodEntity extends BossEntity
 	}
 	
 	@Override
-	protected void cancelActiveGoals()
+	protected void forceStopActiveGoals()
 	{
-		super.cancelActiveGoals();
+		super.forceStopActiveGoals();
 		dataTracker.set(TELEPORT_TIMER, Integer.MIN_VALUE);
 		setAnimation(IDLE_ANIM);
 		dataTracker.set(SWARM_TRANSITION_TICKS, 0);
@@ -1794,9 +1796,9 @@ public class DeerGodEntity extends BossEntity
 		}
 		
 		@Override
-		public void interrupt()
+		public void forceStop()
 		{
-			super.interrupt();
+			super.forceStop();
 			mob.dataTracker.set(SWARM_TRANSITION_TICKS, 0);
 			mob.dataTracker.set(SCHEDULED_SPAWNS, 0);
 		}
@@ -1908,6 +1910,7 @@ public class DeerGodEntity extends BossEntity
 	 */
 	static abstract class RunAttackGoal extends AnimatedAttackGoal<DeerGodEntity>
 	{
+		static final byte WALL_IMPACT = 1;
 		protected final byte type;
 		protected final float speed;
 		boolean arrived;
@@ -1956,7 +1959,7 @@ public class DeerGodEntity extends BossEntity
 			}
 			if(mob.getTarget() == null || !targetAccessible)
 			{
-				interrupt();
+				forceStop();
 				return;
 			}
 			mob.setRunAttackState(type);
@@ -1992,7 +1995,7 @@ public class DeerGodEntity extends BossEntity
 		@Override
 		public void tick()
 		{
-			if(wasInterrupted())
+			if(wasForceStopped())
 				return;
 			if(impactTicks > 0)
 			{
@@ -2000,13 +2003,13 @@ public class DeerGodEntity extends BossEntity
 				{
 					if(mob.getCurrentAnimation() == RUN_ATTACK_WALL_IMPACT_ANIM)
 						mob.setAnimation(IDLE_ANIM);
-					interrupt();
+					forceStop();
 				}
 				return;
 			}
 			if(mob.getTarget() == null)
 			{
-				interrupt();
+				forceStop();
 				return;
 			}
 			if(preparationTime > 0)
@@ -2038,6 +2041,11 @@ public class DeerGodEntity extends BossEntity
 			}
 			mob.applyDamageInCylindricArea(mob.getWidth(), mob.getHeight(), DamageSources.get(mob.getWorld(), DamageSources.TRAMPLE, mob), 4f,
 					(hit, success) -> {
+						if(hit instanceof BulwarkEntity)
+						{
+							interrupt(BULWARK);
+							return;
+						}
 						if(success)
 							hit.setVelocity(mob.getRotationVector().multiply(1f, 0f, 1f).normalize().multiply(2.5f).add(0f, 0.2f, 0f));
 					});
@@ -2056,13 +2064,16 @@ public class DeerGodEntity extends BossEntity
 			if(mob.getWorld().raycast(new RaycastContext(mob.getPos().add(0f, 1.5f, 0f), dest.add(0f, 1.5f, 0f),
 					RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, mob)).getType().equals(HitResult.Type.BLOCK))
 			{
-				impactTicks = 40;
-				mob.setAnimation(RUN_ATTACK_WALL_IMPACT_ANIM);
-				mob.getMoveControl().moveTo(mob.getX(), mob.getY(), mob.getZ(), 0f);
+				interrupt(WALL_IMPACT);
 				return;
 			}
 			boolean targetBehindBlock = mob.getWorld().raycast(new RaycastContext(mob.getPos().add(0f, 1.5f, 0f), target.getPos().add(0f, 1.5f, 0f),
 					RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, mob)).getType().equals(HitResult.Type.BLOCK);
+			if(!targetBehindBlock && target instanceof PlayerEntity player)
+			{
+				IBulwarkComponent comp = FormidableComponents.BULWARK.get(player);
+				targetBehindBlock = comp.hasBulwark();
+			}
 			if((mob.distanceTo(target) < 4f && !targetBehindBlock) || mob.getPos().distanceTo(start) > 16f)
 			{
 				arrived = true;
@@ -2100,16 +2111,27 @@ public class DeerGodEntity extends BossEntity
 				mob.setAnimation(postAnimationID);
 			if(mob.moveControl.isMoving())
 				mob.moveControl.moveTo(mob.getX(), mob.getY(), mob.getZ(), 0f);
+			if(wasForceStopped())
+			{
+				arrived = false;
+				impactTicks = 0;
+			}
 		}
 		
 		protected abstract void tickAttackAnim();
 		
 		@Override
-		public void interrupt()
+		protected boolean tryInterrupt(byte reason)
 		{
-			super.interrupt();
-			arrived = false;
-			impactTicks = 0;
+			if(reason == 1 || reason == InterruptableGoal.BULWARK)
+			{
+				impactTicks = 40;
+				mob.setAnimation(RUN_ATTACK_WALL_IMPACT_ANIM);
+				mob.getMoveControl().moveTo(mob.getX(), mob.getY(), mob.getZ(), 0f);
+				mob.addVelocity(mob.getRotationVector().multiply(1, 0, 1).normalize().multiply(-1.5f)); //knockback
+				return true;
+			}
+			return false;
 		}
 	}
 	
@@ -2179,9 +2201,9 @@ public class DeerGodEntity extends BossEntity
 		}
 		
 		@Override
-		public void interrupt()
+		public void forceStop()
 		{
-			super.interrupt();
+			super.forceStop();
 			chain = 0;
 		}
 	}
