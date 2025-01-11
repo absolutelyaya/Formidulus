@@ -107,6 +107,10 @@
   "item-ability.formidulus.soulsteal.desc2": "+2 Урон §bДуши§r; §6игнорирует броню§r.",
   "item-ability.formidulus.vampirism": "- Вампиризм -",
   "item-ability.formidulus.vampirism.desc0": "Восполняет здоровье, при нанесении урона.",
+  "item-ability.formidulus.bulwark": "🛡 ЗАЩИТНИК 🛡",
+  "item-ability.formidulus.bulwark.desc0": "Зажать, чтобы поставить Защитника.",
+  "item-ability.formidulus.bulwark.desc1": "Может выдержать много ударов, защищая тех, кто стоит позади.",
+  "item-ability.formidulus.bulwark.desc2": "Вы не можете двигаться или поворачиваться, пока установлен Защитник.",
   "item.accessory_mode.active": "Активно",
   "item.accessory_mode.cap": "Шапка",
   "item.accessory_mode.default": "Обычное",
@@ -134,6 +138,7 @@
   "item.formidulus.soul_dagger": "Кинжал душ",
   "item.formidulus.soul_dagger.lore0": "Продвинутая версия тех кинжалов, что обычно носят культисты.",
   "item.formidulus.soul_dagger.lore1": "Вместо тела, ранит душу.",
+  "item.formidulus.bulwark": "Защитник",
   "jukebox_song.formidulus.deer.phase1": "Efefski - Guiding Light",
   "jukebox_song.formidulus.deer.phase2": "Efefski - Running Blood",
   "map.formidulus.cult_hideout": "Карта убежища культа",
@@ -181,5 +186,9 @@
   "subtitles.formidulus.entity.irrlicht.idle": "Огонек потрескивает",
   "subtitles.formidulus.entity.pumpkin.impact": "Парящая тыква падает",
   "subtitles.formidulus.item.accessory.change_mode": "Режим аксессуара изменен",
-  "subtitles.formidulus.ween": "это жутк месяц :D"
+  "subtitles.formidulus.ween": "это жутк месяц :D",
+  "subtitles.formidulus.item.bulwark.block": "Защитник ранен",
+  "subtitles.formidulus.item.bulwark.break": "Защитник ломается",
+  "subtitles.formidulus.item.bulwark.place": "Защитник установлен",
+  "subtitles.formidulus.item.bulwark.smash": "Защитник разбивается об пол"
 }
