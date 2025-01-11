@@ -177,6 +177,12 @@ public class BulwarkEntity extends AnimatedEntity
 	}
 	
 	@Override
+	public boolean canHit()
+	{
+		return false;
+	}
+	
+	@Override
 	protected void playHurtSound(DamageSource damageSource)
 	{
 		playSound(SoundRegistry.BULWARK_BLOCK, 1f, 0.8f);
