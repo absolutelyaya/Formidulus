@@ -19,7 +19,7 @@ public class EntityRegistry
 	public static final EntityType<DeerFollowerEntity> DEER_FOLLOWER = Registry.register(Registries.ENTITY_TYPE, Formidulus.identifier("deer_follower"),
 			EntityType.Builder.create(DeerFollowerEntity::new, SpawnGroup.MONSTER).dimensions(0.6f, 1.95f).build("deer_follower"));
 	public static final EntityType<BulwarkEntity> BULWARK = Registry.register(Registries.ENTITY_TYPE, Formidulus.identifier("bulwark"),
-			EntityType.Builder.create(BulwarkEntity::new, SpawnGroup.MISC).dimensions(1.1f, 2f).build("bulwark"));
+			EntityType.Builder.create(BulwarkEntity::new, SpawnGroup.MISC).dimensions(0.8f, 2f).build("bulwark"));
 	
 	public static void register()
 	{
@@ -37,6 +37,6 @@ public class EntityRegistry
 																	   .add(EntityAttributes.GENERIC_ATTACK_DAMAGE, 2)
 																	   .add(EntityAttributes.GENERIC_ARMOR, 3));
 		FabricDefaultAttributeRegistry.register(BULWARK, IrrlichtEntity.createMobAttributes()
-																  .add(EntityAttributes.GENERIC_MAX_HEALTH, 30));
+																  .add(EntityAttributes.GENERIC_MAX_HEALTH, 40));
 	}
 }

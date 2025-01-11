@@ -189,6 +189,12 @@ public class BulwarkEntity extends AnimatedEntity
 	}
 	
 	@Override
+	public void setVelocity(Vec3d velocity)
+	{
+	
+	}
+	
+	@Override
 	public void tick()
 	{
 		super.tick();
@@ -252,7 +258,7 @@ public class BulwarkEntity extends AnimatedEntity
 			setAnimationFlag(0, true);
 		}
 		if(owner != null)
-			setPosition(getX(), owner.getY(), getZ());
+			setPosition(owner.getX(), owner.getY(), owner.getZ());
 	}
 	
 	public boolean tryBlockDamage(DamageSource source, float amount)
@@ -266,9 +272,7 @@ public class BulwarkEntity extends AnimatedEntity
 	
 	public boolean tryBlockDamage(Entity sourceEntity, DamageSource source, float amount)
 	{
-		float angle = getRelativeHorizontalAngleTo(getPos(), sourceEntity.getPos(), getRotationVector());
-		boolean frontal = angle > 0.3f;
-		if(frontal && !source.isIn(TagRegistry.BULWARK_UNBLOCKABLE_DAMAGE))
+		if(isPosInFront(sourceEntity.getPos()) && !source.isIn(TagRegistry.BULWARK_UNBLOCKABLE_DAMAGE))
 		{
 			redirectDamage(source, amount);
 			if(sourceEntity instanceof AnimatedHostileEntity entity)
@@ -276,5 +280,11 @@ public class BulwarkEntity extends AnimatedEntity
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean isPosInFront(Vec3d pos)
+	{
+		float angle = getRelativeHorizontalAngleTo(getPos(), pos, getRotationVector());
+		return angle > 0.3f;
 	}
 }

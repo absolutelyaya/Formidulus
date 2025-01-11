@@ -2041,7 +2041,7 @@ public class DeerGodEntity extends BossEntity
 			}
 			mob.applyDamageInCylindricArea(mob.getWidth(), mob.getHeight(), DamageSources.get(mob.getWorld(), DamageSources.TRAMPLE, mob), 4f,
 					(hit, success) -> {
-						if(hit instanceof BulwarkEntity)
+						if(hit instanceof BulwarkEntity bulwarkEntity && bulwarkEntity.isPosInFront(mob.getPos()))
 						{
 							interrupt(BULWARK);
 							return;
@@ -2072,7 +2072,7 @@ public class DeerGodEntity extends BossEntity
 			if(!targetBehindBlock && target instanceof PlayerEntity player)
 			{
 				IBulwarkComponent comp = FormidableComponents.BULWARK.get(player);
-				targetBehindBlock = comp.hasBulwark();
+				targetBehindBlock = comp.hasBulwark() && comp.getBulwarkEntity() != null && !comp.getBulwarkEntity().isPosInFront(mob.getPos());
 			}
 			if((mob.distanceTo(target) < 4f && !targetBehindBlock) || mob.getPos().distanceTo(start) > 16f)
 			{
