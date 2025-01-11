@@ -60,6 +60,7 @@ public class BulwarkAbilityEntityComponent implements IBulwarkComponent
 		if(ItemAbility.hasAbility(active, ItemAbilities.BULWARK))
 		{
 			provider.stopUsingItem();
+			provider.clearActiveItem();
 			provider.getItemCooldownManager().set(active.getItem(), 200);
 		}
 	}

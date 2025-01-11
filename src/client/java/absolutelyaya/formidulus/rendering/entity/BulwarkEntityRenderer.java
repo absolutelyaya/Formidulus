@@ -47,7 +47,6 @@ public class BulwarkEntityRenderer extends EntityRenderer<BulwarkEntity>
 		VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(BulwarkModel.TEXTURE));
 		model.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV,
 				ColorHelper.Argb.fromFloats(localPlayer.equals(entity.getOwner()) ? 0.5f : 1f, 1f, 1f, 1f));
-		System.out.println(entity.getOwner());
 		matrices.pop();
 	}
 }

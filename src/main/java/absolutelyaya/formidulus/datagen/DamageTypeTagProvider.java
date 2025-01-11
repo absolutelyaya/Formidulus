@@ -23,7 +23,7 @@ public class DamageTypeTagProvider extends FabricTagProvider<DamageType>
 	{
 		getOrCreateTagBuilder(TagRegistry.BOSS_DAMAGE).add(DamageSources.CLAW, DamageSources.LANTERN);
 		getOrCreateTagBuilder(TagRegistry.SOUL_DAMAGE).add(DamageSources.SOUL);
-		getOrCreateTagBuilder(TagRegistry.SHIELD_DISABLING_DAMAGE).add(DamageSources.CLAW, DamageSources.LANTERN);
+		getOrCreateTagBuilder(TagRegistry.SHIELD_DISABLING_DAMAGE).add(DamageSources.CLAW, DamageSources.LANTERN, DamageSources.TRAMPLE);
 		getOrCreateTagBuilder(TagRegistry.BULWARK_UNBLOCKABLE_DAMAGE)
 				.add(DamageTypes.CRAMMING, DamageTypes.MAGIC, DamageTypes.INDIRECT_MAGIC, DamageTypes.DRAGON_BREATH,
 						DamageTypes.BAD_RESPAWN_POINT, DamageTypes.GENERIC_KILL, DamageTypes.FLY_INTO_WALL, DamageTypes.FALL,

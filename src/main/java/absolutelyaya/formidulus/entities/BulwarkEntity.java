@@ -3,6 +3,7 @@ package absolutelyaya.formidulus.entities;
 import absolutelyaya.formidulus.components.FormidableComponents;
 import absolutelyaya.formidulus.components.entity.IBulwarkComponent;
 import absolutelyaya.formidulus.entities.goal.InterruptableGoal;
+import absolutelyaya.formidulus.accessor.LivingEntityAccessor;
 import absolutelyaya.formidulus.registries.EntityRegistry;
 import absolutelyaya.formidulus.registries.SoundRegistry;
 import absolutelyaya.formidulus.registries.TagRegistry;
@@ -167,6 +168,8 @@ public class BulwarkEntity extends AnimatedEntity
 			{
 				setAnimation(REMOVE_ANIM);
 				PlayerEntity owner = getOwner();
+				if(owner instanceof LivingEntityAccessor living)
+					living.setShieldBreakImmunity(5);
 				IBulwarkComponent comp = FormidableComponents.BULWARK.get(owner);
 				comp.onBulwarkBreak();
 				playSound(SoundRegistry.BULWARK_BREAK, 1f, 0.8f);

@@ -4,7 +4,6 @@ import absolutelyaya.formidulus.Formidulus;
 import absolutelyaya.formidulus.entities.BulwarkEntity;
 import absolutelyaya.formidulus.rendering.entity.BulwarkAnimations;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.client.util.math.MatrixStack;

@@ -1,5 +1,6 @@
 package absolutelyaya.formidulus.mixin;
 
+import absolutelyaya.formidulus.accessor.LivingEntityAccessor;
 import absolutelyaya.formidulus.compat.TrinketsUtil;
 import absolutelyaya.formidulus.damage.DamageSources;
 import absolutelyaya.formidulus.entities.BossEntity;
@@ -35,9 +36,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity
+public abstract class LivingEntityMixin extends Entity implements LivingEntityAccessor
 {
-	@Unique int bossImmunity, soulImmunity;
+	@Unique int bossImmunity, soulImmunity, shieldBreakImmunity;
 	
 	public LivingEntityMixin(EntityType<?> type, World world)
 	{
@@ -72,12 +73,19 @@ public abstract class LivingEntityMixin extends Entity
 			bossImmunity--;
 		if (soulImmunity > 0)
 			soulImmunity--;
+		if (shieldBreakImmunity > 0)
+			shieldBreakImmunity--;
 	}
 	
 	@Inject(method = "damage", at = @At("HEAD"), cancellable = true)
 	void preDamage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir)
 	{
 		if(source.isOf(DamageSources.SOUL) && getType().isIn(TagRegistry.SOULLESS_MOBS))
+		{
+			cir.setReturnValue(false);
+			return;
+		}
+		if(shieldBreakImmunity > 0)
 			cir.setReturnValue(false);
 	}
 	
@@ -108,11 +116,14 @@ public abstract class LivingEntityMixin extends Entity
 	}
 	
 	@SuppressWarnings("all")
-	@Inject(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;takeShieldHit(Lnet/minecraft/entity/LivingEntity;)V"))
-	void onTakeShieldHit(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir)
+	@Inject(method = "damage", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;damageShield(F)V"))
+	void onDamageShield(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir)
 	{
 		if(source.isIn(TagRegistry.SHIELD_DISABLING_DAMAGE) && (Object)this instanceof PlayerEntity player)
+		{
 			player.disableShield();
+			shieldBreakImmunity = 5;
+		}
 	}
 	
 	@ModifyConstant(method = "onDamaged", constant = @Constant(intValue = 20))
@@ -135,5 +146,41 @@ public abstract class LivingEntityMixin extends Entity
 			if(!TrinketsUtil.performIfPresent(self, ItemRegistry.JOLLY_HAT, i -> JollyHatItem.tickSnowfall(self, i)) && head.isOf(ItemRegistry.JOLLY_HAT))
 				JollyHatItem.tickSnowfall(self, head); //only performed if no trinket was valid for causing the effect
 		}
+	}
+	
+	@Override
+	public void setBossImmunity(int bossImmunity)
+	{
+		this.bossImmunity = bossImmunity;
+	}
+	
+	@Override
+	public int getBossImmunity()
+	{
+		return bossImmunity;
+	}
+	
+	@Override
+	public void setSoulImmunity(int soulImmunity)
+	{
+		this.soulImmunity = soulImmunity;
+	}
+	
+	@Override
+	public int getSoulImmunity()
+	{
+		return soulImmunity;
+	}
+	
+	@Override
+	public void setShieldBreakImmunity(int shieldBreakImmunity)
+	{
+		this.shieldBreakImmunity = shieldBreakImmunity;
+	}
+	
+	@Override
+	public int getShieldBreakImmunity()
+	{
+		return shieldBreakImmunity;
 	}
 }
