@@ -272,6 +272,8 @@ public class BulwarkEntity extends AnimatedEntity
 	
 	public boolean tryBlockDamage(DamageSource source, float amount)
 	{
+		if(!canTakeDamage())
+			return false;
 		if(source.isIn(TagRegistry.BULWARK_UNBLOCKABLE_DAMAGE))
 			return false;
 		if(source.getSource() instanceof Entity src && tryBlockDamage(src, source, amount))
