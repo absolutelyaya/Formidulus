@@ -252,13 +252,13 @@ public class BulwarkEntity extends AnimatedEntity
 				}
 				if(!getWorld().isClient)
 				{
-					getWorld().getEntitiesByType(TypeFilter.instanceOf(LivingEntity.class), getBoundingBox().expand(2f, 1f, 2f),
+					getWorld().getEntitiesByType(TypeFilter.instanceOf(LivingEntity.class), getBoundingBox().expand(3f, 1f, 3f),
 									i -> i.canTakeDamage() && !(i.equals(owner) || i.equals(this)))
 							.forEach(living -> {
 								Vec3d dir = living.getPos().subtract(getPos()).multiply(1f, 0f, 1f).normalize();
 								living.addVelocity(dir.multiply(2f).add(0f, 0.2f, 0f)
 														   .multiply(Math.max(1f - living.getAttributeValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE) -
-																   getPos().multiply(1, 0, 1).distanceTo(living.getPos().multiply(1, 0, 1)) / 3f, 0)));
+																   getPos().multiply(1, 0, 1).distanceTo(living.getPos().multiply(1, 0, 1)) / 4f, 0)));
 								if(owner != null)
 									living.setAttacker(owner);
 							});
