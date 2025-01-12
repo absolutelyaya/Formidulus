@@ -4,6 +4,7 @@ import absolutelyaya.formidulus.components.FormidableComponents;
 import absolutelyaya.formidulus.components.entity.IBulwarkComponent;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
@@ -49,5 +50,13 @@ public abstract class ClientBulwarkAbilityPlayerMixin extends PlayerEntity
 			renderPitch = renderPitch + (getPitch() - renderPitch) * 0.5F;
 			renderYaw = renderYaw + (getYaw() - renderYaw) * 0.5F;
 		}
+	}
+	
+	@Inject(method = "updatePostDeath", at = @At("HEAD"))
+	void onPostDeath(CallbackInfo ci)
+	{
+		IBulwarkComponent comp = FormidableComponents.BULWARK.get(this);
+		if(comp.hasBulwark())
+			MinecraftClient.getInstance().gameRenderer.setRenderHand(true);
 	}
 }
