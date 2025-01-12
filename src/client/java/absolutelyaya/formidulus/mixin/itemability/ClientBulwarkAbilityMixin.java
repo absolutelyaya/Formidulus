@@ -18,12 +18,14 @@ public class ClientBulwarkAbilityMixin
 	@Inject(method = "Labsolutelyaya/formidulus/item/abilities/BulwarkAbility;onUse(Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/util/Hand;Lnet/minecraft/util/TypedActionResult;)Ljava/util/Optional;", at = @At("HEAD"))
 	void onStartUsing(ItemStack stack, LivingEntity user, Hand hand, TypedActionResult<ItemStack> result, CallbackInfoReturnable<TypedActionResult<ItemStack>> cir)
 	{
-		MinecraftClient.getInstance().gameRenderer.setRenderHand(false);
+		if(user != null && user.equals(MinecraftClient.getInstance().player))
+			MinecraftClient.getInstance().gameRenderer.setRenderHand(false);
 	}
 	
 	@Inject(method = "Labsolutelyaya/formidulus/item/abilities/BulwarkAbility;onStopUsing(Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/util/Hand;)V", at = @At("HEAD"))
 	void onStopUsing(ItemStack stack, LivingEntity user, Hand hand, CallbackInfo ci)
 	{
-		MinecraftClient.getInstance().gameRenderer.setRenderHand(true);
+		if(user != null && user.equals(MinecraftClient.getInstance().player))
+			MinecraftClient.getInstance().gameRenderer.setRenderHand(true);
 	}
 }
