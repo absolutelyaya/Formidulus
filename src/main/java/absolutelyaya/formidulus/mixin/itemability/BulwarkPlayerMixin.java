@@ -101,4 +101,13 @@ public abstract class BulwarkPlayerMixin extends LivingEntity
 		if(comp.getBulwarkEntity().tryBlockDamage(source, amount))
 			cir.setReturnValue(false);
 	}
+	
+	@Override
+	public boolean isBlocking()
+	{
+		IBulwarkComponent comp = FormidableComponents.BULWARK.get(this);
+		if(comp.hasBulwark())
+			return false;
+		return super.isBlocking();
+	}
 }
